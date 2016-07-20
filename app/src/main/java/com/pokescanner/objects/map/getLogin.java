@@ -23,9 +23,10 @@ import okhttp3.OkHttpClient;
  */
 public class getLogin extends Thread {
     LatLng location;
-    String username,password;
+    String username, password;
 
     private boolean started = false;
+    private int pos = 0;
     private Handler handler = new Handler();
     final ArrayList<LatLng> tempList = new ArrayList<>();
 
@@ -33,10 +34,7 @@ public class getLogin extends Thread {
         this.location = latLng;
         this.username = username;
         this.password = password;
-    }
 
-    @Override
-    public void run() {
         double dist = 00.001500;
         double lat = location.latitude;
         double longi = location.longitude;
@@ -48,18 +46,13 @@ public class getLogin extends Thread {
 
         tempList.add(new LatLng(lat - dist, longi));
         tempList.add(new LatLng(lat + dist, longi));
+    }
 
-        for (int i = 0;i <tempList.size();i++) {
-            System.out.println(i + ":"+ new Date());
-            Handler handler = new Handler();
-            final int Position = i;
-            handler.postDelayed(new Runnable(){
-                @Override
-                public void run(){
-                    loadPokemons(tempList.get(Position));
-                }
-            }, 5000 * i);
-        }
+    @Override
+    public void run() {
+        if (pos >= tempList.size()) return;
+        loadPokemons(tempList.get(pos++));
+        handler.postDelayed(this, 5000);
     }
 
     public void loadPokemons(LatLng lng) {
@@ -72,7 +65,7 @@ public class getLogin extends Thread {
             PokemonGo go = new PokemonGo(auth, client);
 
             System.out.println(go.getPlayerProfile());
-            
+
             go.setLatitude(lng.latitude);
             go.setLongitude(lng.longitude);
 
