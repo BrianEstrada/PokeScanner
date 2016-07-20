@@ -26,32 +26,21 @@ public class getLogin extends Thread {
     String username, password;
 
     private boolean started = false;
+    private double[] lat = {0, 0, -00.001500, 00.001500}, lon = {-00.001500, 00.001500, 0, 0};
     private int pos = 0;
     private Handler handler = new Handler();
-    final ArrayList<LatLng> tempList = new ArrayList<>();
 
     public getLogin(LatLng latLng, String username, String password) {
         this.location = latLng;
         this.username = username;
         this.password = password;
-
-        double dist = 00.001500;
-        double lat = location.latitude;
-        double longi = location.longitude;
-
-        tempList.add(new LatLng(lat, longi));
-
-        tempList.add(new LatLng(lat, longi - dist));
-        tempList.add(new LatLng(lat, longi + dist));
-
-        tempList.add(new LatLng(lat - dist, longi));
-        tempList.add(new LatLng(lat + dist, longi));
     }
 
     @Override
     public void run() {
-        if (pos >= tempList.size()) return;
-        loadPokemons(tempList.get(pos++));
+        if (pos >= 4) return;
+        LatLng loc = new LatLng(location.latitude + lat[pos], lcation.longitude + lon[pos++]);
+        loadPokemons(loc);
         handler.postDelayed(this, 5000);
     }
 
