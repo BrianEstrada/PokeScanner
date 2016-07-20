@@ -13,8 +13,7 @@ import com.pokescanner.PokemonLoadedEvent;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
 
 import POGOProtos.Networking.EnvelopesOuterClass;
 import okhttp3.OkHttpClient;
@@ -28,7 +27,7 @@ public class getLogin extends Thread {
 
     private boolean started = false;
     private Handler handler = new Handler();
-    ArrayList<LatLng> tempList = new ArrayList<>();
+    final ArrayList<LatLng> tempList = new ArrayList<>();
 
     public getLogin(LatLng latLng, String username, String password) {
         this.location = latLng;
@@ -50,20 +49,22 @@ public class getLogin extends Thread {
         tempList.add(new LatLng(lat - dist, longi));
         tempList.add(new LatLng(lat + dist, longi));
 
-        final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(tempList.size());
-
-        for (final LatLng lng: tempList) {
-            executor.schedule(new Runnable() {
+        for (int i = 0;i <tempList.size();i++) {
+            System.out.println(i + ":"+ new Date());
+            Handler handler = new Handler();
+            final int Position = i;
+            handler.postDelayed(new Runnable(){
                 @Override
-                public void run() {
-                    loadPokemons(lng);
+                public void run(){
+                    loadPokemons(tempList.get(Position));
                 }
-            }, 5, TimeUnit.SECONDS);
+            }, 5000 * i);
         }
     }
 
     public void loadPokemons(LatLng lng) {
         try {
+            System.out.print("Running");
             OkHttpClient client = new OkHttpClient();
             PTCLogin ptcLogin = new PTCLogin(client);
             EnvelopesOuterClass.Envelopes.RequestEnvelope.AuthInfo auth = ptcLogin.login(username, password);
