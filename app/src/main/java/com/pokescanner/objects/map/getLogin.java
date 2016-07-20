@@ -39,7 +39,7 @@ public class getLogin extends Thread {
     @Override
     public void run() {
         if (pos >= 4) return;
-        LatLng loc = new LatLng(location.latitude + lat[pos], lcation.longitude + lon[pos++]);
+        LatLng loc = new LatLng(location.latitude + lat[pos], lpcation.longitude + lon[pos++]);
         loadPokemons(loc);
         handler.postDelayed(this, 5000);
     }
