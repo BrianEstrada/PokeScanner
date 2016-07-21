@@ -27,8 +27,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.api.map.Map;
+import com.pokegoapi.api.map.MapObjects;
 import com.pokegoapi.api.map.Pokemon.CatchablePokemon;
 import com.pokegoapi.auth.PTCLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
@@ -61,7 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ArrayList<Long> onMapIDs = new ArrayList<>();
 
     double dist = 00.002000;
-    final int SLEEP_TIME = 2000;
+    final int SLEEP_TIME = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,13 +103,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void PokeScan() {
         showProgressbar(true);
         progressBar.setProgress(0);
-        mMap.clear();
+        if (mMap != null)
+            mMap.clear();
         pokemons.clear();
         onMapIDs.clear();
         createScanMap(mMap.getCameraPosition().target);
         new loadPokemon().execute();
     }
 
+    public void createBox(){
+        if (scanMap.size()>=25) {
+            mMap.addPolygon(new PolygonOptions()
+                    .add(scanMap.get(0))
+                    .add(scanMap.get(4))
+                    .add(scanMap.get(24))
+                    .add(scanMap.get(20)));
+        }
+    }
     @Override
     @SuppressWarnings({"MissingPermission"})
     public void onMapReady(GoogleMap googleMap) {
@@ -157,13 +169,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void refreshMap() {
-        System.out.println(pokemons);
         for (CatchablePokemon pokemon : pokemons) {
             if (!onMapIDs.contains(pokemon.getEncounterId())) {
                 String uri = "p" + pokemon.getPokemonId().getNumber();
                 int resourceID = getResources().getIdentifier(uri, "drawable", getPackageName());
                 Bitmap image = BitmapFactory.decodeResource(getResources(), resourceID);
-
                 DateTime oldDate = new DateTime(pokemon.getExpirationTimestampMs());
                 Interval interval;
                 if (oldDate.isAfter(new Instant())) {
@@ -201,6 +211,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
         System.out.println(scanMap.size());
+        createBox();
     }
 
     public boolean doWeHavePermission() {
@@ -223,7 +234,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         go.setLatitude(loc.latitude);
                         Map map = new Map(go);
                         List<CatchablePokemon> catchablePokemon = map.getCatchablePokemon();
-                        System.out.println(catchablePokemon.size());
+                        MapObjects objects = map.getMapObjects();
+                        System.out.println(loc.latitude+","+loc.longitude);
+                        System.out.println("Catchable:" + objects.getCatchablePokemons().size());
+                        System.out.println("Wild:" + objects.getWildPokemons().size());
+                        System.out.println("Nearby:" + objects.getNearbyPokemons().size());
                         publishProgress(catchablePokemon);
                         Thread.sleep(SLEEP_TIME);
                     } catch (InterruptedException e) {
