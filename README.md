@@ -23,3 +23,8 @@ Link: https://github.com/Grover-c13/PokeGOAPI-Java/ (Grover-C13)
 
 # Contributions
 Anyone is welcome to help out on the project just go ahead and submit any changes and I'll aprove em!
+
+# Feature Requests
+- Blacklist/Whitelist Pokemon
+- Adjust Radius
+- Change Expiration time to S/M/H
