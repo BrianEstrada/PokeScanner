@@ -226,7 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected String doInBackground(String... params) {
             try {
                 OkHttpClient client = new OkHttpClient();
-                RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo authInfo = new PTCLogin(client).login("throwaway562", "throwaway562");
+                RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo authInfo = new PTCLogin(client).login(username, password);
                 PokemonGo go = new PokemonGo(authInfo, client);
                 for (LatLng loc : scanMap) {
                     try {
