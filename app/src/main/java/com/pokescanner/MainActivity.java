@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +18,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.pokegoapi.auth.PTCLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
 
 import POGOProtos.Networking.Envelopes.RequestEnvelopeOuterClass;
+import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 import rx.Observable;
 import rx.Subscriber;
@@ -43,7 +46,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MultiDex.install(this);
         super.onCreate(savedInstanceState);
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics());
+        }
         setContentView(R.layout.activity_main);
 
         sharedPref = getSharedPreferences(getString(R.string.shared_key), Context.MODE_PRIVATE);

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PokeScanner</string>
+    <string name="app_name">Poke Scanner</string>
     <string name="shared_key">POKESCANNER</string>
     <string name="title_activity_maps">Map</string>
     <string name="scan">Scan</string>

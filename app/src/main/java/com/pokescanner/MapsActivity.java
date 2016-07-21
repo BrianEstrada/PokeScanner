@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -57,12 +58,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     ArrayList<LatLng> scanMap = new ArrayList<>();
     ArrayList<CatchablePokemon> pokemons = new ArrayList<>();
+    ArrayList<Long> onMapIDs = new ArrayList<>();
 
     double dist = 00.002000;
     final int SLEEP_TIME = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MultiDex.install(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
@@ -97,6 +100,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void PokeScan() {
         showProgressbar(true);
+        progressBar.setProgress(0);
+        mMap.clear();
+        pokemons.clear();
+        onMapIDs.clear();
         createScanMap(mMap.getCameraPosition().target);
         new loadPokemon().execute();
     }
@@ -150,29 +157,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void refreshMap() {
-        mMap.clear();
+        System.out.println(pokemons);
         for (CatchablePokemon pokemon : pokemons) {
+            if (!onMapIDs.contains(pokemon.getEncounterId())) {
+                String uri = "p" + pokemon.getPokemonId().getNumber();
+                int resourceID = getResources().getIdentifier(uri, "drawable", getPackageName());
+                Bitmap image = BitmapFactory.decodeResource(getResources(), resourceID);
 
-
-            String uri = "p" + pokemon.getPokemonId().getNumber();
-            int resourceID = getResources().getIdentifier(uri, "drawable", getPackageName());
-            Bitmap image = BitmapFactory.decodeResource(getResources(), resourceID);
-
-            DateTime oldDate = new DateTime(pokemon.getExpirationTimestampMs());
-            Interval interval;
-            if (oldDate.isAfter(new Instant())) {
-                interval = new Interval(new Instant(), oldDate);
-                mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))
-                        .icon(BitmapDescriptorFactory.fromBitmap(image))
-                        .title(pokemon.getPokemonId().toString())
-                        .snippet("Expires: " + String.valueOf(interval.toDurationMillis() / 1000) + "s"));
-            }else
-            {
-                mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))
-                        .icon(BitmapDescriptorFactory.fromBitmap(image))
-                        .title(pokemon.getPokemonId().toString()));
+                DateTime oldDate = new DateTime(pokemon.getExpirationTimestampMs());
+                Interval interval;
+                if (oldDate.isAfter(new Instant())) {
+                    interval = new Interval(new Instant(), oldDate);
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))
+                            .icon(BitmapDescriptorFactory.fromBitmap(image))
+                            .title(pokemon.getPokemonId().toString())
+                            .snippet("Expires: " + String.valueOf(interval.toDurationMillis() / 1000) + "s"));
+                } else {
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))
+                            .icon(BitmapDescriptorFactory.fromBitmap(image))
+                            .title(pokemon.getPokemonId().toString()));
+                }
+                onMapIDs.add(pokemon.getEncounterId());
             }
         }
 
@@ -202,7 +209,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private class loadPokemon extends AsyncTask<String, List<CatchablePokemon>, String> {
-        int pos = 0;
+        int pos = 1;
 
         @Override
         protected String doInBackground(String... params) {
@@ -215,7 +222,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         go.setLongitude(loc.longitude);
                         go.setLatitude(loc.latitude);
                         Map map = new Map(go);
-                        publishProgress(map.getCatchablePokemon());
+                        List<CatchablePokemon> catchablePokemon = map.getCatchablePokemon();
+                        System.out.println(catchablePokemon.size());
+                        publishProgress(catchablePokemon);
                         Thread.sleep(SLEEP_TIME);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
