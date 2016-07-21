@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PokeScanner</string>
+    <string name="shared_key">POKESCANNER</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="scan">Scan</string>
+    <string name="login">Login</string>
+    <string name="poke_scanner">Poke Scanner</string>
+</resources>

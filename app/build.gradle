@@ -1,0 +1,47 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        applicationId "com.pokescanner"
+        minSdkVersion 19
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+    buildTypes {
+        debug {
+            resValue "string", "google_maps_api_key", "AIzaSyAuejt-XF3VYk1X4NN9aje_EKqv1pb9Jcg"
+        }
+        release {
+            resValue "string", "google_maps_api_key", "AIzaSyA_NjZflwUrJ7rebCuNBLbGFMPC9vxp28k"
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+
+    compile files('libs/PokeGOAPI.jar')
+
+
+
+    compile 'com.android.support:appcompat-v7:24.1.0'
+    compile 'com.google.android.gms:play-services-maps:9.2.1'
+    compile 'joda-time:joda-time:2.9.4'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'com.google.android.gms:play-services:9.2.1'
+}
