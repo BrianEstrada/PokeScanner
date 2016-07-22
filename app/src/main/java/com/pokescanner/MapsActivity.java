@@ -93,7 +93,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     int pos = 0;
     final int SLEEP_TIME = 2000;
+<<<<<<< HEAD
     int scanValue = 10;
+=======
+    int scanValue = 8;
+>>>>>>> origin/master
     boolean boundingBox = true;
 
     @Override
@@ -143,6 +147,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void PokeScan() {
         pos = 0;
         progressBar.setProgress(0);
+<<<<<<< HEAD
+=======
+        if (mMap != null)
+            mMap.clear();
+>>>>>>> origin/master
         createScanMap(mMap.getCameraPosition().target, scanValue);
 
         MapObjectsLoader mapObjectsLoader = new MapObjectsLoader(user,scanMap,SLEEP_TIME);

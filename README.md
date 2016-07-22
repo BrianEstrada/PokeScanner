@@ -12,8 +12,8 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 ###[Download Section](https://github.com/BrianEstrada/PokeScanner/releases)
 
 # Credits
-### big shout out to the guys over at the Java Pokemon API this project couldn't exist without it
-Link: https://github.com/Grover-c13/PokeGOAPI-Java/ (Grover-C13)
+- [Java Api](https://github.com/Grover-c13/PokeGOAPI-Java/)
+- Tsunamii (Material Icon)
 
 
 # Contributions
