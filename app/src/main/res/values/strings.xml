@@ -58,12 +58,10 @@
     <string name="search_radius">Search Radius</string>
     <string name="higher_number_slower_search">(Higher number = Slower Search)</string>
     <string name="cancel">Cancel</string>
-<<<<<<< HEAD
     <string name="none">None</string>
     <string name="select_all">Select All</string>
     <string name="pokemon_name">Pokemon Name</string>
 
-    //Errors
     <string name="AUTH_FAILED">Bad Login Credentials</string>
     <string name="SERVER_FAILED">Servers not responding</string>
     <string name="LOGIN_OK">Login Successful</string>
@@ -74,7 +72,5 @@
 
     <string name="on">On</string>
     <string name="off">Off</string>
-=======
     <string name="register"><a href="https://club.pokemon.com/us/pokemon-trainer-club/sign-up/">Create PTC Account</a></string>
->>>>>>> origin/master
 </resources>
