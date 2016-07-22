@@ -7,4 +7,5 @@
     <string name="poke_scanner">Poke Scanner</string>
     <string name="blacklist">Blacklist</string>
     <string name="save">Save</string>
+    <string name="register"><a href="https://club.pokemon.com/us/pokemon-trainer-club/sign-up/">Create PTC Account</a></string>
 </resources>

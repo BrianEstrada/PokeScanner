@@ -28,7 +28,16 @@
             android:paddingBottom="20dp"
             android:textSize="40dp"
             android:textIsSelectable="false"
-            android:layout_marginBottom="50dp" />
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Login with a Pokemon Trainer Club account"
+            android:id="@+id/textView3"
+            android:textAlignment="center"
+            android:layout_marginBottom="20dp" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -44,7 +53,7 @@
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/etPassword"
-            android:hint="Pasword" />
+            android:hint="Password" />
 
         <Button
             android:layout_width="wrap_content"
@@ -54,11 +63,19 @@
             android:layout_marginTop="25dp"
             android:background="@color/colorAccent" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register"
+            android:id="@+id/btnRegister"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorAccent" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="WARNING: \nPlease do not your main PokeGo \naccount for this app!"
+            android:text="WARNING: \nPlease do not use your main PokeGo \naccount for this app!"
             android:id="@+id/textView2"
             android:textAlignment="center"
             android:layout_marginTop="20dp" />

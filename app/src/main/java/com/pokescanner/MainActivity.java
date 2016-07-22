@@ -10,6 +10,7 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String username,password;
 
     Button btnLogin;
+    Button btnRegister;
     SharedPreferences sharedPref;
 
     @Override
@@ -70,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Container = (LinearLayout) findViewById(R.id.Container);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        btnRegister = (Button) findViewById(R.id.btnRegister);
+        btnRegister.setMovementMethod(LinkMovementMethod.getInstance());
 
         btnLogin.setOnClickListener(this);
 
