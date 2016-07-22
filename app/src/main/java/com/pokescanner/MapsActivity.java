@@ -156,7 +156,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         progressBar.setProgress(0);
         if (mMap != null)
             mMap.clear();
-        pokemons.clear();
         createScanMap(mMap.getCameraPosition().target, scanValue);
         new loadPokemon().execute();
     }
