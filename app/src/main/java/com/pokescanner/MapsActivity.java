@@ -21,19 +21,10 @@ package com.pokescanner;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.FragmentActivity;
@@ -53,33 +44,32 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.pokegoapi.api.PokemonGo;
-import com.pokegoapi.api.map.Map;
-import com.pokegoapi.api.map.MapObjects;
-import com.pokegoapi.api.map.Pokemon.CatchablePokemon;
-import com.pokegoapi.auth.PTCLogin;
-import com.pokegoapi.exceptions.LoginFailedException;
-import com.pokegoapi.exceptions.RemoteServerException;
+import com.pokescanner.helper.PokemonListLoader;
+import com.pokescanner.loaders.MapObjectsLoadedEvent;
+import com.pokescanner.loaders.MapObjectsLoader;
+import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.MenuItem;
+import com.pokescanner.objects.Pokemons;
+import com.pokescanner.objects.User;
+import com.pokescanner.recycler.FilterRecyclerAdapter;
 import com.pokescanner.recycler.MenuRecycler;
 
-import org.joda.time.DateTime;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.Instant;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-import POGOProtos.Networking.Envelopes.RequestEnvelopeOuterClass;
-import okhttp3.OkHttpClient;
+import POGOProtos.Map.Pokemon.MapPokemonOuterClass;
+import io.realm.Realm;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -95,15 +85,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String username, password;
     ImageButton imageButton;
 
-    SharedPreferences sharedPref;
+    User user;
+    Realm realm;
+    RecyclerView.Adapter mAdapter;
 
     ArrayList<LatLng> scanMap = new ArrayList<>();
-    ArrayList<CatchablePokemon> pokemons = new ArrayList<>();
 
-    loadPokemon loader;
-
+    int pos = 0;
     final int SLEEP_TIME = 2000;
-    int scanValue = 5;
+    int scanValue = 10;
     boolean boundingBox = true;
 
     @Override
@@ -112,17 +102,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        sharedPref = getSharedPreferences(getString(R.string.shared_key), Context.MODE_PRIVATE);
+        realm = Realm.getDefaultInstance();
 
-        boolean login = sharedPref.getBoolean("login", false);
-
-        if (login) {
-            username = sharedPref.getString("username", null);
-            password = sharedPref.getString("password", null);
-        } else {
+        if  (realm.where(User.class).findAll().size() != 0) {
+            user = realm.copyFromRealm(realm.where(User.class).findFirst());
+        }else
+        {
             Toast.makeText(MapsActivity.this, "No login!", Toast.LENGTH_SHORT).show();
             logOut();
         }
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -146,30 +135,67 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Click");
                 showMenu();
             }
         });
     }
 
     public void PokeScan() {
+        pos = 0;
         progressBar.setProgress(0);
-        if (mMap != null)
-            mMap.clear();
-        pokemons.clear();
         createScanMap(mMap.getCameraPosition().target, scanValue);
-        new loadPokemon().execute();
+
+        MapObjectsLoader mapObjectsLoader = new MapObjectsLoader(user,scanMap,SLEEP_TIME);
+        //mapObjectsLoader.start();
     }
 
-    public void createBoundingBox()
-    {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void mapObjectsLoaded(MapObjectsLoadedEvent event) {
+        progressBar.setProgress(pos);
+
+        if (pos==(Math.pow(scanValue,2)-1)) {
+            showProgressbar(false);
+        }
+
+        final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getMapObjects().getCatchablePokemons();
+
+        if (collectionPokemon != null) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    for (MapPokemonOuterClass.MapPokemon pokemonOut: collectionPokemon)
+                    {
+                        realm.copyToRealmOrUpdate(new Pokemons(pokemonOut));
+                    }
+                }
+            });
+        }else {
+            showToast(R.string.SERVER_FAILED);
+        }
+        pos++;
+    }
+
+    public void showToast(int resString) {
+        Toast.makeText(MapsActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
+    }
+
+    public void createBoundingBox() {
         if (scanMap.size() == Math.pow(scanValue,2)) {
+            int adjusted = scanValue - 1;
             mMap.addPolygon(new PolygonOptions()
                     .add(scanMap.get(0))
                     .add(scanMap.get(scanValue - 1))
-                    .add(scanMap.get(scanMap.size() - scanValue - 1))
-                    .add(scanMap.get(scanValue - 1))
+                    .add(scanMap.get(scanMap.size() - 1))
+                    .add(scanMap.get(scanMap.size() - adjusted - 1))
             );
+        }
+    }
+
+    public void createMarkerList() {
+        if(BuildConfig.DEBUG){
+            for (LatLng temp: scanMap) {
+                mMap.addMarker(new MarkerOptions().position(temp));
+            }
         }
     }
     @Override
@@ -191,7 +217,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             startRefresher();
         }
     }
-
     public void centerCamera() {
         if (currentLocation != null && doWeHavePermission()) {
             LatLng target = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
@@ -204,12 +229,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
         }
     }
-
+    public void showProgressbar(boolean status) {
+        if (status) {
+            progressBar.setVisibility(View.VISIBLE);
+            button.setVisibility(View.GONE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            button.setVisibility(View.VISIBLE);
+        }
+    }
+    public boolean isGPSEnabled() {
+        LocationManager cm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return cm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+    public void logOut() {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.deleteAll();
+                Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+    //Menu Related Functions
     public void showMenu() {
         ArrayList<MenuItem> items = new ArrayList<>();
 
         items.add(new MenuItem("Search Radius",0,null));
-        items.add(new MenuItem("Pokemon Filters",0,null));
+        items.add(new MenuItem("Pokemon Filters",1,null));
+        items.add(new MenuItem("Settings",2,null));
+        items.add(new MenuItem("Log Out",3,null));
 
         final RecyclerView.Adapter mAdapter;
         RecyclerView.LayoutManager mLayoutManager;
@@ -233,6 +283,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         searchRadiusDialog();
                         dialog.dismiss();
                         break;
+                    case 1:
+                        filterDialog();
+                        dialog.dismiss();
+                        break;
                 }
 
             }
@@ -242,9 +296,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         dialog.show();
     }
-
-    public void searchRadiusDialog()
-    {
+    public void searchRadiusDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_search_radius);
@@ -279,8 +331,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 int saveValue = seekBar.getProgress();
                 if (saveValue == 0 || saveValue == 1) {
                     scanValue = 2;
-                }else
-                {
+                }else {
                     scanValue = saveValue;
                 }
                 dialog.dismiss();
@@ -295,75 +346,97 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         dialog.show();
     }
+    public void filterDialog(){
 
-    public void showProgressbar(boolean status) {
-        if (status) {
-            progressBar.setVisibility(View.VISIBLE);
-            button.setVisibility(View.GONE);
-        } else {
-            progressBar.setVisibility(View.GONE);
-            button.setVisibility(View.VISIBLE);
+        final PokemonListLoader pokemonListLoader = new PokemonListLoader(this);
+        try {
+            final ArrayList<FilterItem> filterItems = pokemonListLoader.getPokelist();
+
+            final Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_blacklist);
+
+            Button btnAll = (Button) dialog.findViewById(R.id.btnAll);
+            Button btnNone = (Button) dialog.findViewById(R.id.btnNone);
+            Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
+            RecyclerView filterRecycler = (RecyclerView) dialog.findViewById(R.id.filterRecycler);
+
+            RecyclerView.LayoutManager mLayoutManager;
+            filterRecycler.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(this);
+            filterRecycler.setLayoutManager(mLayoutManager);
+
+            mAdapter = new FilterRecyclerAdapter(filterItems, new FilterRecyclerAdapter.onCheckedListener() {
+                @Override
+                public void onChecked(FilterItem filterItem) {
+                    filterItems.set(filterItem.getNumber(),filterItem);
+                }
+            });
+
+            btnAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (int i = 0;i<filterItems.size();i++)
+                    {
+                        filterItems.get(i).setFiltered(true);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+
+            btnNone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (int i = 0;i<filterItems.size();i++)
+                    {
+                        filterItems.get(i).setFiltered(false);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+
+            btnSave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pokemonListLoader.savePokeList(filterItems);
+                    dialog.dismiss();
+                }
+            });
+
+            filterRecycler.setAdapter(mAdapter);
+            dialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public boolean isGPSEnabled() {
-        LocationManager cm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return cm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    public void logOut() {
-        getPreferences(Context.MODE_PRIVATE).edit().clear().commit();
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
+    //Map related Functions
     public void refreshMap() {
+        realm.beginTransaction();
         mMap.clear();
+        createMapObjects();
+        ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
+        for (int i = 0; i < pokemons.size(); i++) {
+            Pokemons pokemon = pokemons.get(i);
+                if (pokemon.getDate().isAfter(new Instant())) {
+                    mMap.addMarker(pokemon.getMarker(this));
+
+                }else
+                {
+                    realm.where(Pokemons.class).equalTo("encounterid",pokemon.getEncounterid()).findAll().deleteAllFromRealm();
+                }
+        }
+        realm.commitTransaction();
+    }
+    public void createMapObjects() {
         if (boundingBox)
             createBoundingBox();
-        for (int i = 0; i < pokemons.size(); i++) {
-            CatchablePokemon pokemon = pokemons.get(i);
-            {
-
-                String uri = "p" + pokemon.getPokemonId().getNumber();
-                int resourceID = getResources().getIdentifier(uri, "drawable", getPackageName());
-
-                DateTime oldDate = new DateTime(pokemon.getExpirationTimestampMs());
-                Interval interval;
-                if (oldDate.isAfter(new Instant())) {
-                    //Find our interval
-                    interval = new Interval(new Instant(), oldDate);
-                    //turn our interval into MM:SS
-                    DateTime dt = new DateTime(interval.toDurationMillis());
-                    DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
-                    String timeOut = fmt.print(dt);
-                    //set our location
-                    LatLng position = new LatLng(pokemon.getLatitude(), pokemon.getLongitude());
-
-                    Bitmap out = writeTextOnDrawable(resourceID,timeOut,2);
-
-                    String name = pokemon.getPokemonId().toString();
-                    name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-
-                    MarkerOptions pokeIcon = new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.fromBitmap(out))
-                            .position(position)
-                            .title(name)
-                            .snippet(timeOut);
-
-                    mMap.addMarker(pokeIcon);
-
-                }
-            }
-        }
-
+        createMarkerList();
     }
-
     public void createScanMap(LatLng loc, int gridsize) {
         int gridNumber = gridsize;
         //Make our grid size an odd number (evens don't have centers :P)
-        if ((gridsize % 1) == 0) {
+        if ((gridsize % 2) == 0) {
             gridNumber = gridNumber - 1;
         }
         //clear the previous scan map
@@ -373,11 +446,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double dist = 00.002000;
         //to find the middle of the grid we need to find the middle number
         int middleNumber = ((gridNumber - 1) / 2);
+        System.out.println("Grid Size: "+gridsize +"Adjusted Size: " +  gridNumber + "Middle Number; "+ middleNumber);
         double lat = loc.latitude + (dist * -middleNumber);
         double lon = loc.longitude + (dist * -middleNumber);
         //this is the GPS offset we're going to use
-        for (int i = 0; i < gridsize; i++) {
-            for (int j = 0; j < gridsize; j++) {
+        for (int i = 0; i < gridNumber; i++) {
+            for (int j = 0; j < gridNumber; j++) {
                 double newLat = (lat + (dist * i));
                 double newLon = (lon + (dist * j));
                 LatLng temp = new LatLng(newLat, newLon);
@@ -385,7 +459,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
     public void startRefresher() {
         Observable.interval(3, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
@@ -400,108 +473,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean doWeHavePermission() {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
-
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
     }
 
-    private Bitmap writeTextOnDrawable(int drawableId, String text, int scale) {
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId)
-                .copy(Bitmap.Config.ARGB_8888, true);
-        bm = Bitmap.createScaledBitmap(bm,bm.getWidth()/scale,bm.getHeight()/scale,false);
-
-        Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
-
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.BLACK);
-        paint.setTypeface(tf);
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(convertToPixels(this, 11));
-
-        Rect textRect = new Rect();
-        paint.getTextBounds(text, 0, text.length(), textRect);
-
-        Canvas canvas = new Canvas(bm);
-
-        //If the text is bigger than the canvas , reduce the font size
-        if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
-            paint.setTextSize(convertToPixels(this, 7));        //Scaling needs to be used for different dpi's
-
-        //Calculate the positions
-        int xPos = (canvas.getWidth() / 2) - 2;     //-2 is for regulating the x position offset
-
-        //"- ((paint.descent() + paint.ascent()) / 2)" is the distance from the baseline to the center.
-        int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;
-
-        canvas.drawText(text, xPos, yPos-convertToPixels(this,16), paint);
-
-        return  bm;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        realm = Realm.getDefaultInstance();
     }
 
-    public static int convertToPixels(Context context, int nDP) {
-        final float conversionScale = context.getResources().getDisplayMetrics().density;
-
-        return (int) ((nDP * conversionScale) + 0.5f) ;
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
-
-    private class loadPokemon extends AsyncTask<String, List<CatchablePokemon>, String> {
-        int pos = 1;
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                OkHttpClient client = new OkHttpClient();
-                RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo authInfo = new PTCLogin(client).login(username, password);
-                PokemonGo go = new PokemonGo(authInfo, client);
-                for (LatLng loc : scanMap) {
-                    try {
-                        go.setLongitude(loc.longitude);
-                        go.setLatitude(loc.latitude);
-                        Map map = new Map(go);
-                        List<CatchablePokemon> catchablePokemon = map.getCatchablePokemon();
-                        MapObjects objects = map.getMapObjects();
-                        publishProgress(catchablePokemon);
-                        Thread.sleep(SLEEP_TIME);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (RemoteServerException e) {
-                        publishProgress(null);
-                        e.printStackTrace();
-                    } catch (LoginFailedException e) {
-                        publishProgress(null);
-                        e.printStackTrace();
-                    }
-                }
-            } catch (LoginFailedException e) {
-                publishProgress(null);
-                e.printStackTrace();
-            }
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            showProgressbar(false);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            showProgressbar(true);
-        }
-
-        @Override
-        protected void onProgressUpdate(List<CatchablePokemon>... objects) {
-            progressBar.setProgress(pos * 4);
-            if (objects != null) {
-                if (objects.length < 1) return;
-                List<CatchablePokemon> object = objects[0];
-                pokemons.addAll(object);
-            }else {
-                Toast.makeText(MapsActivity.this, "Connection Error (Servers might be down)", Toast.LENGTH_SHORT).show();
-            }
-            pos++;
-        }
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+    @Override
+    protected void onDestroy() {
+        realm.close();
+        super.onDestroy();
     }
 }

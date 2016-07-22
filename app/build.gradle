@@ -9,6 +9,7 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'realm-android'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -57,7 +58,8 @@ dependencies {
 
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
-
+    compile 'org.greenrobot:eventbus:3.0.0'
+    
     compile 'com.android.support:cardview-v7:24.0.+'
     compile 'com.android.support:recyclerview-v7:24.0.+'
 

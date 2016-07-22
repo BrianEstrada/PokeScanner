@@ -18,7 +18,6 @@
 
 package com.pokescanner;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -37,17 +36,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.pokegoapi.auth.PTCLogin;
-import com.pokegoapi.exceptions.LoginFailedException;
+import com.pokescanner.loaders.AuthGOOGLELoader;
+import com.pokescanner.loaders.AuthLoadedEvent;
+import com.pokescanner.loaders.AuthPTCLoader;
+import com.pokescanner.objects.User;
 
-import POGOProtos.Networking.Envelopes.RequestEnvelopeOuterClass;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import io.fabric.sdk.android.Fabric;
-import okhttp3.OkHttpClient;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func0;
-import rx.schedulers.Schedulers;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     EditText etUsername;
@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button btnLogin;
     SharedPreferences sharedPref;
+    Realm realm;
+    int LOGIN_METHOD = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +73,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         setContentView(R.layout.activity_main);
 
-        sharedPref = getSharedPreferences(getString(R.string.shared_key), Context.MODE_PRIVATE);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+                .name(Realm.DEFAULT_REALM_NAME)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(realmConfiguration);
 
-        //If we are logged in this value will be true
-        boolean login = sharedPref.getBoolean("login",false);
-        //if this value is true then lets go to the map
-        if (login) {
+        realm = Realm.getDefaultInstance();
+
+        if  (realm.where(User.class).findAll().size() != 0) {
             startMapIntent();
         }
 
@@ -102,53 +107,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         password = etPassword.getText().toString();
         //begin to show the progress bar
         showProgressbar(true);
-        CheckLogin().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo>() {
-                    @Override
-                    public void onCompleted() {
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toast.makeText(MainActivity.this, "Bad login (Servers might be down)", Toast.LENGTH_SHORT).show();
-                        showProgressbar(false);
-                    }
+        if (isEmailValid(username)) {
+            /*
+            showToast(R.string.TRYING_GOOGLE_LOGIN);
+            showProgressbar(false);
+            */
+            LOGIN_METHOD = User.GOOGLE;
+            AuthGOOGLELoader authGOOGLELoader = new AuthGOOGLELoader(username,password);
+            authGOOGLELoader.start();
+        }else{
+            showToast(R.string.TRYING_PTC_LOGIN);
+            LOGIN_METHOD = User.PTC;
+            AuthPTCLoader authloader = new AuthPTCLoader(username,password);
+            authloader.start();
+        }
+    }
 
+    @Subscribe (threadMode = ThreadMode.MAIN)
+    public void onAuthLoadedEvent(AuthLoadedEvent event){
+        showProgressbar(false);
+        switch(event.getStatus()) {
+            case AuthLoadedEvent.OK:
+                realm.executeTransaction(new Realm.Transaction() {
                     @Override
-                    public void onNext(RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo authInfo) {
-                        if (authInfo != null) {
-                            if (authInfo.hasToken()) {
-                                SharedPreferences.Editor editor = sharedPref.edit();
-                                editor.putBoolean("login", true);
-                                editor.putString("username", etUsername.getText().toString());
-                                editor.putString("password", etPassword.getText().toString());
-                                editor.commit();
-
-                                startMapIntent();
-                                Toast.makeText(MainActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                    public void execute(Realm realm) {
+                        User user = new User(1,username,password,LOGIN_METHOD);
+                        realm.copyToRealmOrUpdate(user);
+                        startMapIntent();
+                        showToast(R.string.LOGIN_OK);
                     }
                 });
+                break;
+            case AuthLoadedEvent.AUTH_FAILED:
+                showToast(R.string.AUTH_FAILED);
+                break;
+            case AuthLoadedEvent.SERVER_FAILED:
+                showToast(R.string.SERVER_FAILED);
+                break;
+        }
+
     }
-    public Observable<RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo> CheckLogin() {
-        return Observable.defer(new Func0<Observable<RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo>>() {
-            @Override public Observable<RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo> call() {
-                try {
-                    OkHttpClient client = new OkHttpClient();
-                    PTCLogin ptcLogin = new PTCLogin(client);
-                    RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo auth = ptcLogin.login(username,password);
-                    System.out.println(auth);
-                    return Observable.just(auth);
-                } catch (LoginFailedException e) {
-                    showProgressbar(false);
-                    Toast.makeText(MainActivity.this, "Bad login (Servers might be down)", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        });
+
+    public void showToast(int resString) {
+        Toast.makeText(MainActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
     }
 
     public void startMapIntent() {
@@ -193,9 +195,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case 1400: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Thanks for the permission!", Toast.LENGTH_SHORT).show();
+                    showToast(R.string.PERMISSION_OK);
                 }
             }
         }
+    }
+
+    boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        realm.close();
+        super.onDestroy();
     }
 }

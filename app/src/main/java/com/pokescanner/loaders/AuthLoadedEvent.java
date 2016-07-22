@@ -14,12 +14,26 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
-package com.pokescanner.objects;
+package com.pokescanner.loaders;
 
 /**
  * Created by Brian on 7/22/2016.
  */
-public class Filter {
+public class AuthLoadedEvent {
+    public static final int OK = 1;
+    public static final int AUTH_FAILED = 2;
+    public static final int SERVER_FAILED = 3;
+    int status;
+
+    public AuthLoadedEvent(int status) {
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }

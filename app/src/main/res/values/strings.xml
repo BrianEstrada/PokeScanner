@@ -58,4 +58,19 @@
     <string name="search_radius">Search Radius</string>
     <string name="higher_number_slower_search">(Higher number = Slower Search)</string>
     <string name="cancel">Cancel</string>
+    <string name="none">None</string>
+    <string name="select_all">Select All</string>
+    <string name="pokemon_name">Pokemon Name</string>
+
+    //Errors
+    <string name="AUTH_FAILED">Bad Login Credentials</string>
+    <string name="SERVER_FAILED">Servers not responding</string>
+    <string name="LOGIN_OK">Login Successful</string>
+    <string name="PERMISSION_OK">Thanks for the permission!</string>
+
+    <string name="TRYING_PTC_LOGIN">Trying PTC login.</string>
+    <string name="TRYING_GOOGLE_LOGIN">Google Login is not available on this app (yet).</string>
+
+    <string name="on">On</string>
+    <string name="off">Off</string>
 </resources>

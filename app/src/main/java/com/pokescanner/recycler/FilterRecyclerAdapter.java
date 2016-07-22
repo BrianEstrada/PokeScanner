@@ -24,40 +24,40 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pokescanner.R;
-import com.pokescanner.objects.Pokemons;
+import com.pokescanner.objects.FilterItem;
 
 import java.util.ArrayList;
 
 /**
  * Created by Brian on 7/21/2016.
  */
-public class BlacklistRecyclerAdapter extends RecyclerView.Adapter<BlacklistViewHolder> {
+public class FilterRecyclerAdapter extends RecyclerView.Adapter<FilterViewHolder> {
     private onCheckedListener listener;
-    private ArrayList<Pokemons> pokemons;
+    private ArrayList<FilterItem> filteritems;
 
     public interface onCheckedListener {
-        void onChecked(Pokemons pokemons, boolean b);
+        void onChecked(FilterItem filterItem);
     }
 
-    public BlacklistRecyclerAdapter(ArrayList<Pokemons> pokemons, onCheckedListener listener) {
-        this.pokemons = pokemons;
+    public FilterRecyclerAdapter(ArrayList<FilterItem> filteritems, onCheckedListener listener) {
+        this.filteritems = filteritems;
         this.listener = listener;
     }
 
 
     @Override
-    public BlacklistViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public FilterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_pokemon_blacklist, viewGroup, false);
-        return new BlacklistViewHolder(view);
+        return new FilterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(BlacklistViewHolder blacklistViewHolder, int i) {
-        blacklistViewHolder.bind(pokemons.get(i), listener);
+    public void onBindViewHolder(FilterViewHolder filterViewHolder, int i) {
+        filterViewHolder.bind(filteritems.get(i), listener);
     }
 
     @Override
     public int getItemCount() {
-        return pokemons.size();
+        return filteritems.size();
     }
 }
