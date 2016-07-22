@@ -103,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     loadPokemon loader;
 
     final int SLEEP_TIME = 2000;
-    int scanValue = 5;
+    int scanValue = 8;
     boolean boundingBox = true;
 
     @Override
