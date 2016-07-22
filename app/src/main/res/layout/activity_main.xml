@@ -60,6 +60,24 @@
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/poke_scanner"
+        android:id="@+id/tvTitle"
+        android:paddingBottom="20dp"
+        android:textSize="40sp"
+        android:textIsSelectable="false"
+        android:layout_marginBottom="20dp" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
@@ -67,33 +85,13 @@
         android:gravity="center_vertical|center_horizontal"
         android:id="@+id/Container">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/poke_scanner"
-            android:id="@+id/tvTitle"
-            android:paddingBottom="20dp"
-            android:textSize="40dp"
-            android:textIsSelectable="false"
-            android:layout_marginBottom="20dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Login with a Pokemon Trainer Club account"
-            android:id="@+id/textView3"
-            android:textAlignment="center"
-            android:layout_marginBottom="20dp" />
-
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/etUsername"
-            android:hint="Username" />
+            android:hint="@string/username" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -101,7 +99,7 @@
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/etPassword"
-            android:hint="Password" />
+            android:hint="@string/password" />
 
         <Button
             android:layout_width="wrap_content"
@@ -111,30 +109,15 @@
             android:layout_marginTop="25dp"
             android:background="@color/colorAccent" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/register"
-            android:id="@+id/btnRegister"
-            android:layout_marginTop="15dp"
-            android:background="@color/colorAccent" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="WARNING: \nPlease do not use your main PokeGo \naccount for this app!"
-            android:id="@+id/textView2"
+            android:text="@string/warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app"
+            android:id="@+id/tvWarning"
             android:textAlignment="center"
             android:layout_marginTop="20dp" />
 
     </LinearLayout>
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:visibility="gone" />
 
 </LinearLayout>

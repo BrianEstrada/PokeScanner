@@ -61,7 +61,10 @@ import com.pokescanner.recycler.MenuRecycler;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.joda.time.DateTime;
 import org.joda.time.Instant;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -93,11 +96,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     int pos = 0;
     final int SLEEP_TIME = 2000;
-<<<<<<< HEAD
-    int scanValue = 10;
-=======
-    int scanValue = 8;
->>>>>>> origin/master
+
+    int scanValue = 5;
     boolean boundingBox = true;
 
     @Override
@@ -147,15 +147,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void PokeScan() {
         pos = 0;
         progressBar.setProgress(0);
-<<<<<<< HEAD
-=======
-        if (mMap != null)
-            mMap.clear();
->>>>>>> origin/master
         createScanMap(mMap.getCameraPosition().target, scanValue);
 
         MapObjectsLoader mapObjectsLoader = new MapObjectsLoader(user,scanMap,SLEEP_TIME);
-        //mapObjectsLoader.start();
+        mapObjectsLoader.start();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -296,6 +291,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         filterDialog();
                         dialog.dismiss();
                         break;
+                    case 2:
+                        break;
+                    case 3:
+                        logOut();
+                        break;
                 }
 
             }
@@ -314,6 +314,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Button btnSave = (Button) dialog.findViewById(R.id.btnAccept);
         Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
         final TextView tvNumber = (TextView) dialog.findViewById(R.id.tvNumber);
+        final TextView tvEstimate = (TextView) dialog.findViewById(R.id.tvEstimate);
+        tvNumber.setText(String.valueOf(scanValue));
+        tvEstimate.setText(getString(R.string.timeEstimate)+" "+getTimeEstimate(scanValue));
         seekBar.setProgress(scanValue);
         seekBar.setMax(12);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -321,6 +324,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 System.out.println(i);
                 tvNumber.setText(String.valueOf(i));
+                tvEstimate.setText(getString(R.string.timeEstimate)+" "+getTimeEstimate(i));
             }
 
             @Override
@@ -339,7 +343,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 int saveValue = seekBar.getProgress();
                 if (saveValue == 0 || saveValue == 1) {
-                    scanValue = 2;
+                    //we really don't want a value smaller than 3
+                    scanValue = 3;
                 }else {
                     scanValue = saveValue;
                 }
@@ -355,6 +360,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         dialog.show();
     }
+
+    public String getTimeEstimate(int val) {
+        int calculatedValue = (int) (Math.pow(val,2) * SLEEP_TIME);
+        System.out.println(calculatedValue);
+        long millis = calculatedValue;
+        DateTime dt = new DateTime(millis);
+
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
+        return fmt.print(dt);
+    }
+
     public void filterDialog(){
 
         final PokemonListLoader pokemonListLoader = new PokemonListLoader(this);
