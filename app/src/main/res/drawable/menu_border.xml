@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -46,9 +47,22 @@
   ~  */
   -->
 
-<resources>
-    <!-- Example customization of dimensions originally defined in res/values/dimens.xml
-         (such as screen margins) for screens with more than 820dp of available width. This
-         would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively). -->
-    <dimen name="activity_horizontal_margin">64dp</dimen>
-</resources>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape
+            android:shape="rectangle">
+            <stroke android:width="1dp" android:color="#FFFFFF" />
+            <solid android:color="#424242" />
+
+        </shape>
+    </item>
+
+    <item android:top="1dp" android:bottom="1dp">
+        <shape
+            android:shape="rectangle">
+            <stroke android:width="1dp" android:color="#424242" />
+            <solid android:color="#00000000" />
+        </shape>
+    </item>
+
+</layer-list>

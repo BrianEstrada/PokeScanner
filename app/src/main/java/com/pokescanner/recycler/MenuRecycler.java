@@ -24,40 +24,40 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pokescanner.R;
-import com.pokescanner.objects.Pokemons;
+import com.pokescanner.objects.MenuItem;
 
 import java.util.ArrayList;
 
 /**
- * Created by Brian on 7/21/2016.
+ * Created by Brian on 7/22/2016.
  */
-public class BlacklistRecyclerAdapter extends RecyclerView.Adapter<BlacklistViewHolder> {
-    private onCheckedListener listener;
-    private ArrayList<Pokemons> pokemons;
+public class MenuRecycler extends RecyclerView.Adapter<MenuViewHolder> {
+    private onItemClickListener listener;
+    private ArrayList<MenuItem> menuItems;
 
-    public interface onCheckedListener {
-        void onChecked(Pokemons pokemons, boolean b);
+    public interface onItemClickListener {
+        void onItemClick(MenuItem item);
     }
 
-    public BlacklistRecyclerAdapter(ArrayList<Pokemons> pokemons, onCheckedListener listener) {
-        this.pokemons = pokemons;
+    public MenuRecycler(ArrayList<MenuItem> menuItems, onItemClickListener listener) {
+        this.menuItems = menuItems;
         this.listener = listener;
     }
 
 
     @Override
-    public BlacklistViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_pokemon_blacklist, viewGroup, false);
-        return new BlacklistViewHolder(view);
+    public MenuViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyler_menu_row, viewGroup, false);
+        return new MenuViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(BlacklistViewHolder blacklistViewHolder, int i) {
-        blacklistViewHolder.bind(pokemons.get(i), listener);
+    public void onBindViewHolder(MenuViewHolder menuViewHolder, int i) {
+        menuViewHolder.bind(menuItems.get(i), listener);
     }
 
     @Override
     public int getItemCount() {
-        return pokemons.size();
+        return menuItems.size();
     }
 }

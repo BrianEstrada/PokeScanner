@@ -20,35 +20,36 @@ package com.pokescanner.recycler;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.Switch;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pokescanner.R;
-import com.pokescanner.objects.Pokemons;
+import com.pokescanner.objects.MenuItem;
 
 /**
- * Created by Brian on 7/21/2016.
+ * Created by Brian on 7/22/2016.
  */
-public class BlacklistViewHolder extends RecyclerView.ViewHolder {
-    TextView pokemonName;
-    Switch swt;
+public class MenuViewHolder extends RecyclerView.ViewHolder {
+    TextView text;
+    ImageView img;
 
-    public BlacklistViewHolder(View itemView) {
+    public MenuViewHolder(View itemView) {
         super(itemView);
-
-        pokemonName = (TextView) itemView.findViewById(R.id.tvName);
-        swt = (Switch) itemView.findViewById(R.id.swt);
-
-        swt.setClickable(true);
+        text = (TextView) itemView.findViewById(R.id.textView);
+        itemView.setClickable(true);
     }
 
-    public void bind(final Pokemons pokemons, final BlacklistRecyclerAdapter.onCheckedListener listener) {
-        swt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    public void bind(final MenuItem item, final MenuRecycler.onItemClickListener listener) {
+        text.setText(item.getText());
+
+        //Add icons in the future
+
+        itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                listener.onChecked(pokemons,b);
+            public void onClick(View view) {
+                listener.onItemClick(item);
             }
         });
     }
+
 }
