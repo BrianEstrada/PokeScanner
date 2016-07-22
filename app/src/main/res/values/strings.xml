@@ -5,4 +5,6 @@
     <string name="scan">Scan</string>
     <string name="login">Login</string>
     <string name="poke_scanner">Poke Scanner</string>
+    <string name="blacklist">Blacklist</string>
+    <string name="save">Save</string>
 </resources>
