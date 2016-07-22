@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/higher_number_slower_search"
-            android:id="@+id/tvDescription" />
+            android:id="@+id/tvEstimate" />
 
     </LinearLayout>
 

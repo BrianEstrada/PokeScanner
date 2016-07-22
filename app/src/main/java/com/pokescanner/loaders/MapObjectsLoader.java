@@ -62,25 +62,36 @@ public class MapObjectsLoader extends Thread{
     @Override
     public void run() {
         try {
+            //Create our client so we can call our objects
             OkHttpClient client = new OkHttpClient();
+            //declare our user so we can get our pokemon go instance
             RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo authInfo;
             //this is ugly and I should feel bad.
+            //Okay so we're going to check our user object
+            //Are we using a google login or a PTC login?
             if (user.getAuthType() == User.GOOGLE) {
+                //If google do this
                 authInfo = new GoogleLogin(client).login(user.getUsername(), user.getPassword());
             }else {
+                //if PTC do that
                 authInfo = new PTCLogin(client).login(user.getUsername(), user.getPassword());
             }
+            //Once we have our token and stuff lets call our pokemonGo instance
             PokemonGo go = new PokemonGo(authInfo, client);
 
+            //Finally when we load our instance we're going to go through our scanmap
             for (LatLng loc: scanMap) {
-
+                //Set the location for each looop
                 go.setLongitude(loc.longitude);
                 go.setLatitude(loc.latitude);
 
+                //Call the map
                 Map map = new Map(go);
 
+                //Send it off to the map thread
                 EventBus.getDefault().post(new MapObjectsLoadedEvent(map.getMapObjects()));
 
+                //Time 2 wait
                 Thread.sleep(SLEEP_TIME);
             }
         } catch (InterruptedException e) {
