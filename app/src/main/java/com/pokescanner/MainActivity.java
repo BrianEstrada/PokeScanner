@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.pokegoapi.auth.PTCLogin;
+import com.pokegoapi.auth.PtcLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
 
 import POGOProtos.Networking.Envelopes.RequestEnvelopeOuterClass;
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override public Observable<RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo> call() {
                 try {
                     OkHttpClient client = new OkHttpClient();
-                    PTCLogin ptcLogin = new PTCLogin(client);
+                    PtcLogin ptcLogin = new PtcLogin(client);
                     RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo auth = ptcLogin.login(username,password);
                     System.out.println(auth);
                     return Observable.just(auth);

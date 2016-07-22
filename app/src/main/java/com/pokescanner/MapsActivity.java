@@ -35,8 +35,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.api.map.Map;
 import com.pokegoapi.api.map.MapObjects;
-import com.pokegoapi.api.map.Pokemon.CatchablePokemon;
-import com.pokegoapi.auth.PTCLogin;
+import com.pokegoapi.api.map.pokemon.CatchablePokemon;
+import com.pokegoapi.auth.PtcLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
 import com.pokegoapi.exceptions.RemoteServerException;
 
@@ -307,7 +307,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected String doInBackground(String... params) {
             try {
                 OkHttpClient client = new OkHttpClient();
-                RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo authInfo = new PTCLogin(client).login(username, password);
+                RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo authInfo = new PtcLogin(client).login(username, password);
                 PokemonGo go = new PokemonGo(authInfo, client);
                 for (LatLng loc : scanMap) {
                     try {
