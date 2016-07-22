@@ -58,4 +58,5 @@
     <string name="search_radius">Search Radius</string>
     <string name="higher_number_slower_search">(Higher number = Slower Search)</string>
     <string name="cancel">Cancel</string>
+    <string name="register"><a href="https://club.pokemon.com/us/pokemon-trainer-club/sign-up/">Create PTC Account</a></string>
 </resources>
