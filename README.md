@@ -8,6 +8,9 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 - Enter your username and password (Warning:Do not use your main account information)
 - Press Scan and where ever your camera is centered is where the application will scan
 
+
+###[Download Section](https://github.com/BrianEstrada/PokeScanner/releases)
+
 #TODO
 - Increase Range
 - Add a service
