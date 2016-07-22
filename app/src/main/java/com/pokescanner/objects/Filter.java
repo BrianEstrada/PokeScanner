@@ -14,16 +14,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.pokescanner;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
+
+package com.pokescanner.objects;
 
 /**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
+ * Created by Brian on 7/22/2016.
  */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
-    }
+public class Filter {
 }

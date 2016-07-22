@@ -1,5 +1,24 @@
+/*
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
 package com.pokescanner;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,9 +38,15 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,6 +57,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.api.map.Map;
 import com.pokegoapi.api.map.MapObjects;
@@ -39,6 +65,8 @@ import com.pokegoapi.api.map.Pokemon.CatchablePokemon;
 import com.pokegoapi.auth.PTCLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
 import com.pokegoapi.exceptions.RemoteServerException;
+import com.pokescanner.objects.MenuItem;
+import com.pokescanner.recycler.MenuRecycler;
 
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
@@ -65,6 +93,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationManager locationManager;
     Location currentLocation;
     String username, password;
+    ImageButton imageButton;
 
     SharedPreferences sharedPref;
 
@@ -74,6 +103,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     loadPokemon loader;
 
     final int SLEEP_TIME = 2000;
+    int scanValue = 5;
+    boolean boundingBox = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,13 +130,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        imageButton = (ImageButton) findViewById(R.id.imageButton);
         button = (Button) findViewById(R.id.btnSearch);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PokeScan();
+            }
+        });
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Click");
+                showMenu();
             }
         });
     }
@@ -115,10 +157,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mMap != null)
             mMap.clear();
         pokemons.clear();
-        createScanMap(mMap.getCameraPosition().target, 5);
+        createScanMap(mMap.getCameraPosition().target, scanValue);
         new loadPokemon().execute();
     }
 
+    public void createBoundingBox()
+    {
+        if (scanMap.size() == Math.pow(scanValue,2)) {
+            mMap.addPolygon(new PolygonOptions()
+                    .add(scanMap.get(0))
+                    .add(scanMap.get(scanValue - 1))
+                    .add(scanMap.get(scanMap.size() - scanValue - 1))
+                    .add(scanMap.get(scanValue - 1))
+            );
+        }
+    }
     @Override
     @SuppressWarnings({"MissingPermission"})
     public void onMapReady(GoogleMap googleMap) {
@@ -152,6 +205,97 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    public void showMenu() {
+        ArrayList<MenuItem> items = new ArrayList<>();
+
+        items.add(new MenuItem("Search Radius",0,null));
+        items.add(new MenuItem("Pokemon Filters",0,null));
+
+        final RecyclerView.Adapter mAdapter;
+        RecyclerView.LayoutManager mLayoutManager;
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        dialog.setContentView(R.layout.dialog_menu);
+
+
+        final RecyclerView invoicesRecycler = (RecyclerView) dialog.findViewById(R.id.recycler);
+        invoicesRecycler.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        invoicesRecycler.setLayoutManager(mLayoutManager);
+
+        mAdapter = new MenuRecycler(items, new MenuRecycler.onItemClickListener() {
+            @Override
+            public void onItemClick(MenuItem item) {
+                switch(item.getAction()){
+                    case 0:
+                        searchRadiusDialog();
+                        dialog.dismiss();
+                        break;
+                }
+
+            }
+        });
+
+        invoicesRecycler.setAdapter(mAdapter);
+
+        dialog.show();
+    }
+
+    public void searchRadiusDialog()
+    {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_search_radius);
+
+        final SeekBar seekBar = (SeekBar) dialog.findViewById(R.id.seekBar);
+        Button btnSave = (Button) dialog.findViewById(R.id.btnAccept);
+        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        final TextView tvNumber = (TextView) dialog.findViewById(R.id.tvNumber);
+        seekBar.setProgress(scanValue);
+        seekBar.setMax(12);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                System.out.println(i);
+                tvNumber.setText(String.valueOf(i));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int saveValue = seekBar.getProgress();
+                if (saveValue == 0 || saveValue == 1) {
+                    scanValue = 2;
+                }else
+                {
+                    scanValue = saveValue;
+                }
+                dialog.dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     public void showProgressbar(boolean status) {
         if (status) {
             progressBar.setVisibility(View.VISIBLE);
@@ -176,6 +320,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void refreshMap() {
         mMap.clear();
+        if (boundingBox)
+            createBoundingBox();
         for (int i = 0; i < pokemons.size(); i++) {
             CatchablePokemon pokemon = pokemons.get(i);
             {
@@ -321,12 +467,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (RemoteServerException e) {
+                        publishProgress(null);
                         e.printStackTrace();
                     } catch (LoginFailedException e) {
+                        publishProgress(null);
                         e.printStackTrace();
                     }
                 }
             } catch (LoginFailedException e) {
+                publishProgress(null);
                 e.printStackTrace();
             }
             return "Executed";
@@ -345,9 +494,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onProgressUpdate(List<CatchablePokemon>... objects) {
             progressBar.setProgress(pos * 4);
-            if (objects.length < 1) return;
-            List<CatchablePokemon> object = objects[0];
-            pokemons.addAll(object);
+            if (objects != null) {
+                if (objects.length < 1) return;
+                List<CatchablePokemon> object = objects[0];
+                pokemons.addAll(object);
+            }else {
+                Toast.makeText(MapsActivity.this, "Connection Error (Servers might be down)", Toast.LENGTH_SHORT).show();
+            }
             pos++;
         }
     }

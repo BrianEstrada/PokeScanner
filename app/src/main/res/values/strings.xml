@@ -1,3 +1,51 @@
+<!--
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!--
+  ~ /*
+  ~  *     This program is free software: you can redistribute it and/or modify
+  ~  *     it under the terms of the GNU General Public License as published by
+  ~  *     the Free Software Foundation, either version 3 of the License, or
+  ~  *     (at your option) any later version.
+  ~  *
+  ~  *     This program is distributed in the hope that it will be useful,
+  ~  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  *     GNU General Public License for more details.
+  ~  *
+  ~  *     You should have received a copy of the GNU General Public License
+  ~  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  */
+  ~
+  ~ /*
+  ~  *     This program is free software: you can redistribute it and/or modify
+  ~  *     it under the terms of the GNU General Public License as published by
+  ~  *     the Free Software Foundation, either version 3 of the License, or
+  ~  *     (at your option) any later version.
+  ~  *
+  ~  *     This program is distributed in the hope that it will be useful,
+  ~  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  *     GNU General Public License for more details.
+  ~  *
+  ~  *     You should have received a copy of the GNU General Public License
+  ~  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~  */
+  -->
+
 <resources>
     <string name="app_name">Poke Scanner</string>
     <string name="shared_key">POKESCANNER</string>
@@ -7,4 +55,7 @@
     <string name="poke_scanner">Poke Scanner</string>
     <string name="blacklist">Blacklist</string>
     <string name="save">Save</string>
+    <string name="search_radius">Search Radius</string>
+    <string name="higher_number_slower_search">(Higher number = Slower Search)</string>
+    <string name="cancel">Cancel</string>
 </resources>
