@@ -49,9 +49,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/PokeGOAPI.jar')
 
-    compile 'com.android.support:appcompat-v7:24.1.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
 
-    compile 'com.google.android.gms:play-services-maps:9.2.1'
+    compile 'com.google.android.gms:play-services-maps:9.2.0'
     compile 'joda-time:joda-time:2.9.4'
     compile 'com.android.support:multidex:1.0.1'
 

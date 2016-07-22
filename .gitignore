@@ -20,6 +20,9 @@ Thumbs.db
 # Android Studio
 .idea
 build/
+app/app.iml
+app/build.gradle
+
 cache.properties.lock
 .idea/workspace.xml
 *.iws

@@ -34,7 +34,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.api.map.Map;
-import com.pokegoapi.api.map.MapObjects;
 import com.pokegoapi.api.map.Pokemon.CatchablePokemon;
 import com.pokegoapi.auth.PTCLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
@@ -47,9 +46,11 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import POGOProtos.Map.Fort.FortDataOuterClass;
 import POGOProtos.Networking.Envelopes.RequestEnvelopeOuterClass;
 import okhttp3.OkHttpClient;
 import rx.Observable;
@@ -70,8 +71,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     ArrayList<LatLng> scanMap = new ArrayList<>();
     ArrayList<CatchablePokemon> pokemons = new ArrayList<>();
-
-    loadPokemon loader;
+    ArrayList<FortDataOuterClass.FortData> gyms = new ArrayList<>();
+    ArrayList<FortDataOuterClass.FortData> pokeStops = new ArrayList<>();
 
     final int SLEEP_TIME = 2000;
 
@@ -115,8 +116,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mMap != null)
             mMap.clear();
         pokemons.clear();
+        gyms.clear();
+        pokeStops.clear();
         createScanMap(mMap.getCameraPosition().target, 5);
-        new loadPokemon().execute();
+        new loadMapObjects().execute();
     }
 
     @Override
@@ -176,6 +179,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void refreshMap() {
         mMap.clear();
+        //Display pokemon
         for (int i = 0; i < pokemons.size(); i++) {
             CatchablePokemon pokemon = pokemons.get(i);
             {
@@ -210,6 +214,72 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
             }
+        }
+
+        //Display gyms
+        for(int i = 0;i < gyms.size();i++)
+        {
+            FortDataOuterClass.FortData gym = gyms.get(i);
+            String guardPokemon = gym.getGuardPokemonId().toString();
+            guardPokemon = guardPokemon.substring(0, 1).toUpperCase() + guardPokemon.substring(1).toLowerCase();
+            String uri = "gym" + gym.getOwnedByTeamValue();
+            int resourceID = getResources().getIdentifier(uri, "drawable", getPackageName());
+            Bitmap out = writeTextOnDrawable(resourceID, "gym", 2);
+            LatLng position = new LatLng(gym.getLatitude(), gym.getLongitude());
+            MarkerOptions gymIcon = new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromBitmap(out))
+                    .position(position)
+                    .title("Gym")
+                    .snippet("Guard pokemon : " + guardPokemon);
+            mMap.addMarker(gymIcon);
+        }
+
+        //Display pokestops
+        for(int i = 0;i < pokeStops.size();i++)
+        {
+            FortDataOuterClass.FortData pokeStop = pokeStops.get(i);
+            //TODO - Display the name of the landmark (cannot seem to find it in the API)
+            String uri = "";
+            String snippetMessage = "";
+            String expiryText = "PokeStop"; //Displayed unfer the icon
+            long lureExpiresAt = pokeStop.getLureInfoOrBuilder().getLureExpiresTimestampMs();
+            if(lureExpiresAt > 0)
+            {
+                DateTime oldDate = new DateTime(lureExpiresAt);
+                Interval interval;
+                if (oldDate.isAfter(new Instant()))
+                {
+                    //Lure is active at the pokestop
+                    uri = "stop_lure";
+                    //Find our interval
+                    interval = new Interval(new Instant(), oldDate);
+                    //turn our interval into MM:SS
+                    DateTime dt = new DateTime(interval.toDurationMillis());
+                    DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
+                    expiryText = fmt.print(dt);
+                    String attractedPokemon = pokeStop.getLureInfo().getActivePokemonId().toString();
+                    attractedPokemon = attractedPokemon.substring(0, 1).toUpperCase() + attractedPokemon.substring(1).toLowerCase();
+                    snippetMessage = "A lure has attracted a " + attractedPokemon + ", despawns in " + expiryText;
+                }
+                else
+                {
+                    //Lure has expired
+                    uri = "stop";
+                }
+            }
+            else
+            {
+                uri = "stop";
+            }
+            int resourceID = getResources().getIdentifier(uri, "drawable", getPackageName());
+            Bitmap out = writeTextOnDrawable(resourceID, expiryText, 2);
+            LatLng position = new LatLng(pokeStop.getLatitude(), pokeStop.getLongitude());
+            MarkerOptions pokestopIcon = new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromBitmap(out))
+                    .position(position)
+                    .title("PokeStop")
+                    .snippet(snippetMessage);
+            mMap.addMarker(pokestopIcon);
         }
 
     }
@@ -300,7 +370,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private class loadPokemon extends AsyncTask<String, List<CatchablePokemon>, String> {
+    private class loadMapObjects extends AsyncTask<String, HashMap, String> {
         int pos = 1;
 
         @Override
@@ -314,18 +384,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         go.setLongitude(loc.longitude);
                         go.setLatitude(loc.latitude);
                         Map map = new Map(go);
-                        List<CatchablePokemon> catchablePokemon = map.getCatchablePokemon();
-                        MapObjects objects = map.getMapObjects();
-                        publishProgress(catchablePokemon);
+                        Collection<CatchablePokemon> catchablePokemon = map.getCatchablePokemon();
+                        Collection<FortDataOuterClass.FortData> gymData = map.getMapObjects().getGyms();
+                        Collection<FortDataOuterClass.FortData> pokestopData = map.getMapObjects().getPokestops();
+                        HashMap<String, Collection<? extends Object>> mapData = new HashMap<>();
+                        mapData.put("pokemon", catchablePokemon);
+                        mapData.put("gyms", gymData);
+                        mapData.put("pokestops", pokestopData);
+                        publishProgress(mapData);
                         Thread.sleep(SLEEP_TIME);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    } catch (RemoteServerException e) {
-                        e.printStackTrace();
-                    } catch (LoginFailedException e) {
-                        e.printStackTrace();
                     }
                 }
+            }
+            catch (RemoteServerException e) {
+                e.printStackTrace();
             } catch (LoginFailedException e) {
                 e.printStackTrace();
             }
@@ -343,11 +417,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         @Override
-        protected void onProgressUpdate(List<CatchablePokemon>... objects) {
+        protected void onProgressUpdate(HashMap... mapData)
+        {
             progressBar.setProgress(pos * 4);
-            if (objects.length < 1) return;
-            List<CatchablePokemon> object = objects[0];
-            pokemons.addAll(object);
+            if(mapData.length < 1) return;
+
+            //Store all pokemon
+            Collection<CatchablePokemon> catchablePokemon = (Collection<CatchablePokemon>) mapData[0].get("pokemon");
+            pokemons.addAll(catchablePokemon);
+
+            //Store all gyms
+            Collection<FortDataOuterClass.FortData> gymData = (Collection<FortDataOuterClass.FortData>) mapData[0].get("gyms");
+            gyms.addAll(gymData);
+
+            //Store all pokestops
+            Collection<FortDataOuterClass.FortData> pokestopData = (Collection<FortDataOuterClass.FortData>) mapData[0].get("pokestops");
+            pokeStops.addAll(pokestopData);
+
             pos++;
         }
     }
