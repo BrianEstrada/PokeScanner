@@ -23,16 +23,16 @@ android {
         applicationId "com.pokescanner"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 3
-        versionName "1.1. 0"
+        versionCode 5
+        versionName "1.2.1"
         multiDexEnabled true
     }
     buildTypes {
         debug {
-            resValue "string", "google_maps_api_key", "YOUR KEY SHOULD GO HERE"
+            resValue "string", "google_maps_api_key", "AIzaSyAuejt-XF3VYk1X4NN9aje_EKqv1pb9Jcg"
         }
         release {
-            resValue "string", "google_maps_api_key", "YOUR KEY SHOULD GO HERE"
+            resValue "string", "google_maps_api_key", "AIzaSyAuejt-XF3VYk1X4NN9aje_EKqv1pb9Jcg"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -58,7 +58,8 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
-    compile 'com.google.android.gms:play-services:9.2.1'
+    compile 'com.google.maps.android:android-maps-utils:0.4+'
+
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }

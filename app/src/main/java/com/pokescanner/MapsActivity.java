@@ -6,11 +6,17 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -27,7 +33,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.api.map.Map;
 import com.pokegoapi.api.map.MapObjects;
@@ -39,14 +44,20 @@ import com.pokegoapi.exceptions.RemoteServerException;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
 import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import POGOProtos.Networking.Envelopes.RequestEnvelopeOuterClass;
 import okhttp3.OkHttpClient;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener {
 
     Button button;
     ProgressBar progressBar;
@@ -61,8 +72,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ArrayList<LatLng> scanMap = new ArrayList<>();
     ArrayList<CatchablePokemon> pokemons = new ArrayList<>();
     ArrayList<Long> onMapIDs = new ArrayList<>();
+    private Handler handler = new Handler();
 
-    double dist = 00.002000;
+    loadPokemon loader;
+
     final int SLEEP_TIME = 1000;
 
     @Override
@@ -101,35 +114,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void PokeScan() {
-        showProgressbar(true);
         progressBar.setProgress(0);
         if (mMap != null)
             mMap.clear();
         pokemons.clear();
         onMapIDs.clear();
-        createScanMap(mMap.getCameraPosition().target);
+        createScanMap(mMap.getCameraPosition().target, 5);
         new loadPokemon().execute();
     }
 
-    public void createBox(){
-        if (scanMap.size()>=25) {
-            mMap.addPolygon(new PolygonOptions()
-                    .add(scanMap.get(0))
-                    .add(scanMap.get(4))
-                    .add(scanMap.get(24))
-                    .add(scanMap.get(20)));
-        }
-    }
     @Override
     @SuppressWarnings({"MissingPermission"})
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (doWeHavePermission()) {
+            //Set our map stuff
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnCameraChangeListener(this);
+
+            //Let's find our location and set it!
             Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider(criteria, true);
             currentLocation = locationManager.getLastKnownLocation(provider);
-            mMap.setMyLocationEnabled(true);
+
+            //Center camera function
             centerCamera();
+            startRefresher();
         }
     }
 
@@ -169,49 +179,75 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void refreshMap() {
-        for (CatchablePokemon pokemon : pokemons) {
-            if (!onMapIDs.contains(pokemon.getEncounterId())) {
+        mMap.clear();
+        for (int i = 0; i < pokemons.size(); i++) {
+            CatchablePokemon pokemon = pokemons.get(i);
+            {
+
                 String uri = "p" + pokemon.getPokemonId().getNumber();
                 int resourceID = getResources().getIdentifier(uri, "drawable", getPackageName());
-                Bitmap image = BitmapFactory.decodeResource(getResources(), resourceID);
+
                 DateTime oldDate = new DateTime(pokemon.getExpirationTimestampMs());
                 Interval interval;
                 if (oldDate.isAfter(new Instant())) {
+                    //Find our interval
                     interval = new Interval(new Instant(), oldDate);
-                    mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))
-                            .icon(BitmapDescriptorFactory.fromBitmap(image))
-                            .title(pokemon.getPokemonId().toString())
-                            .snippet("Expires: " + String.valueOf(interval.toDurationMillis() / 1000) + "s"));
-                } else {
-                    mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))
-                            .icon(BitmapDescriptorFactory.fromBitmap(image))
-                            .title(pokemon.getPokemonId().toString()));
+                    //turn our interval into MM:SS
+                    DateTime dt = new DateTime(interval.toDurationMillis());
+                    DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
+                    String timeOut = fmt.print(dt);
+                    //set our location
+                    LatLng position = new LatLng(pokemon.getLatitude(), pokemon.getLongitude());
+
+                    Bitmap out = writeTextOnDrawable(resourceID,timeOut,2);
+
+                    MarkerOptions pokeIcon = new MarkerOptions().
+                            icon(BitmapDescriptorFactory.fromBitmap(out)).
+                            position(position);
+
+                    mMap.addMarker(pokeIcon);
+
                 }
-                onMapIDs.add(pokemon.getEncounterId());
             }
         }
 
     }
 
-    public void createScanMap(LatLng loc) {
-        //Clear our map
+    public void createScanMap(LatLng loc, int gridsize) {
+        int gridNumber = gridsize;
+        //Make our grid size an odd number (evens don't have centers :P)
+        if ((gridsize % 1) == 0) {
+            gridNumber = gridNumber - 1;
+        }
+        //clear the previous scan map
         scanMap.clear();
-        double lat = loc.latitude + (dist * -2);
-        double lon = loc.longitude + (dist * -2);
+        //Our distance number is the number we'll offset the GPS by
+        //when creating a grid
+        double dist = 00.002000;
+        //to find the middle of the grid we need to find the middle number
+        int middleNumber = ((gridNumber - 1) / 2);
+        double lat = loc.latitude + (dist * -middleNumber);
+        double lon = loc.longitude + (dist * -middleNumber);
         //this is the GPS offset we're going to use
-
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < gridsize; i++) {
+            for (int j = 0; j < gridsize; j++) {
                 double newLat = (lat + (dist * i));
                 double newLon = (lon + (dist * j));
                 LatLng temp = new LatLng(newLat, newLon);
                 scanMap.add(temp);
             }
         }
-        System.out.println(scanMap.size());
-        createBox();
+    }
+
+    public void startRefresher() {
+        Observable.interval(3, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Long>() {
+                    @Override
+                    public void call(Long aLong) {
+                        refreshMap();
+                        System.out.println("Refreshing Map");
+                    }
+                });
     }
 
     public boolean doWeHavePermission() {
@@ -219,60 +255,101 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    private class loadPokemon extends AsyncTask<String, List<CatchablePokemon>, String> {
-        int pos = 1;
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                OkHttpClient client = new OkHttpClient();
-                RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo authInfo = new PTCLogin(client).login(username, password);
-                PokemonGo go = new PokemonGo(authInfo, client);
-                for (LatLng loc : scanMap) {
-                    try {
-                        go.setLongitude(loc.longitude);
-                        go.setLatitude(loc.latitude);
-                        Map map = new Map(go);
-                        List<CatchablePokemon> catchablePokemon = map.getCatchablePokemon();
-                        MapObjects objects = map.getMapObjects();
-                        System.out.println(loc.latitude+","+loc.longitude);
-                        System.out.println("Catchable:" + objects.getCatchablePokemons().size());
-                        System.out.println("Wild:" + objects.getWildPokemons().size());
-                        System.out.println("Nearby:" + objects.getNearbyPokemons().size());
-                        publishProgress(catchablePokemon);
-                        Thread.sleep(SLEEP_TIME);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (RemoteServerException e) {
-                        e.printStackTrace();
-                    } catch (LoginFailedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (LoginFailedException e) {
-                e.printStackTrace();
-            }
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            showProgressbar(false);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            showProgressbar(true);
-        }
-
-        @Override
-        protected void onProgressUpdate(List<CatchablePokemon>... objects) {
-            progressBar.setProgress(pos * 4);
-            if (objects.length < 1) return;
-            List<CatchablePokemon> object = objects[0];
-            pokemons.addAll(object);
-            refreshMap();
-            pos++;
-        }
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
     }
+
+    private Bitmap writeTextOnDrawable(int drawableId, String text, int scale) {
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId)
+                .copy(Bitmap.Config.ARGB_8888, true);
+        bm = Bitmap.createScaledBitmap(bm,bm.getWidth()/scale,bm.getHeight()/scale,false);
+
+        Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.BLACK);
+        paint.setTypeface(tf);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(convertToPixels(this, 11));
+
+        Rect textRect = new Rect();
+        paint.getTextBounds(text, 0, text.length(), textRect);
+
+        Canvas canvas = new Canvas(bm);
+
+        //If the text is bigger than the canvas , reduce the font size
+        if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
+            paint.setTextSize(convertToPixels(this, 7));        //Scaling needs to be used for different dpi's
+
+        //Calculate the positions
+        int xPos = (canvas.getWidth() / 2) - 2;     //-2 is for regulating the x position offset
+
+        //"- ((paint.descent() + paint.ascent()) / 2)" is the distance from the baseline to the center.
+        int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;
+
+        canvas.drawText(text, xPos, yPos-convertToPixels(this,10), paint);
+
+        return  bm;
+    }
+
+    public static int convertToPixels(Context context, int nDP)
+    {
+        final float conversionScale = context.getResources().getDisplayMetrics().density;
+
+        return (int) ((nDP * conversionScale) + 0.5f) ;
+
+    }
+
+    private class loadPokemon extends AsyncTask<String, List<CatchablePokemon>, String> {
+    int pos = 1;
+
+    @Override
+    protected String doInBackground(String... params) {
+        try {
+            OkHttpClient client = new OkHttpClient();
+            RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo authInfo = new PTCLogin(client).login(username, password);
+            PokemonGo go = new PokemonGo(authInfo, client);
+            for (LatLng loc : scanMap) {
+                try {
+                    go.setLongitude(loc.longitude);
+                    go.setLatitude(loc.latitude);
+                    Map map = new Map(go);
+                    List<CatchablePokemon> catchablePokemon = map.getCatchablePokemon();
+                    MapObjects objects = map.getMapObjects();
+                    publishProgress(catchablePokemon);
+                    Thread.sleep(SLEEP_TIME);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (RemoteServerException e) {
+                    e.printStackTrace();
+                } catch (LoginFailedException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (LoginFailedException e) {
+            e.printStackTrace();
+        }
+        return "Executed";
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        showProgressbar(false);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        showProgressbar(true);
+    }
+
+    @Override
+    protected void onProgressUpdate(List<CatchablePokemon>... objects) {
+        progressBar.setProgress(pos * 4);
+        if (objects.length < 1) return;
+        List<CatchablePokemon> object = objects[0];
+        pokemons.addAll(object);
+        pos++;
+    }
+}
 }

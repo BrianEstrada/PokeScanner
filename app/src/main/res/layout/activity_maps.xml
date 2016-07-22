@@ -42,4 +42,14 @@
             android:layout_marginLeft="25dp" />
     </LinearLayout>
 
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imageButton"
+        android:src="@drawable/ic_menu_white_36dp"
+        android:background="@drawable/rounded_corners"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="25dp" />
+
 </RelativeLayout>
