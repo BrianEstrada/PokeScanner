@@ -11,14 +11,6 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 
 ###[Download Section](https://github.com/BrianEstrada/PokeScanner/releases)
 
-#TODO
-- Increase Range
-- Add a service
-- Notification when pokemons are in the area
-- List pokemon in the area
-- Add Gyms
-- Add Pokestops
-
 # Credits
 ### big shout out to the guys over at the Java Pokemon API this project couldn't exist without it
 Link: https://github.com/Grover-c13/PokeGOAPI-Java/ (Grover-C13)
@@ -29,5 +21,10 @@ Anyone is welcome to help out on the project just go ahead and submit any change
 
 # Feature Requests
 - Blacklist/Whitelist Pokemon
-- Adjust Radius
-- Change Expiration time to S/M/H
+- Adjustable Radius
+- Add timers to pokemons
+- Add a service
+- Notification when pokemons are in the area
+- List pokemon in the area
+- Add Gyms
+- Add Pokestops
