@@ -73,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     loadPokemon loader;
 
-    final int SLEEP_TIME = 1000;
+    final int SLEEP_TIME = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,9 +197,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     Bitmap out = writeTextOnDrawable(resourceID,timeOut,2);
 
-                    MarkerOptions pokeIcon = new MarkerOptions().
-                            icon(BitmapDescriptorFactory.fromBitmap(out)).
-                            position(position);
+                    String name = pokemon.getPokemonId().toString();
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+                    MarkerOptions pokeIcon = new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.fromBitmap(out))
+                            .position(position)
+                            .title(name)
+                            .snippet(timeOut);
 
                     mMap.addMarker(pokeIcon);
 
