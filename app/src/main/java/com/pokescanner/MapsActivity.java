@@ -283,11 +283,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void showProgressbar(boolean status) {
         if (status) {
             progressBar.setVisibility(View.VISIBLE);
-            button.setText("Cancel");
+            button.setText(getString(R.string.cancel));
             SCANNING_STATUS = true;
         } else {
             progressBar.setVisibility(View.INVISIBLE);
-            button.setText("Scan");
+            button.setText(getString(R.string.scan));
             SCANNING_STATUS = false;
         }
     }
@@ -300,10 +300,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void showMenu() {
         ArrayList<MenuItem> items = new ArrayList<>();
 
-        items.add(new MenuItem("Search Radius",0,null));
-        items.add(new MenuItem("Pokemon Filters",1,null));
-        items.add(new MenuItem("Settings",2,null));
-        items.add(new MenuItem("Log Out",3,null));
+        items.add(new MenuItem(getString(R.string.search_radius),0,null));
+        items.add(new MenuItem(getString(R.string.filter),1,null));
+        items.add(new MenuItem(getString(R.string.settings),2,null));
+        items.add(new MenuItem(getString(R.string.logout),3,null));
 
         final RecyclerView.Adapter mAdapter;
         RecyclerView.LayoutManager mLayoutManager;
