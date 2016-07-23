@@ -43,17 +43,17 @@ import com.pokescanner.objects.User;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import POGOProtos.Networking.Envelopes.RequestEnvelopeOuterClass;
 import okhttp3.OkHttpClient;
 
 public class MapObjectsLoader extends Thread{
     User user;
-    ArrayList<LatLng> scanMap;
+    List<LatLng> scanMap;
     int SLEEP_TIME;
 
-    public MapObjectsLoader(User user, ArrayList<LatLng> scanMap, int SLEEP_TIME) {
+    public MapObjectsLoader(User user, List<LatLng> scanMap, int SLEEP_TIME) {
         this.user = user;
         this.scanMap = scanMap;
         this.SLEEP_TIME = SLEEP_TIME;

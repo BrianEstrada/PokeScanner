@@ -1,4 +1,4 @@
-package com.pokescanner;
+package com.pokescanner.helper;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,5 +9,5 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Settings {
-    boolean boundingBox;
+    boolean boundingBoxEnabled;
 }

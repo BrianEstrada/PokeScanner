@@ -7,10 +7,12 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.Window;
 import android.widget.CompoundButton;
 
+import com.pokescanner.helper.Settings;
+
 
 public class SettingsController {
 
-    public static final String KEY_BOUNDING_BOX = "boundingBox";
+    public static final String KEY_BOUNDING_BOX = "boundingBoxEnabled";
 
     public static void showSettingDialog(final Context context) {
         final Dialog dialog = new Dialog(context);
@@ -18,7 +20,7 @@ public class SettingsController {
         dialog.setContentView(R.layout.dialog_settings);
 
         SwitchCompat showRange = (SwitchCompat) dialog.findViewById(R.id.showRange);
-        showRange.setChecked(getSettings(context).boundingBox);
+        showRange.setChecked(getSettings(context).isBoundingBoxEnabled());
         showRange.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
@@ -42,7 +44,7 @@ public class SettingsController {
     public static void saveSettings(Context context, Settings settings) {
         context.getSharedPreferences(context.getString(R.string.shared_key), Context.MODE_PRIVATE)
             .edit()
-            .putBoolean(KEY_BOUNDING_BOX, settings.boundingBox)
+            .putBoolean(KEY_BOUNDING_BOX, settings.isBoundingBoxEnabled())
             .commit();
     }
 }
