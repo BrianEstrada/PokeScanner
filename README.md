@@ -14,15 +14,16 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 # Credits
 - [Java Api](https://github.com/Grover-c13/PokeGOAPI-Java/)
 - Tsunamii (Material Icon)
+- swhittaker
+- toumeitou
+- leTokki
+- ljk1291
 
 
 # Contributions
 Anyone is welcome to help out on the project just go ahead and submit any changes and I'll aprove em!
 
 # Feature Requests
-- Blacklist/Whitelist Pokemon
-- Adjustable Radius
-- Add timers to pokemons
 - Add a service
 - Notification when pokemons are in the area
 - List pokemon in the area
