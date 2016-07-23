@@ -79,7 +79,8 @@ import rx.functions.Action1;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener {
 
-    Button button;
+    Button scanButton;
+    Button stopScanButton;
     ProgressBar progressBar;
     private GoogleMap mMap;
 
@@ -98,6 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     final int SLEEP_TIME = 2000;
     int scanValue = 4;
     boolean boundingBox = true;
+    private MapObjectsLoader mapObjectsLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,15 +126,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         imageButton = (ImageButton) findViewById(R.id.imageButton);
-        button = (Button) findViewById(R.id.btnSearch);
+        scanButton = (Button) findViewById(R.id.btnSearch);
+        stopScanButton = (Button) findViewById(R.id.btnStopSearch);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
 
-        button.setOnClickListener(new View.OnClickListener() {
+        scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PokeScan();
+            }
+        });
+
+        stopScanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopPokeScan();
             }
         });
 
@@ -148,16 +158,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         pos = 1;
         showProgressbar(true);
         progressBar.setProgress(0);
-        if (mMap != null)
-            mMap.clear();
+        if (mMap != null) mMap.clear();
         createHexScanMap(mMap.getCameraPosition().target, scanValue);
 
-        MapObjectsLoader mapObjectsLoader = new MapObjectsLoader(user,scanMap,SLEEP_TIME);
+        mapObjectsLoader = new MapObjectsLoader(user,scanMap,SLEEP_TIME);
         mapObjectsLoader.start();
+    }
+
+    private void stopPokeScan() {
+        try {
+            mapObjectsLoader.interrupt();
+            mapObjectsLoader.join(500);
+            showProgressbar(false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void mapObjectsLoaded(MapObjectsLoadedEvent event) {
+        if(event.getMapObjects() == null) return;
         progressBar.setProgress((pos* 100)/scanMap.size());
 
         final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getMapObjects().getCatchablePokemons();
@@ -240,10 +260,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void showProgressbar(boolean status) {
         if (status) {
             progressBar.setVisibility(View.VISIBLE);
-            button.setVisibility(View.GONE);
+            stopScanButton.setVisibility(View.VISIBLE);
+            scanButton.setVisibility(View.GONE);
         } else {
             progressBar.setVisibility(View.GONE);
-            button.setVisibility(View.VISIBLE);
+            stopScanButton.setVisibility(View.GONE);
+            scanButton.setVisibility(View.VISIBLE);
         }
     }
     public boolean isGPSEnabled() {

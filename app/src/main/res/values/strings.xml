@@ -78,4 +78,5 @@
     <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">WARNING: \nPlease do not use your main PokeGo \naccount for this app!</string>
     <string name="filter">Filter</string>
     <string name="timeEstimate">Estimate Scan Time: </string>
+    <string name="stop_scan">Stop</string>
 </resources>

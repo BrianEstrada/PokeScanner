@@ -78,7 +78,19 @@
             android:background="@color/colorAccent"
             android:padding="8dp"
             android:text="@string/scan"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"
+            android:layout_margin="@dimen/abc_button_padding_horizontal_material" />
+
+        <Button
+            android:id="@+id/btnStopSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:padding="8dp"
+            android:text="@string/stop_scan"
+            android:textColor="#ffffff"
+            android:visibility="gone"
+            android:layout_margin="@dimen/abc_button_padding_horizontal_material" />
 
         <ProgressBar
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -87,7 +99,9 @@
             android:id="@+id/progressBar"
             android:visibility="gone"
             android:layout_marginRight="25dp"
-            android:layout_marginLeft="25dp" />
+            android:layout_marginLeft="25dp"
+            android:layout_margin="@dimen/abc_button_padding_horizontal_material" />
+
     </LinearLayout>
 
     <ImageButton
