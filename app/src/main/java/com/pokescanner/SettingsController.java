@@ -25,10 +25,11 @@ import io.realm.Realm;
 
 public class SettingsController {
 
-    public static final String KEY_BOUNDING_BOX = "boundingBoxEnabled";
-    public static final String SERVER_REFRESH_RATE = "serverRefreshRate";
-    public static final String MAP_REFRESH_RATE = "mapRefreshRate";
-    public static final String POKEMON_ICON_SCALE = "pokemonIconScale";
+    private static final String KEY_BOUNDING_BOX = "boundingBoxEnabled";
+    private static final String SERVER_REFRESH_RATE = "serverRefreshRate";
+    private static final String MAP_REFRESH_RATE = "mapRefreshRate";
+    private static final String POKEMON_ICON_SCALE = "pokemonIconScale";
+    private static final String LAST_USERNAME = "lastUsername";
 
     static int mapRefresh = 3;
     static int serverRefresh = 3;
@@ -45,9 +46,8 @@ public class SettingsController {
         dialog.setContentView(R.layout.dialog_settings);
 
         Settings settings = getSettings(context);
-        mapRefresh = settings.getMapRefresh();
-        serverRefresh = settings.getServerRefresh();
-        boundingBox = settings.isBoundingBoxEnabled();
+        int mapRefresh = settings.getMapRefresh();
+        int serverRefresh = settings.getServerRefresh();
 
         SwitchCompat showRange = (SwitchCompat) dialog.findViewById(R.id.showRange);
 
@@ -66,8 +66,7 @@ public class SettingsController {
         showRange.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
-                boundingBox = b;
-                saveSettings(context, new Settings(boundingBox,serverRefresh,mapRefresh,iconScale));
+                Settings.get(context).toBuilder().boundingBoxEnabled(b).build().save(context);
             }
         });
 
@@ -87,8 +86,7 @@ public class SettingsController {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 tvMapNumber.setText(String.valueOf(i+1)+"s");
-                mapRefresh = i + 1;
-                saveSettings(context, new Settings(boundingBox,serverRefresh,mapRefresh,iconScale));
+                Settings.get(context).toBuilder().mapRefresh(i + 1).build().save(context);
 
                 if (EventBus.getDefault().hasSubscriberForEvent(RestartRefreshEvent.class)) {
                     EventBus.getDefault().post(new RestartRefreshEvent());
@@ -110,8 +108,7 @@ public class SettingsController {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 tvServerNumber.setText(String.valueOf(i+1)+"s");
-                serverRefresh = i + 1;
-                saveSettings(context, new Settings(boundingBox,serverRefresh,mapRefresh,iconScale));
+                Settings.get(context).toBuilder().serverRefresh(i + 1).build().save(context);
             }
 
             @Override
@@ -129,8 +126,7 @@ public class SettingsController {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 tvScaleNumber.setText(String.valueOf(i+1));
-                iconScale = i + 1;
-                saveSettings(context, new Settings(boundingBox,serverRefresh,mapRefresh,iconScale));
+                Settings.get(context).toBuilder().scale(i + 1).build().save(context);
             }
 
             @Override
@@ -183,9 +179,10 @@ public class SettingsController {
         );
         return new Settings(
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
-                sharedPrefs.getInt(SERVER_REFRESH_RATE,3),
-                sharedPrefs.getInt(MAP_REFRESH_RATE,3),
-                sharedPrefs.getInt(POKEMON_ICON_SCALE,2)
+            sharedPrefs.getInt(SERVER_REFRESH_RATE, 3),
+            sharedPrefs.getInt(MAP_REFRESH_RATE, 3),
+            sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
+            sharedPrefs.getString(LAST_USERNAME, "")
         );
     }
 
@@ -193,9 +190,10 @@ public class SettingsController {
         context.getSharedPreferences(context.getString(R.string.shared_key), Context.MODE_PRIVATE)
             .edit()
             .putBoolean(KEY_BOUNDING_BOX, settings.isBoundingBoxEnabled())
-                .putInt(SERVER_REFRESH_RATE,settings.getServerRefresh())
-                .putInt(MAP_REFRESH_RATE,settings.getMapRefresh())
-                .putInt(POKEMON_ICON_SCALE,settings.getScale())
-            .commit();
+            .putInt(SERVER_REFRESH_RATE, settings.getServerRefresh())
+            .putInt(MAP_REFRESH_RATE, settings.getMapRefresh())
+            .putInt(POKEMON_ICON_SCALE, settings.getScale())
+            .putString(LAST_USERNAME, settings.getLastUsername())
+            .apply();
     }
 }

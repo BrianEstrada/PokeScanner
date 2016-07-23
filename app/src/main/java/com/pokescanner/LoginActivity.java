@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.pokescanner.events.AuthLoadedEvent;
+import com.pokescanner.helper.Settings;
 import com.pokescanner.helper.UiUtils;
 import com.pokescanner.loaders.AuthGOOGLELoader;
 import com.pokescanner.loaders.AuthPTCLoader;
@@ -49,6 +50,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import okhttp3.Cache;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -99,7 +101,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Container = (LinearLayout) findViewById(R.id.Container);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+<<<<<<< HEAD
         btnLogin.setOnClickListener(this);
+=======
+        etUsername.setText(Settings.get(this).getLastUsername());
+
+        Button btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(onLoginClicked);
+    }
+>>>>>>> b31e2ca... Cache last used username
 
         //finally we are going to ask for permission to the GPS
         getPermissions();
@@ -136,14 +146,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
+<<<<<<< HEAD
                         User user = new User(1,
                                 username,
                                 password,
                                 event.getToken(),
                                 LOGIN_METHOD);
+=======
+                        User user = event.getUser();
+>>>>>>> b31e2ca... Cache last used username
                         realm.copyToRealmOrUpdate(user);
                         startMapIntent();
                         showToast(R.string.LOGIN_OK);
+
+                        LoginActivity context = LoginActivity.this;
+                        Settings.get(context).toBuilder()
+                            .lastUsername(user.getUsername())
+                            .build().save(context);
                     }
                 });
                 break;
