@@ -399,7 +399,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mAdapter = new FilterRecyclerAdapter(filterItems, new FilterRecyclerAdapter.onCheckedListener() {
                 @Override
                 public void onChecked(FilterItem filterItem) {
-                    filterItems.set(filterItem.getNumber(),filterItem);
+                    filterItems.set(filterItem.getNumber()-1,filterItem);
                 }
             });
 

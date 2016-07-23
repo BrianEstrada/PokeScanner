@@ -70,8 +70,8 @@
     <string name="TRYING_PTC_LOGIN">Trying PTC login.</string>
     <string name="TRYING_GOOGLE_LOGIN">Google Login is not available on this app (yet).</string>
 
-    <string name="on">On</string>
-    <string name="off">Off</string>
+    <string name="filter_on">Hide</string>
+    <string name="filter_off">Show</string>
     <string name="register"><a href="https://club.pokemon.com/us/pokemon-trainer-club/sign-up/">Create PTC Account</a></string>
     <string name="username">Username</string>
     <string name="password">Password</string>

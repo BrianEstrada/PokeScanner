@@ -70,9 +70,9 @@ public class FilterViewHolder extends RecyclerView.ViewHolder {
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             filterItem.setFiltered(b);
             if (filterItem.isFiltered()) {
-                tvStatus.setText(itemView.getContext().getString(R.string.off));
+                tvStatus.setText(itemView.getContext().getString(R.string.filter_on));
             }else{
-                tvStatus.setText(itemView.getContext().getString(R.string.on));
+                tvStatus.setText(itemView.getContext().getString(R.string.filter_off));
             }
             listener.onChecked(filterItem);
         }

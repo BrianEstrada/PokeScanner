@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/off"
+            android:text="@string/filter_off"
             android:id="@+id/tvStatus" />
     </LinearLayout>
     <LinearLayout
