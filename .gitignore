@@ -18,7 +18,7 @@ Thumbs.db
 .classpath
 .project
 # Android Studio
-.idea
+.idea/
 build/
 cache.properties.lock
 .idea/workspace.xml
@@ -27,3 +27,4 @@ cache.properties.lock
 **/.gradle/
 .*
 !/.gitignore
+*.iml
