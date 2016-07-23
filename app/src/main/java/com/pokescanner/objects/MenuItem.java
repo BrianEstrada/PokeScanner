@@ -20,44 +20,19 @@ package com.pokescanner.objects;
 
 import android.graphics.drawable.Drawable;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+
+
 /**
  * Created by Brian on 7/22/2016.
  */
+@Value
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class MenuItem {
     String text;
     int action;
     Drawable drawable;
-
-    public MenuItem(String text, int action, Drawable drawable) {
-        this.text = text;
-        this.action = action;
-        this.drawable = drawable;
-    }
-
-    public MenuItem() {
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public int getAction() {
-        return action;
-    }
-
-    public void setAction(int action) {
-        this.action = action;
-    }
-
-    public Drawable getDrawable() {
-        return drawable;
-    }
-
-    public void setDrawable(Drawable drawable) {
-        this.drawable = drawable;
-    }
 }

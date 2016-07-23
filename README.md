@@ -28,3 +28,8 @@ Anyone is welcome to help out on the project just go ahead and submit any change
 - List pokemon in the area
 - Add Gyms
 - Add Pokestops
+
+
+For everyone asking if they can donate I've posted a link below
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/brianestrada)

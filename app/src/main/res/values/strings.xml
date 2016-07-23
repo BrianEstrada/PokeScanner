@@ -58,7 +58,6 @@
     <string name="search_radius">Search Radius</string>
     <string name="higher_number_slower_search">(Higher number = Slower Search)</string>
     <string name="cancel">Cancel</string>
-
     <string name="none">None</string>
     <string name="select_all">Select All</string>
     <string name="pokemon_name">Pokemon Name</string>
@@ -73,7 +72,7 @@
 
     <string name="on">On</string>
     <string name="off">Off</string>
-
+    <string name="register"><a href="https://club.pokemon.com/us/pokemon-trainer-club/sign-up/">Create PTC Account</a></string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">WARNING: \nPlease do not use your main PokeGo \naccount for this app!</string>
