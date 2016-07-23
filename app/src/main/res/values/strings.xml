@@ -14,38 +14,6 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!--
-  ~ /*
-  ~  *     This program is free software: you can redistribute it and/or modify
-  ~  *     it under the terms of the GNU General Public License as published by
-  ~  *     the Free Software Foundation, either version 3 of the License, or
-  ~  *     (at your option) any later version.
-  ~  *
-  ~  *     This program is distributed in the hope that it will be useful,
-  ~  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~  *     GNU General Public License for more details.
-  ~  *
-  ~  *     You should have received a copy of the GNU General Public License
-  ~  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  ~  */
-  ~
-  ~ /*
-  ~  *     This program is free software: you can redistribute it and/or modify
-  ~  *     it under the terms of the GNU General Public License as published by
-  ~  *     the Free Software Foundation, either version 3 of the License, or
-  ~  *     (at your option) any later version.
-  ~  *
-  ~  *     This program is distributed in the hope that it will be useful,
-  ~  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~  *     GNU General Public License for more details.
-  ~  *
-  ~  *     You should have received a copy of the GNU General Public License
-  ~  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  ~  */
-  -->
-
 <resources>
     <string name="app_name">Poke Scanner</string>
     <string name="shared_key">POKESCANNER</string>
@@ -56,7 +24,7 @@
     <string name="blacklist">Blacklist</string>
     <string name="save">Save</string>
     <string name="search_radius">Search Radius</string>
-    <string name="higher_number_slower_search">(Higher number = Slower Search)</string>
+    <string name="higher_number_slower_search">1 Unit ~= 200 Meters</string>
     <string name="cancel">Cancel</string>
 
     <string name="none">None</string>
@@ -80,4 +48,7 @@
     <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">WARNING: \nPlease do not use your main PokeGo \naccount for this app!</string>
     <string name="filter">Filter</string>
     <string name="timeEstimate">Estimate Scan Time: </string>
+    <string name="hide">Hide</string>
+    <string name="searchicon">SearchIcon</string>
+    <string name="menubutton">MenuButton</string>
 </resources>

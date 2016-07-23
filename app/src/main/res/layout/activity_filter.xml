@@ -35,14 +35,16 @@
             android:id="@+id/imageView2"
             android:src="@drawable/ic_search_white_36dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:contentDescription="@string/searchicon" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/etSearch"
             android:layout_weight="1"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:inputType="text" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -50,7 +52,24 @@
             android:id="@+id/imageView3"
             android:src="@drawable/ic_apps_white_36dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:contentDescription="@string/hide"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".5"
+        android:gravity="center_vertical|center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Check = Hidden"
+            android:id="@+id/tvInstructions" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -87,4 +106,5 @@
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp" />
     </LinearLayout>
+
 </LinearLayout>

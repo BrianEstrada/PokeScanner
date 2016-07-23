@@ -23,7 +23,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:gravity="center_vertical|center_horizontal">
 
         <TextView
@@ -39,7 +39,16 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/higher_number_slower_search"
-            android:id="@+id/tvEstimate" />
+            android:id="@+id/tvEstimate"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/higher_number_slower_search"
+            android:id="@+id/tvDescription"
+            android:textAlignment="center" />
 
     </LinearLayout>
 
@@ -47,7 +56,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.9"
+        android:layout_weight="1.5"
         android:gravity="center_vertical|center_horizontal">
 
         <SeekBar

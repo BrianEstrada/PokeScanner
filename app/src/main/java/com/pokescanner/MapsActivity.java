@@ -21,6 +21,7 @@ package com.pokescanner;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -45,9 +46,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.loaders.MapObjectsLoadedEvent;
 import com.pokescanner.loaders.MapObjectsLoader;
@@ -100,10 +101,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     List<LatLng> scanMap = new ArrayList<>();
     ArrayList<FilterItem> filterItems = new ArrayList<>();
     PokemonListLoader pokemonListLoader;
+    SharedPreferences sharedPreferences;
+    private MapObjectsLoader mapObjectsLoader;
 
     int pos = 1;
-    final int SLEEP_TIME = 2000;
-
+    final int SLEEP_TIME = 1000;
+    boolean SCANNING_STATUS = false;
     int scanValue = 5;
 
 
@@ -117,11 +120,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (realm.where(User.class).findAll().size() != 0) {
             user = realm.copyFromRealm(realm.where(User.class).findFirst());
-            System.out.println(user);
         } else {
             Toast.makeText(MapsActivity.this, "No login!", Toast.LENGTH_SHORT).show();
             logOut();
         }
+
+        //Load our shared prefs for our scan value
+        sharedPreferences = getSharedPreferences(getString(R.string.shared_key),Context.MODE_PRIVATE);
+        scanValue = sharedPreferences.getInt("scanvalue",5);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -136,11 +142,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             //let's try and load our filters
             filterItems.addAll(pokemonListLoader.getPokelist());
-            System.out.print(filterItems.size());
-            for (FilterItem filterItem: filterItems)
-            {
-                System.out.println(filterItem);
-            }
         } catch (IOException e) {
             showToast(R.string.ERROR_FILTERS);
             e.printStackTrace();
@@ -168,16 +169,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     public void PokeScan() {
-        pos = 1;
-        showProgressbar(true);
-        progressBar.setProgress(0);
-        if (mMap != null)
-            mMap.clear();
+        if (SCANNING_STATUS) {
+            stopPokeScan();
+        }else
+        {
+            pos = 1;
+            showProgressbar(true);
+            progressBar.setProgress(0);
+            scanMap = makeHexScanMap(mMap.getCameraPosition().target, scanValue, 1, new ArrayList<LatLng>());
+            mapObjectsLoader = new MapObjectsLoader(user, scanMap, SLEEP_TIME);
+            mapObjectsLoader.start();
+            button.setText("Cancel");
+            SCANNING_STATUS = true;
+        }
+    }
 
-        scanMap = makeHexScanMap(mMap.getCameraPosition().target, scanValue, 1, new ArrayList<LatLng>());
-
-        MapObjectsLoader mapObjectsLoader = new MapObjectsLoader(user,scanMap,SLEEP_TIME);
-        mapObjectsLoader.start();
+    private void stopPokeScan()
+    {
+        try{
+            mapObjectsLoader.interrupt();
+            mapObjectsLoader.join(500);
+            button.setText("Scan");
+            showProgressbar(false);
+            SCANNING_STATUS = false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void mapObjectsLoaded(MapObjectsLoadedEvent event) {
@@ -209,7 +226,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toast.makeText(MapsActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
     }
     public void createBoundingBox() {
-        mMap.addPolygon(new PolygonOptions().addAll(getCorners(scanMap)));
+        if (scanMap.size()>0) {
+            //To create a circle we need to get the corners
+            List<LatLng> corners = getCorners(scanMap);
+            //Once we have the corners lets create two locations
+            Location location = new Location("");
+            //set the laditude/longitude
+            location.setLatitude(corners.get(0).latitude);
+            location.setLongitude(corners.get(0).longitude);
+
+            Location location1 = new Location("");
+            //set the laditude/longitude
+            location1.setLatitude(scanMap.get(0).latitude);
+            location1.setLongitude(scanMap.get(0).longitude);
+
+            float distance = location.distanceTo(location1);
+
+            mMap.addCircle(new CircleOptions().center(scanMap.get(0)).radius(distance));
+            //mMap.addPolygon(new PolygonOptions().addAll(getCorners(scanMap)));
+        }
     }
     public void createMarkerList() {
         if(BuildConfig.DEBUG){
@@ -252,10 +287,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void showProgressbar(boolean status) {
         if (status) {
             progressBar.setVisibility(View.VISIBLE);
-            button.setVisibility(View.GONE);
         } else {
-            progressBar.setVisibility(View.GONE);
-            button.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
         }
     }
     //I don't think we're using this
@@ -350,12 +383,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 int saveValue = seekBar.getProgress();
-                if (saveValue == 0 || saveValue == 1) {
-                    //we really don't want a value smaller than 3
-                    scanValue = 3;
+                if (saveValue == 0) {
+                    //We don't want a value of 0, No one likes 0 :{
+                    scanValue = 1;
                 } else {
                     scanValue = saveValue;
                 }
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("scanvalue",scanValue);
+                editor.commit();
                 dialog.dismiss();
             }
         });
@@ -428,7 +464,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void startRefresher() {
-        Observable.interval(3, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+        Observable.interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long aLong) {

@@ -54,6 +54,7 @@ public class FilterViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(final FilterItem filterItem, final FilterRecyclerAdapter.onCheckedListener listener) {
+        checkBox.setOnCheckedChangeListener(null);
 
         pokemonName.setText(filterItem.getName());
         checkBox.setChecked(filterItem.isFiltered());
