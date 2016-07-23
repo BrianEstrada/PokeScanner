@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.pokescanner.events.AuthLoadedEvent;
+import com.pokescanner.helper.UiUtils;
 import com.pokescanner.loaders.AuthGOOGLELoader;
 import com.pokescanner.loaders.AuthPTCLoader;
 import com.pokescanner.objects.User;
@@ -48,6 +49,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     EditText etUsername;
@@ -117,6 +119,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         password = etPassword.getText().toString();
         //begin to show the progress bar
         showProgressbar(true);
+        UiUtils.hideKeyboard(etPassword);
 
 
         showToast(R.string.TRYING_PTC_LOGIN);
