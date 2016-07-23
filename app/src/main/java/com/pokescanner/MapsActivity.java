@@ -15,7 +15,6 @@
  */
 
 
-
 package com.pokescanner;
 
 import android.app.Dialog;
@@ -93,7 +92,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     RecyclerView.Adapter mAdapter;
 
     ArrayList<LatLng> scanMap = new ArrayList<>();
-
+    ArrayList<FilterItem> filterItems = new ArrayList<>();
+    PokemonListLoader pokemonListLoader;
     int pos = 1;
     final int SLEEP_TIME = 2000;
 
@@ -108,11 +108,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         realm = Realm.getDefaultInstance();
 
-        if  (realm.where(User.class).findAll().size() != 0) {
+        if (realm.where(User.class).findAll().size() != 0) {
             user = realm.copyFromRealm(realm.where(User.class).findFirst());
             System.out.println(user);
-        }else
-        {
+        } else {
             Toast.makeText(MapsActivity.this, "No login!", Toast.LENGTH_SHORT).show();
             logOut();
         }
@@ -122,12 +121,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //Start our location manager so we can center our map
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //This class is used to load and save our filters
+        pokemonListLoader = new PokemonListLoader(this);
+
+        try {
+            //let's try and load our filters
+            filterItems.addAll(pokemonListLoader.getPokelist());
+            System.out.print(filterItems.size());
+            for (FilterItem filterItem: filterItems)
+            {
+                System.out.println(filterItem);
+            }
+        } catch (IOException e) {
+            showToast(R.string.ERROR_FILTERS);
+            e.printStackTrace();
+        }
 
         imageButton = (ImageButton) findViewById(R.id.imageButton);
         button = (Button) findViewById(R.id.btnSearch);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -146,39 +160,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void PokeScan() {
+        //Set our position to one
         pos = 1;
+        //Let's show the progress bar
         showProgressbar(true);
+        //Set the progress back to zero so we go from 0-100
         progressBar.setProgress(0);
+        //Create our scan map from the center of our camera
         createScanMap(mMap.getCameraPosition().target, scanValue);
 
-        MapObjectsLoader mapObjectsLoader = new MapObjectsLoader(user,scanMap,SLEEP_TIME);
+        //Start our map loader!
+        MapObjectsLoader mapObjectsLoader = new MapObjectsLoader(user, scanMap, SLEEP_TIME);
         mapObjectsLoader.start();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void mapObjectsLoaded(MapObjectsLoadedEvent event) {
-        progressBar.setProgress((pos/scanMap.size())*100);
-
+        //Simple equation our position divided by the scan map size gives us a percetage and the 100 gives us a full number
+        double progressValue = ((float) pos / scanMap.size()) * 100.0;
+        progressBar.setProgress((int) progressValue);
         final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getMapObjects().getCatchablePokemons();
 
         if (collectionPokemon != null) {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    for (MapPokemonOuterClass.MapPokemon pokemonOut: collectionPokemon)
-                    {
+                    for (MapPokemonOuterClass.MapPokemon pokemonOut : collectionPokemon) {
                         realm.copyToRealmOrUpdate(new Pokemons(pokemonOut));
                     }
                 }
             });
-        }else {
+        } else {
             showToast(R.string.SERVER_FAILED);
         }
 
-        if (pos==(scanMap.size())) {
+        if (pos == (scanMap.size())) {
             showProgressbar(false);
         }
-        
+
         pos++;
     }
 
@@ -186,69 +205,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toast.makeText(MapsActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
     }
 
-    public void createBoundingBox() {
-        if (scanMap.size() == Math.pow(scanValue,2)) {
-            int adjusted = scanValue - 1;
-            mMap.addPolygon(new PolygonOptions()
-                    .add(scanMap.get(0))
-                    .add(scanMap.get(scanValue - 1))
-                    .add(scanMap.get(scanMap.size() - 1))
-                    .add(scanMap.get(scanMap.size() - adjusted - 1))
-            );
-        }
-    }
-
-    public void createMarkerList() {
-        if(BuildConfig.DEBUG){
-            for (LatLng temp: scanMap) {
-                mMap.addMarker(new MarkerOptions().position(temp));
-            }
-        }
-    }
-    @Override
-    @SuppressWarnings({"MissingPermission"})
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        if (doWeHavePermission()) {
-            //Set our map stuff
-            mMap.setMyLocationEnabled(true);
-            mMap.setOnCameraChangeListener(this);
-
-            //Let's find our location and set it!
-            Criteria criteria = new Criteria();
-            String provider = locationManager.getBestProvider(criteria, true);
-            currentLocation = locationManager.getLastKnownLocation(provider);
-
-            //Center camera function
-            centerCamera();
-            startRefresher();
-        }
-    }
-    public void centerCamera() {
-        if (currentLocation != null && doWeHavePermission()) {
-            LatLng target = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            CameraPosition position = this.mMap.getCameraPosition();
-
-            CameraPosition.Builder builder = new CameraPosition.Builder();
-            builder.zoom(15);
-            builder.target(target);
-
-            this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
-        }
-    }
-    public void showProgressbar(boolean status) {
-        if (status) {
-            progressBar.setVisibility(View.VISIBLE);
-            button.setVisibility(View.GONE);
-        } else {
-            progressBar.setVisibility(View.GONE);
-            button.setVisibility(View.VISIBLE);
-        }
-    }
-    public boolean isGPSEnabled() {
-        LocationManager cm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return cm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
     public void logOut() {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -261,14 +217,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+
     //Menu Related Functions
     public void showMenu() {
         ArrayList<MenuItem> items = new ArrayList<>();
 
-        items.add(new MenuItem("Search Radius",0,null));
-        items.add(new MenuItem("Pokemon Filters",1,null));
-        items.add(new MenuItem("Settings",2,null));
-        items.add(new MenuItem("Log Out",3,null));
+        items.add(new MenuItem("Search Radius", 0, null));
+        items.add(new MenuItem("Pokemon Filters", 1, null));
+        items.add(new MenuItem("Settings", 2, null));
+        items.add(new MenuItem("Log Out", 3, null));
 
         final RecyclerView.Adapter mAdapter;
         RecyclerView.LayoutManager mLayoutManager;
@@ -287,7 +244,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mAdapter = new MenuRecycler(items, new MenuRecycler.onItemClickListener() {
             @Override
             public void onItemClick(MenuItem item) {
-                switch(item.getAction()){
+                switch (item.getAction()) {
                     case 0:
                         searchRadiusDialog();
                         dialog.dismiss();
@@ -310,6 +267,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         dialog.show();
     }
+
     public void searchRadiusDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -321,14 +279,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final TextView tvNumber = (TextView) dialog.findViewById(R.id.tvNumber);
         final TextView tvEstimate = (TextView) dialog.findViewById(R.id.tvEstimate);
         tvNumber.setText(String.valueOf(scanValue));
-        tvEstimate.setText(getString(R.string.timeEstimate)+" "+getTimeEstimate(scanValue));
+        tvEstimate.setText(getString(R.string.timeEstimate) + " " + getTimeEstimate(scanValue));
         seekBar.setProgress(scanValue);
         seekBar.setMax(12);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 tvNumber.setText(String.valueOf(i));
-                tvEstimate.setText(getString(R.string.timeEstimate)+" "+getTimeEstimate(i));
+                tvEstimate.setText(getString(R.string.timeEstimate) + " " + getTimeEstimate(i));
             }
 
             @Override
@@ -349,7 +307,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (saveValue == 0 || saveValue == 1) {
                     //we really don't want a value smaller than 3
                     scanValue = 3;
-                }else {
+                } else {
                     scanValue = saveValue;
                 }
                 dialog.dismiss();
@@ -366,7 +324,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public String getTimeEstimate(int val) {
-        int calculatedValue = (int) (Math.pow(val,2) * SLEEP_TIME);
+        int calculatedValue = (int) (Math.pow(val, 2) * SLEEP_TIME);
         System.out.println(calculatedValue);
         long millis = calculatedValue;
         DateTime dt = new DateTime(millis);
@@ -375,18 +333,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return fmt.print(dt);
     }
 
-    public void filterDialog(){
-
-        final PokemonListLoader pokemonListLoader = new PokemonListLoader(this);
-        try {
-            final ArrayList<FilterItem> filterItems = pokemonListLoader.getPokelist();
-
+    public void filterDialog() {
             final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.dialog_blacklist);
 
-            Button btnAll = (Button) dialog.findViewById(R.id.btnAll);
-            Button btnNone = (Button) dialog.findViewById(R.id.btnNone);
+            Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
             Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
             RecyclerView filterRecycler = (RecyclerView) dialog.findViewById(R.id.filterRecycler);
 
@@ -398,29 +350,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mAdapter = new FilterRecyclerAdapter(filterItems, new FilterRecyclerAdapter.onCheckedListener() {
                 @Override
                 public void onChecked(FilterItem filterItem) {
-                    filterItems.set(filterItem.getNumber(),filterItem);
+                    filterItems.set(filterItem.getNumber(), filterItem);
                 }
             });
 
-            btnAll.setOnClickListener(new View.OnClickListener() {
+            btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    for (int i = 0;i<filterItems.size();i++)
-                    {
-                        filterItems.get(i).setFiltered(true);
-                    }
-                    mAdapter.notifyDataSetChanged();
-                }
-            });
-
-            btnNone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    for (int i = 0;i<filterItems.size();i++)
-                    {
-                        filterItems.get(i).setFiltered(false);
-                    }
-                    mAdapter.notifyDataSetChanged();
+                    dialog.dismiss();
                 }
             });
 
@@ -428,17 +365,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 @Override
                 public void onClick(View view) {
                     pokemonListLoader.savePokeList(filterItems);
+                    reloadFilters();
                     dialog.dismiss();
                 }
             });
 
             filterRecycler.setAdapter(mAdapter);
             dialog.show();
+    }
+
+    public void reloadFilters() {
+        try {
+            filterItems.clear();
+            filterItems.addAll(pokemonListLoader.getPokelist());
+            System.out.println(filterItems.size());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
     //Map related Functions
     public void refreshMap() {
         realm.beginTransaction();
@@ -447,21 +391,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
         for (int i = 0; i < pokemons.size(); i++) {
             Pokemons pokemon = pokemons.get(i);
-                if (pokemon.getDate().isAfter(new Instant())) {
+            if (pokemon.getDate().isAfter(new Instant())) {
+                if (realm.copyFromRealm(realm.where(FilterItem.class).equalTo("Number",pokemon.getNumber()).findFirst()).isFiltered()) {
+                } else {
                     mMap.addMarker(pokemon.getMarker(this));
-
-                }else
-                {
-                    realm.where(Pokemons.class).equalTo("encounterid",pokemon.getEncounterid()).findAll().deleteAllFromRealm();
                 }
+            } else {
+                realm.where(Pokemons.class).equalTo("encounterid", pokemon.getEncounterid()).findAll().deleteAllFromRealm();
+            }
         }
         realm.commitTransaction();
     }
+
+    //Map Objects
     public void createMapObjects() {
         if (boundingBox)
             createBoundingBox();
-        createMarkerList();
+        //createMarkerList();
     }
+
     public void createScanMap(LatLng loc, int gridsize) {
         int gridNumber = gridsize;
         //Make our grid size an odd number (evens don't have centers :P)
@@ -475,7 +423,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double dist = 00.002000;
         //to find the middle of the grid we need to find the middle number
         int middleNumber = ((gridNumber - 1) / 2);
-        System.out.println("Grid Size: "+gridsize +"Adjusted Size: " +  gridNumber + "Middle Number; "+ middleNumber);
+        System.out.println("Grid Size: " + gridsize + "Adjusted Size: " + gridNumber + "Middle Number; " + middleNumber);
         double lat = loc.latitude + (dist * -middleNumber);
         double lon = loc.longitude + (dist * -middleNumber);
         //this is the GPS offset we're going to use
@@ -488,8 +436,78 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+    @Override
+    @SuppressWarnings({"MissingPermission"})
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        if (doWeHavePermission()) {
+            //Set our map stuff
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnCameraChangeListener(this);
+
+            //Let's find our location and set it!
+            Criteria criteria = new Criteria();
+            String provider = locationManager.getBestProvider(criteria, true);
+            currentLocation = locationManager.getLastKnownLocation(provider);
+
+            //Center camera function
+            centerCamera();
+            startRefresher();
+        }
+    }
+
+    public void centerCamera() {
+        if (currentLocation != null && doWeHavePermission()) {
+            LatLng target = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            CameraPosition position = this.mMap.getCameraPosition();
+
+            CameraPosition.Builder builder = new CameraPosition.Builder();
+            builder.zoom(15);
+            builder.target(target);
+
+            this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
+        }
+    }
+
+    public void showProgressbar(boolean status) {
+        if (status) {
+            progressBar.setVisibility(View.VISIBLE);
+            button.setVisibility(View.GONE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            button.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public boolean isGPSEnabled() {
+        LocationManager cm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return cm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    public void createBoundingBox() {
+        if (scanMap.size() >= 9) {
+            int adjusted = scanValue - 1;
+            mMap.addPolygon(new PolygonOptions()
+                    .strokeWidth(3)
+                    .add(scanMap.get(0))
+                    .add(scanMap.get(scanValue - 1))
+                    .add(scanMap.get(scanMap.size() - 1))
+                    .add(scanMap.get(scanMap.size() - adjusted - 1))
+            );
+        }
+    }
+
+    public void createMarkerList() {
+        if (BuildConfig.DEBUG) {
+            for (LatLng temp : scanMap) {
+                mMap.addMarker(new MarkerOptions().position(temp));
+            }
+        }
+    }
+
     public void startRefresher() {
-        Observable.interval(3, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+        Observable.interval(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long aLong) {
@@ -502,6 +520,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean doWeHavePermission() {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
+
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
     }
@@ -517,11 +536,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onStart();
         EventBus.getDefault().register(this);
     }
+
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+
     @Override
     protected void onDestroy() {
         realm.close();

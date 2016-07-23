@@ -54,6 +54,7 @@ public class PokemonListLoader {
     public ArrayList<FilterItem> getPokelist() throws IOException {
         if (realm.where(FilterItem.class).findAll().size() == 151) {
             Log.d(TAG,"LOADING FROM REALM");
+            return new ArrayList<>(realm.copyFromRealm(realm.where(FilterItem.class).findAll().sort("Number")));
         }else
         {
             InputStream is = context.getAssets().open("pokemons.json");
