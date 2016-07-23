@@ -59,4 +59,5 @@
     <string name="logout">Log out</string>
     <string name="map_refresh">Map Refresh</string>
     <string name="check_hidden">Check = Hidden</string>
+    <string name="donate">Donate</string>
 </resources>

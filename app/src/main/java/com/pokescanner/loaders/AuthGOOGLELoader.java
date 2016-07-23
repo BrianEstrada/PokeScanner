@@ -34,6 +34,7 @@ package com.pokescanner.loaders;
 
 import com.pokegoapi.auth.GoogleLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
+import com.pokescanner.events.AuthLoadedEvent;
 
 import org.greenrobot.eventbus.EventBus;
 

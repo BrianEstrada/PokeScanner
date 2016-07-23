@@ -37,7 +37,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.pokescanner.loaders.AuthGOOGLELoader;
-import com.pokescanner.loaders.AuthLoadedEvent;
+import com.pokescanner.events.AuthLoadedEvent;
 import com.pokescanner.loaders.AuthPTCLoader;
 import com.pokescanner.objects.User;
 

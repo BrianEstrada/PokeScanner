@@ -14,26 +14,25 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.pokescanner.loaders;
+package com.pokescanner.events;
+
+import com.pokegoapi.api.map.MapObjects;
 
 /**
  * Created by Brian on 7/22/2016.
  */
-public class AuthLoadedEvent {
-    public static final int OK = 1;
-    public static final int AUTH_FAILED = 2;
-    public static final int SERVER_FAILED = 3;
-    int status;
+public class MapObjectsLoadedEvent {
+    MapObjects mapObjects;
 
-    public AuthLoadedEvent(int status) {
-        this.status = status;
+    public MapObjectsLoadedEvent(MapObjects mapObjects) {
+        this.mapObjects = mapObjects;
     }
 
-    public int getStatus() {
-        return status;
+    public MapObjects getMapObjects() {
+        return mapObjects;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setMapObjects(MapObjects mapObjects) {
+        this.mapObjects = mapObjects;
     }
 }

@@ -18,6 +18,7 @@ package com.pokescanner.loaders;
 
 import com.pokegoapi.auth.PTCLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
+import com.pokescanner.events.AuthLoadedEvent;
 
 import org.greenrobot.eventbus.EventBus;
 

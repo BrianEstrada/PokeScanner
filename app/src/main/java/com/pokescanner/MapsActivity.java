@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.FragmentActivity;
@@ -48,10 +49,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.helper.PokemonListLoader;
-import com.pokescanner.loaders.MapObjectsLoadedEvent;
+import com.pokescanner.events.MapObjectsLoadedEvent;
 import com.pokescanner.loaders.MapObjectsLoader;
 import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.Gym;
@@ -66,14 +69,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
-import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -105,6 +106,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     List<LatLng> scanMap = new ArrayList<>();
     ArrayList<FilterItem> filterItems = new ArrayList<>();
+
+    private ArrayList<Marker> pokeMarkers = new ArrayList<>();
+    private ArrayList<Marker> locationMarkers = new ArrayList<>();
+
     PokemonListLoader pokemonListLoader;
     SharedPreferences sharedPreferences;
     private MapObjectsLoader mapObjectsLoader;
@@ -115,7 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Default size for our scan grid
     int scanValue = 5;
     //Used for our refreshing of the map
-    Subscription refresher;
+    Subscription pokeonRefresher,gymstopRefresher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +179,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 showMenu();
             }
         });
+
+
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
     }
+
     public void PokeScan() {
         if (SCANNING_STATUS) {
             stopPokeScan();
@@ -271,7 +282,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Set our map stuff
             mMap.setMyLocationEnabled(true);
             mMap.setOnCameraChangeListener(this);
-
             //Let's find our location and set it!
             Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider(criteria, true);
@@ -318,6 +328,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         items.add(new MenuItem(getString(R.string.filter),1,null));
         items.add(new MenuItem(getString(R.string.settings),2,null));
         items.add(new MenuItem(getString(R.string.logout),3,null));
+        items.add(new MenuItem(getString(R.string.donate),4,null));
 
         final RecyclerView.Adapter mAdapter;
         RecyclerView.LayoutManager mLayoutManager;
@@ -351,6 +362,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         break;
                     case 3:
                         logOut();
+                        break;
+                    case 4:
+                        Uri uri = Uri.parse("https://www.paypal.me/brianestrada"); // missing 'http://' will cause crashed
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                        dialog.dismiss();
                         break;
                 }
 
@@ -438,6 +455,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
     public void logOut() {
+        pokeonRefresher.unsubscribe();
+        gymstopRefresher.unsubscribe();
+
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -451,34 +471,77 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     //Map related Functions
     public void refreshMap() {
-        realm.beginTransaction();
-        mMap.clear();
+        LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
+
         createMapObjects();
+
+        //Before we refresh we want to remove the old markets so lets do that first
+        for (Marker marker: pokeMarkers) {
+            marker.remove();
+        }
+        //Clear our array
+        pokeMarkers.clear();
+
         ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
+
+        System.out.println(pokemons.size());
+
         for (int i = 0; i < pokemons.size(); i++) {
             Pokemons pokemon = pokemons.get(i);
-            if (pokemon.getDate().isAfter(new Instant())) {
-                if (realm.copyFromRealm(realm.where(FilterItem.class).equalTo("Number",pokemon.getNumber()).findFirst()).isFiltered()) {
+            //If our pokemon is contained within the bounds of the map then lets render him!
+            if (curScreen.contains(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))) {
+                //Has our pokemon expired?
+                if (pokemon.getDate().isAfter(new Instant())) {
+                    //And is he filtered?
+                    if (realm.copyFromRealm(realm.where(FilterItem.class).equalTo("Number", pokemon.getNumber()).findFirst()).isFiltered()) {
+                        //INTENTIONALLY LEFT EMPTY
+                    } else {
+                        //Render him!
+                        pokeMarkers.add(mMap.addMarker(pokemon.getMarker(this)));
+                    }
                 } else {
-                    mMap.addMarker(pokemon.getMarker(this));
+                    //If he has expired lets purge him from the database
+                    realm.beginTransaction();
+                    realm.where(Pokemons.class).equalTo("encounterid", pokemon.getEncounterid()).findAll().deleteAllFromRealm();
+                    realm.commitTransaction();
                 }
-            } else {
-                realm.where(Pokemons.class).equalTo("encounterid", pokemon.getEncounterid()).findAll().deleteAllFromRealm();
             }
         }
+
+    }
+    public void refreshGyms() {
+        //The the map bounds
+        LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
+
+        //Before we refresh we want to remove the old markets so lets do that first
+        for (Marker marker: locationMarkers) {
+            marker.remove();
+        }
+        //Clear our array
+        locationMarkers.clear();
+        //Once we refresh our markers lets go ahead and load our pokemans
         ArrayList<Gym> gyms = new ArrayList<Gym>(realm.copyFromRealm(realm.where(Gym.class).findAll()));
-        for (int i = 0;i < gyms.size(); i++)
-        {
-            Gym gym = gyms.get(i);
-            mMap.addMarker(gym.getMarker(this));
-        }
         ArrayList<PokeStop> pokestops = new ArrayList<PokeStop>(realm.copyFromRealm(realm.where(PokeStop.class).findAll()));
-        for (int i = 0;i < pokestops.size(); i++)
-        {
-            PokeStop pokestop = pokestops.get(i);
-            mMap.addMarker(pokestop.getMarker(this));
+
+        int contained = 0;
+        for (int i = 0;i < gyms.size(); i++) {
+            Gym gym = gyms.get(i);
+            LatLng pos = new LatLng(gym.getLatitude(),gym.getLongitude());
+            if (curScreen.contains(pos)) {
+                contained++;
+                locationMarkers.add(mMap.addMarker(gym.getMarker(this)));
+            }
         }
-        realm.commitTransaction();
+
+        for (int i = 0;i < pokestops.size(); i++) {
+            PokeStop pokestop = pokestops.get(i);
+            LatLng pos = new LatLng(pokestop.getLatitude(),pokestop.getLongitude());
+            if (curScreen.contains(pos)) {
+                contained++;
+                locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
+            }
+        }
+        System.out.println("VISIBLE GYMS:" + contained);
     }
     public void createMapObjects() {
         if (SettingsController.getSettings(this).isBoundingBoxEnabled()) {
@@ -487,31 +550,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //createMarkerList();
     }
     public void startRefresher() {
-        final DateTime date = new DateTime();
-        //If our Subscription is subscribed (As in is running)
-        //Then lets unsubscribe them so we can create a new one
-        if (refresher != null) {
-            if (!refresher.isUnsubscribed()) {
-                refresher.unsubscribe();
-            }
-        }
         //Using RX java we setup an interval to refresh the map
-        refresher = Observable.interval(SettingsController.getSettings(this).getMapRefresh(), TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+        pokeonRefresher = Observable.interval(SettingsController.getSettings(this).getMapRefresh(), TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long aLong) {
-                        Interval interval = new Interval(date, new DateTime());
-                        long time = interval.toDurationMillis() / 1000;
-                        System.out.println("Refreshing " + String.valueOf(time));
+                        System.out.println("Refreshing Pokemons");
                         refreshMap();
                     }
                 });
+
+        gymstopRefresher = Observable.interval(30, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Long>() {
+                    @Override
+                    public void call(Long aLong) {
+                        System.out.println("Refreshing Gyms");
+                        refreshGyms();
+                    }
+                });
+    }
+    @Subscribe (threadMode = ThreadMode.MAIN)
+    public void forceRefreshEvent(ForceRefreshEvent event) {
+        refreshGyms();
+        refreshMap();
     }
     public boolean doWeHavePermission() {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-    @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
     }
     @Override
     protected void onResume() {
@@ -534,5 +598,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onDestroy() {
         realm.close();
         super.onDestroy();
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+
     }
 }

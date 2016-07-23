@@ -39,6 +39,7 @@ import com.pokegoapi.auth.GoogleLogin;
 import com.pokegoapi.auth.PTCLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
 import com.pokegoapi.exceptions.RemoteServerException;
+import com.pokescanner.events.MapObjectsLoadedEvent;
 import com.pokescanner.objects.User;
 
 import org.greenrobot.eventbus.EventBus;
