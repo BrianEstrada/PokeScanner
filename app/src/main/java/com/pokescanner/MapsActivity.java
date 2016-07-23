@@ -101,7 +101,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     final int SLEEP_TIME = 2000;
 
     int scanValue = 5;
-    boolean boundingBox = true;
 
 
     @Override
@@ -303,6 +302,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         dialog.dismiss();
                         break;
                     case 2:
+                        dialog.dismiss();
+                        SettingsController.showSettingDialog(MapsActivity.this);
                         break;
                     case 3:
                         logOut();
@@ -458,8 +459,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         realm.commitTransaction();
     }
     public void createMapObjects() {
-        if (boundingBox)
+        if (SettingsController.getSettings(this).boundingBox) {
             createBoundingBox();
+        }
         createMarkerList();
     }
     // Call with layer_count initially 1
