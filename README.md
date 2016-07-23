@@ -18,6 +18,7 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 - toumeitou
 - leTokki
 - ljk1291
+- fizzxed
 
 
 # Contributions
