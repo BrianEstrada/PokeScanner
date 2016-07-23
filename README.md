@@ -32,4 +32,4 @@ Anyone is welcome to help out on the project just go ahead and submit any change
 
 For everyone asking if they can donate I've posted a link below
 
-[![Buy Me a Coffee](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://ko-fi.com/A6046GV)
+[![Buy Me a Coffee](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/brianestrada)
