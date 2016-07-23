@@ -96,8 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     int pos = 1;
     final int SLEEP_TIME = 2000;
-
-    int scanValue = 5;
+    int scanValue = 4;
     boolean boundingBox = true;
 
     @Override
@@ -149,7 +148,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         pos = 1;
         showProgressbar(true);
         progressBar.setProgress(0);
-        createScanMap(mMap.getCameraPosition().target, scanValue);
+        if (mMap != null)
+            mMap.clear();
+        createHexScanMap(mMap.getCameraPosition().target, scanValue);
 
         MapObjectsLoader mapObjectsLoader = new MapObjectsLoader(user,scanMap,SLEEP_TIME);
         mapObjectsLoader.start();
@@ -462,6 +463,89 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             createBoundingBox();
         createMarkerList();
     }
+
+    // Call with layer_count initially 1
+    // REQUIRES: not empty scanMap, layer_count > 0, loc is the starting loc
+    public void HexScanMapHelp(LatLng loc, int steps, int layer_count) {
+        // Base case is do nothing
+        if (steps > 0) {
+            if (layer_count == 1) {
+                // Add in the point, no translation since 1st layer
+                scanMap.add(loc);
+            } else {
+                double distance = 173.2; // in meters
+                // add a point that is distance due north
+                scanMap.add(translate(loc, 0.0, distance));
+                // go south-east
+                for (int i = 0; i < layer_count - 1; i++) {
+                    LatLng prev = scanMap.get(scanMap.size() - 1);
+                    LatLng next = translate(prev, 120.0, distance);
+                    scanMap.add(next);
+                }
+                // go due south
+                for (int i = 0; i < layer_count - 1; i++) {
+                    LatLng prev = scanMap.get(scanMap.size() - 1);
+                    LatLng next = translate(prev, 180.0, distance);
+                    scanMap.add(next);
+                }
+                // go south-west
+                for (int i = 0; i < layer_count - 1; i++) {
+                    LatLng prev = scanMap.get(scanMap.size() - 1);
+                    LatLng next = translate(prev, 240.0, distance);
+                    scanMap.add(next);
+                }
+                // go north-west
+                for (int i = 0; i < layer_count - 1; i++) {
+                    LatLng prev = scanMap.get(scanMap.size() - 1);
+                    LatLng next = translate(prev, 300.0, distance);
+                    scanMap.add(next);
+                }
+                // go due north
+                for (int i = 0; i < layer_count - 1; i++) {
+                    LatLng prev = scanMap.get(scanMap.size() - 1);
+                    LatLng next = translate(prev, 0.0, distance);
+                    scanMap.add(next);
+                }
+                // go north-east
+                for (int i = 0; i < layer_count - 2; i++) {
+                    LatLng prev = scanMap.get(scanMap.size() - 1);
+                    LatLng next = translate(prev, 60.0, distance);
+                    scanMap.add(next);
+                }
+            }
+            HexScanMapHelp(scanMap.get(hexagonal_number(layer_count -1)), steps - 1, layer_count + 1);
+        }
+
+
+    }
+
+    // Takes in distance in meters, bearing in degrees
+    public LatLng translate(LatLng cur, double bearing, double distance) {
+        double earth = 6378.1; // Radius of Earth in km
+        double rad_bear = Math.toRadians(bearing);
+        double dist_km = distance/1000;
+        double lat1 = Math.toRadians(cur.latitude);
+        double lon1 = Math.toRadians(cur.longitude);
+        double lat2 =  Math.asin( Math.sin(lat1) * Math.cos(dist_km/earth) +
+                Math.cos(lat1) * Math.sin(dist_km/earth) * Math.cos(rad_bear));
+        double lon2 = lon1 + Math.atan2(Math.sin(rad_bear) * Math.sin(dist_km/earth) * Math.cos(lat1),
+                Math.cos(dist_km/earth) - Math.sin(lat1) * Math.sin(lat2));
+        lat2 = Math.toDegrees(lat2);
+        lon2 = Math.toDegrees(lon2);
+        return new LatLng(lat2, lon2);
+    }
+
+    public int hexagonal_number(int n) {
+        return (n == 0) ? 0 : 3 * n * (n - 1) + 1;
+    }
+
+    public void createHexScanMap(LatLng loc, int gridsize) {
+        // Clear previous scan map
+        scanMap.clear();
+
+        HexScanMapHelp(loc, gridsize, 1);
+    }
+
     public void createScanMap(LatLng loc, int gridsize) {
         int gridNumber = gridsize;
         //Make our grid size an odd number (evens don't have centers :P)
