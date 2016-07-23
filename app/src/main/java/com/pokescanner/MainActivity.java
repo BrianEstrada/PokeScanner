@@ -15,11 +15,10 @@
  */
 
 
-
 package com.pokescanner;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,7 +30,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,18 +47,16 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     EditText etUsername;
     EditText etPassword;
     TextView tvTitle;
 
-    LinearLayout Container;
-    ProgressBar progressBar;
+    LinearLayout container;
+    ProgressDialog pDialog;
 
-    String username,password;
-    Button btnRegister;
+    String username, password;
     Button btnLogin;
-    SharedPreferences sharedPref;
     Realm realm;
     int LOGIN_METHOD = -1;
 
@@ -73,6 +69,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         setContentView(R.layout.activity_main);
 
+        checkIfUserIsLoggedIn();
+        initViews();
+        getPermissions();
+    }
+
+    /**
+     * This method checks if the user has previously logged in. If it has,
+     * it will open up the MapsActivity.
+     */
+    private void checkIfUserIsLoggedIn() {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
                 .name(Realm.DEFAULT_REALM_NAME)
                 .deleteRealmIfMigrationNeeded()
@@ -81,58 +87,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         realm = Realm.getDefaultInstance();
 
-        if  (realm.where(User.class).findAll().size() != 0) {
+        if (realm.where(User.class).findAll().size() != 0) {
             startMapIntent();
         }
+    }
 
-        //get our views
+    /**
+     * This method initializes all the views and assigns them to variables as well as assigns
+     * the onClickListener to the login button.
+     */
+    private void initViews() {
         btnLogin = (Button) findViewById(R.id.btnLogin);
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
+        container = (LinearLayout) findViewById(R.id.container);
 
-        Container = (LinearLayout) findViewById(R.id.Container);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-        btnLogin.setOnClickListener(this);
-
-        //finally we are going to ask for permission to the GPS
-        getPermissions();
+        /**
+         * The login button will check whether a PTC account or Gmail account is being used,
+         * and will therefore log the user in using the appropriate approach.
+         */
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                username = etUsername.getText().toString();
+                password = etPassword.getText().toString();
+                showProgressbar(true);
+                if (isEmailValid(username)) {
+                    showToast(R.string.TRYING_GOOGLE_LOGIN);
+                    LOGIN_METHOD = User.GOOGLE;
+                    AuthGOOGLELoader authGOOGLELoader = new AuthGOOGLELoader(username, password);
+                    authGOOGLELoader.start();
+                } else {
+                    showToast(R.string.TRYING_PTC_LOGIN);
+                    LOGIN_METHOD = User.PTC;
+                    AuthPTCLoader authloader = new AuthPTCLoader(username, password);
+                    authloader.start();
+                }
+            }
+        });
     }
 
-    @Override
-    public void onClick(View view) {
-        //get our username and password value
-        username = etUsername.getText().toString();
-        password = etPassword.getText().toString();
-        //begin to show the progress bar
-        showProgressbar(true);
-
-        if (isEmailValid(username)) {
-            /*
-            showToast(R.string.TRYING_GOOGLE_LOGIN);
-            showProgressbar(false);
-            */
-            LOGIN_METHOD = User.GOOGLE;
-            AuthGOOGLELoader authGOOGLELoader = new AuthGOOGLELoader(username,password);
-            authGOOGLELoader.start();
-        }else{
-            showToast(R.string.TRYING_PTC_LOGIN);
-            LOGIN_METHOD = User.PTC;
-            AuthPTCLoader authloader = new AuthPTCLoader(username,password);
-            authloader.start();
-        }
-    }
-
-    @Subscribe (threadMode = ThreadMode.MAIN)
-    public void onAuthLoadedEvent(AuthLoadedEvent event){
+    /**
+     * This method will wait to see if the user credentials are authenticated. If they are, it will
+     * store the password and data to the database (using realm) and start the MapActivity.
+     * Events are fired off after authloader.start() is called.
+     * @param event the status of the user authentication
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAuthLoadedEvent(AuthLoadedEvent event) {
         showProgressbar(false);
-        switch(event.getStatus()) {
+        switch (event.getStatus()) {
             case AuthLoadedEvent.OK:
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        User user = new User(1,username,password,LOGIN_METHOD);
+                        User user = new User(1, username, password, LOGIN_METHOD);
                         realm.copyToRealmOrUpdate(user);
                         startMapIntent();
                         showToast(R.string.LOGIN_OK);
@@ -149,38 +159,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void showToast(int resString) {
-        Toast.makeText(MainActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
-    }
 
+    /**
+     * This method will launch the MapActivity if the user has approved permissions. If not,
+     * the app will request that the user allow the app the permissions.
+     */
     public void startMapIntent() {
         if (doWeHavePermission()) {
             Intent intent = new Intent(this, MapsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
-        }else
-        {
+        } else {
             getPermissions();
         }
     }
 
-    //if this value is true then lets hide the login and show the progress bar
+    /**
+     * Displays a loading dialog. It will hide the EditText fields while active.
+     * @param status a boolean that determines if the dialog should be visible. True: Visible Progress Dialog.
+     *               False: Hide the Progress Dialog and display the EditText fields.
+     */
     public void showProgressbar(boolean status) {
-        if (status)
-        {
-            progressBar.setVisibility(View.VISIBLE);
-            Container.setVisibility(View.GONE);
-        }else
-        {
-            progressBar.setVisibility(View.GONE);
-            Container.setVisibility(View.VISIBLE);
+        if (status) {
+            container.setVisibility(View.INVISIBLE);
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage("Logging In...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        } else {
+            pDialog.dismiss();
+            container.setVisibility(View.VISIBLE);
         }
     }
-    //Permission Stuff
+
+    /**
+     * The following methods check whether the app has permissions enabled or not.
+     */
     public boolean doWeHavePermission() {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
+
     public void getPermissions() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -189,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1400);
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -201,8 +222,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Miscellaneous methods
+     */
+
     boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+
+    public void showToast(int resString) {
+        Toast.makeText(MainActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
     }
 
     @Override

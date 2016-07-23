@@ -48,8 +48,11 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#F44336</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
-    <color name="colorAccent">#448AFF</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#03A9F4</color>
     <color name="markerTextBackground">#BF757575</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
 </resources>

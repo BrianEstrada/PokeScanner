@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -47,77 +46,81 @@
   ~  */
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.pokescanner.MainActivity"
-    android:gravity="center_vertical|center_horizontal"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:background="@color/colorPrimary">
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:visibility="gone" />
+    tools:context="com.pokescanner.MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/poke_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/poke_scanner"
-        android:id="@+id/tvTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
         android:paddingBottom="20dp"
-        android:textSize="40sp"
+        android:text="@string/poke_scanner"
+        android:textColor="@color/black"
         android:textIsSelectable="false"
-        android:layout_marginBottom="20dp" />
+        android:textSize="32sp" />
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/pokescan_logo"
+        android:layout_below="@id/poke_title"
+        android:layout_centerHorizontal="true"/>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/logo"
+        android:layout_centerInParent="true"
         android:gravity="center_vertical|center_horizontal"
-        android:id="@+id/Container">
+        android:orientation="vertical"
+        android:layout_marginTop="16dp">
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
             android:id="@+id/etUsername"
-            android:hint="@string/username" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/username"
+            android:inputType="textPersonName" />
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
             android:id="@+id/etPassword"
-            android:hint="@string/password" />
-
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login"
-            android:id="@+id/btnLogin"
-            android:layout_marginTop="25dp"
-            android:background="@color/colorAccent" />
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
 
         <TextView
+            android:id="@+id/tvWarning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app"
-            android:id="@+id/tvWarning"
+            android:layout_marginTop="20dp"
+            android:text="@string/warning_pogo"
             android:textAlignment="center"
-            android:layout_marginTop="20dp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="25dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/login"
+        android:textColor="@color/white" />
+
+</RelativeLayout>
