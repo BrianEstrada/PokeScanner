@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Map Refresh"
+                android:text="@string/map_refresh"
                 android:id="@+id/tvMapDesc"
                 android:layout_marginLeft="15dp"
                 android:textAlignment="center" />
