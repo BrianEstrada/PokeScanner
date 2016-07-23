@@ -89,7 +89,11 @@ public class MapObjectsLoader extends Thread{
                 Map map = new Map(go);
 
                 //Send it off to the map thread
-                EventBus.getDefault().post(new MapObjectsLoadedEvent(map.getMapObjects()));
+                //We're going to check if we have any subscribers availible for this class
+                //If we don't we simply don't send off the objects
+                if(EventBus.getDefault().hasSubscriberForEvent(MapObjectsLoadedEvent.class)) {
+                    EventBus.getDefault().post(new MapObjectsLoadedEvent(map.getMapObjects()));
+                }
 
                 //Time 2 wait
                 Thread.sleep(SLEEP_TIME);

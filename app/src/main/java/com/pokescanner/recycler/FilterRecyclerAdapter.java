@@ -47,7 +47,7 @@ public class FilterRecyclerAdapter extends RecyclerView.Adapter<FilterViewHolder
 
     @Override
     public FilterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_pokemon_blacklist, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_pokemon_filter_row, viewGroup, false);
         return new FilterViewHolder(view);
     }
 

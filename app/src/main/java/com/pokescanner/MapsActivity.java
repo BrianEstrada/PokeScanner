@@ -55,7 +55,6 @@ import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.MenuItem;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
-import com.pokescanner.recycler.FilterRecyclerAdapter;
 import com.pokescanner.recycler.MenuRecycler;
 
 import org.greenrobot.eventbus.EventBus;
@@ -72,16 +71,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import POGOProtos.Map.Fort.FortDataOuterClass;
 import POGOProtos.Map.Pokemon.MapPokemonOuterClass;
 import io.realm.Realm;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
+import static com.pokescanner.helper.Generation.getCorners;
 import static com.pokescanner.helper.Generation.hexagonal_number;
 import static com.pokescanner.helper.Generation.makeHexScanMap;
-import static com.pokescanner.helper.Generation.getCorners;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener {
@@ -297,7 +295,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         dialog.dismiss();
                         break;
                     case 1:
-                        filterDialog();
+                        startDialogActivity();
                         dialog.dismiss();
                         break;
                     case 2:
@@ -377,55 +375,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
         return fmt.print(dt);
     }
-    public void filterDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_blacklist);
-
-        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-        Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
-        RecyclerView filterRecycler = (RecyclerView) dialog.findViewById(R.id.filterRecycler);
-
-        RecyclerView.LayoutManager mLayoutManager;
-        filterRecycler.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        filterRecycler.setLayoutManager(mLayoutManager);
-
-        mAdapter = new FilterRecyclerAdapter(filterItems, new FilterRecyclerAdapter.onCheckedListener() {
-            @Override
-            public void onChecked(FilterItem filterItem) {
-                filterItems.set(filterItem.getNumber(), filterItem);
-            }
-        });
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pokemonListLoader.savePokeList(filterItems);
-                reloadFilters();
-                dialog.dismiss();
-            }
-        });
-
-        filterRecycler.setAdapter(mAdapter);
-        dialog.show();
+    public void startDialogActivity() {
+        Intent filterIntent = new Intent(MapsActivity.this,FilterActivity.class);
+        startActivity(filterIntent);
     }
+
     public void reloadFilters() {
         try {
             filterItems.clear();
             filterItems.addAll(pokemonListLoader.getPokelist());
-            System.out.println(filterItems.size());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     public void logOut() {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -461,7 +424,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (SettingsController.getSettings(this).isBoundingBoxEnabled()) {
             createBoundingBox();
         }
-        createMarkerList();
+        //createMarkerList();
     }
 
     public void startRefresher() {
@@ -470,7 +433,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void call(Long aLong) {
                         refreshMap();
-                        System.out.println("Refreshing Map");
                     }
                 });
     }
@@ -484,6 +446,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
         realm = Realm.getDefaultInstance();
+        reloadFilters();
     }
     @Override
     public void onStart() {
