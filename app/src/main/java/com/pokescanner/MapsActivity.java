@@ -437,7 +437,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void execute(Realm realm) {
                 realm.where(User.class).findAll().deleteAllFromRealm();
-                Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+                Intent intent = new Intent(MapsActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
