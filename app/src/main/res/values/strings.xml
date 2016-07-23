@@ -65,6 +65,7 @@
 
     <string name="AUTH_FAILED">Bad Login Credentials</string>
     <string name="SERVER_FAILED">Servers not responding</string>
+    <string name="ERROR_FILTERS">Error loading filters</string>
     <string name="LOGIN_OK">Login Successful</string>
     <string name="PERMISSION_OK">Thanks for the permission!</string>
 

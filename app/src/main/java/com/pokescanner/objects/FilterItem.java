@@ -15,7 +15,6 @@
  */
 
 
-
 package com.pokescanner.objects;
 
 import io.realm.RealmObject;
@@ -24,7 +23,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Brian on 7/22/2016.
  */
-public class FilterItem extends RealmObject{
+public class FilterItem extends RealmObject {
     @PrimaryKey
     int Number;
     String Name;
@@ -61,5 +60,14 @@ public class FilterItem extends RealmObject{
 
     public void setFiltered(boolean filtered) {
         this.filtered = filtered;
+    }
+
+    @Override
+    public String toString() {
+        return "FilterItem{" +
+                "Number=" + Number +
+                ", Name='" + Name + '\'' +
+                ", filtered=" + filtered +
+                '}';
     }
 }

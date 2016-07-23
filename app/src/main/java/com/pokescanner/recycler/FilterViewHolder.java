@@ -23,9 +23,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.pokescanner.R;
@@ -38,26 +38,25 @@ public class FilterViewHolder extends RecyclerView.ViewHolder {
     ImageView imageFilterRow;
     TextView pokemonName;
     TextView tvStatus;
-    Switch swt;
+    CheckBox checkBox;
     Context context;
 
     public FilterViewHolder(View itemView) {
         super(itemView);
 
         pokemonName = (TextView) itemView.findViewById(R.id.tvName);
-        tvStatus = (TextView) itemView.findViewById(R.id.tvStatus);
-        swt = (Switch) itemView.findViewById(R.id.swt);
+        checkBox = (CheckBox) itemView.findViewById(R.id.checkBox);
         imageFilterRow = (ImageView) itemView.findViewById(R.id.imageFilterRow);
 
         this.context = itemView.getContext();
 
-        swt.setClickable(true);
+        checkBox.setClickable(true);
     }
 
     public void bind(final FilterItem filterItem, final FilterRecyclerAdapter.onCheckedListener listener) {
 
         pokemonName.setText(filterItem.getName());
-        swt.setChecked(filterItem.isFiltered());
+        checkBox.setChecked(filterItem.isFiltered());
 
         String uri = "p" + filterItem.getNumber();
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
@@ -65,15 +64,10 @@ public class FilterViewHolder extends RecyclerView.ViewHolder {
 
         imageFilterRow.setImageBitmap(bm);
 
-        swt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             filterItem.setFiltered(b);
-            if (filterItem.isFiltered()) {
-                tvStatus.setText(itemView.getContext().getString(R.string.off));
-            }else{
-                tvStatus.setText(itemView.getContext().getString(R.string.on));
-            }
             listener.onChecked(filterItem);
         }
     });

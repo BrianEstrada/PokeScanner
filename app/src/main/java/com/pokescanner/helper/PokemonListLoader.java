@@ -22,7 +22,7 @@ package com.pokescanner.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -34,20 +34,28 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import io.realm.Realm;
+
 /**
  * Created by Brian on 7/21/2016.
  */
 public class PokemonListLoader {
     Context context;
     SharedPreferences sharedPref;
+    Realm realm;
+    final String TAG = "POKELOADER";
 
     public PokemonListLoader(Context context) {
+        realm = Realm.getDefaultInstance();
         this.context = context;
         this.sharedPref = context.getSharedPreferences(context.getString(R.string.shared_key), Context.MODE_PRIVATE);
     }
 
     public ArrayList<FilterItem> getPokelist() throws IOException {
-        if (sharedPref.getString("filterlist",null)== null) {
+        if (realm.where(FilterItem.class).findAll().size() == 151) {
+            Log.d(TAG,"LOADING FROM REALM");
+        }else
+        {
             InputStream is = context.getAssets().open("pokemons.json");
             int size = is.available();
             byte[] buffer = new byte[size];
@@ -55,33 +63,19 @@ public class PokemonListLoader {
             is.close();
             String bufferString = new String(buffer);
             Gson gson = new Gson();
-            Type listType = new TypeToken<ArrayList<FilterItem>>() {
-            }.getType();
+            Type listType = new TypeToken<ArrayList<FilterItem>>() {}.getType();
             return gson.fromJson(bufferString, listType);
-        }else
-        {
-            String pokeString = sharedPref.getString("filterlist",null);
-            if (pokeString!= null){
-                Gson gson = new Gson();
-                Type listType = new TypeToken<ArrayList<FilterItem>>() {}.getType();
-                return gson.fromJson(pokeString, listType);
-            }else
-            {
-                Toast.makeText(context, "Could not load pokelist :/", Toast.LENGTH_SHORT).show();
-                return null;
-            }
         }
     }
 
-    public void savePokeList(ArrayList<FilterItem> pokelist) {
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        Gson gson = new Gson();
-        String pokeString = gson.toJson(pokelist);
-
-        System.out.println(pokeString);
-
-        editor.putString("filterlist", pokeString);
-        editor.commit();
+    public void savePokeList(final ArrayList<FilterItem> pokelist) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Log.d(TAG,"SAVING");
+                realm.copyToRealmOrUpdate(pokelist);
+            }
+        });
     }
+
 }
