@@ -51,4 +51,7 @@
     <string name="hide">Hide</string>
     <string name="searchicon">SearchIcon</string>
     <string name="menubutton">MenuButton</string>
+    <string name="show_range">Show Range</string>
+    <string name="_0">0</string>
+    <string name="server_refresh">Server Refresh</string>
 </resources>

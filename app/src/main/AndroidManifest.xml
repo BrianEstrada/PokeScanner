@@ -14,6 +14,11 @@
         android:supportsRtl="true"
         android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name=".service.ScanService"
+            android:exported="false"/>
+
         <activity android:name=".MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
