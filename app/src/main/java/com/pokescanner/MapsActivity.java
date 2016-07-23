@@ -179,8 +179,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             scanMap = makeHexScanMap(mMap.getCameraPosition().target, scanValue, 1, new ArrayList<LatLng>());
             mapObjectsLoader = new MapObjectsLoader(user, scanMap, SLEEP_TIME);
             mapObjectsLoader.start();
-            button.setText("Cancel");
-            SCANNING_STATUS = true;
         }
     }
 
@@ -189,9 +187,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try{
             mapObjectsLoader.interrupt();
             mapObjectsLoader.join(500);
-            button.setText("Scan");
             showProgressbar(false);
-            SCANNING_STATUS = false;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -287,8 +283,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void showProgressbar(boolean status) {
         if (status) {
             progressBar.setVisibility(View.VISIBLE);
+            button.setText("Cancel");
+            SCANNING_STATUS = true;
         } else {
             progressBar.setVisibility(View.INVISIBLE);
+            button.setText("Scan");
+            SCANNING_STATUS = false;
         }
     }
     //I don't think we're using this

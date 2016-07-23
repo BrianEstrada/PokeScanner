@@ -16,8 +16,8 @@ android {
         applicationId "com.pokescanner"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 8
-        versionName "1.4.0"
+        versionCode 9
+        versionName "1.4.1"
         multiDexEnabled true
     }
     buildTypes {
