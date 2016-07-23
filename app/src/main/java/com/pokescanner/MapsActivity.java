@@ -94,7 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     ArrayList<LatLng> scanMap = new ArrayList<>();
 
-    int pos = 0;
+    int pos = 1;
     final int SLEEP_TIME = 2000;
 
     int scanValue = 5;
@@ -110,6 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if  (realm.where(User.class).findAll().size() != 0) {
             user = realm.copyFromRealm(realm.where(User.class).findFirst());
+            System.out.println(user);
         }else
         {
             Toast.makeText(MapsActivity.this, "No login!", Toast.LENGTH_SHORT).show();
@@ -145,7 +146,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void PokeScan() {
-        pos = 0;
+        pos = 1;
+        showProgressbar(true);
         progressBar.setProgress(0);
         createScanMap(mMap.getCameraPosition().target, scanValue);
 
@@ -155,11 +157,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void mapObjectsLoaded(MapObjectsLoadedEvent event) {
-        progressBar.setProgress(pos);
-
-        if (pos==(Math.pow(scanValue,2)-1)) {
-            showProgressbar(false);
-        }
+        progressBar.setProgress((pos/scanMap.size())*100);
 
         final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getMapObjects().getCatchablePokemons();
 
@@ -176,6 +174,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else {
             showToast(R.string.SERVER_FAILED);
         }
+
+        if (pos==(scanMap.size())) {
+            showProgressbar(false);
+        }
+        
         pos++;
     }
 
@@ -250,9 +253,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.deleteAll();
+                realm.where(User.class).findAll().deleteAllFromRealm();
                 Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -322,7 +327,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                System.out.println(i);
                 tvNumber.setText(String.valueOf(i));
                 tvEstimate.setText(getString(R.string.timeEstimate)+" "+getTimeEstimate(i));
             }

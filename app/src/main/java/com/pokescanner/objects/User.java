@@ -23,7 +23,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Brian on 7/22/2016.
  */
 public class User extends RealmObject{
-    static public final int PTC = 1;
+    static public final int PTC = 0;
     static public final int GOOGLE = 1;
 
     @PrimaryKey
@@ -72,5 +72,15 @@ public class User extends RealmObject{
 
     public void setAuthType(int authType) {
         this.authType = authType;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "index=" + index +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", authType=" + authType +
+                '}';
     }
 }

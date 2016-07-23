@@ -95,13 +95,13 @@ public class MapObjectsLoader extends Thread{
                 Thread.sleep(SLEEP_TIME);
             }
         } catch (InterruptedException e) {
-            EventBus.getDefault().post(new PokemonLoadedEvent(null));
+            EventBus.getDefault().post(new MapObjectsLoadedEvent(null));
             e.printStackTrace();
         } catch (RemoteServerException e) {
-            EventBus.getDefault().post(new PokemonLoadedEvent(null));
+            EventBus.getDefault().post(new MapObjectsLoadedEvent(null));
             e.printStackTrace();
         } catch (LoginFailedException e) {
-            EventBus.getDefault().post(new PokemonLoadedEvent(null));
+            EventBus.getDefault().post(new MapObjectsLoadedEvent(null));
             e.printStackTrace();
         }
     }
