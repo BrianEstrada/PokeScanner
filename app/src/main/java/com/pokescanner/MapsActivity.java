@@ -63,6 +63,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
+import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -75,6 +76,7 @@ import java.util.concurrent.TimeUnit;
 import POGOProtos.Map.Pokemon.MapPokemonOuterClass;
 import io.realm.Realm;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -91,12 +93,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     LocationManager locationManager;
     Location currentLocation;
-    String username, password;
     ImageButton imageButton;
 
     User user;
     Realm realm;
-    RecyclerView.Adapter mAdapter;
 
     List<LatLng> scanMap = new ArrayList<>();
     ArrayList<FilterItem> filterItems = new ArrayList<>();
@@ -105,10 +105,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MapObjectsLoader mapObjectsLoader;
 
     int pos = 1;
-    final int SLEEP_TIME = 1000;
+    //Used for determining Scan status
     boolean SCANNING_STATUS = false;
+    //Default size for our scan grid
     int scanValue = 5;
-
+    //Used for our refreshing of the map
+    Subscription refresher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +120,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         realm = Realm.getDefaultInstance();
 
+        //So if our realm has no users then we'll send our user back to the login screen
+        //otherwise set our user and move on!
         if (realm.where(User.class).findAll().size() != 0) {
             user = realm.copyFromRealm(realm.where(User.class).findFirst());
         } else {
@@ -166,24 +170,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-
-
     public void PokeScan() {
         if (SCANNING_STATUS) {
             stopPokeScan();
         }else
         {
             pos = 1;
+            //Our refresh rate to Milliseconds
+            int millis = SettingsController.getSettings(this).getServerRefresh() * 1000;
             showProgressbar(true);
             progressBar.setProgress(0);
             scanMap = makeHexScanMap(mMap.getCameraPosition().target, scanValue, 1, new ArrayList<LatLng>());
-            mapObjectsLoader = new MapObjectsLoader(user, scanMap, SLEEP_TIME);
+            mapObjectsLoader = new MapObjectsLoader(user, scanMap,millis);
             mapObjectsLoader.start();
         }
     }
-
-    private void stopPokeScan()
-    {
+    private void stopPokeScan() {
         try{
             mapObjectsLoader.interrupt();
             mapObjectsLoader.join(500);
@@ -405,7 +407,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dialog.show();
     }
     public String getTimeEstimate(int val) {
-        int calculatedValue = hexagonal_number(val) * SLEEP_TIME;
+        int calculatedValue = hexagonal_number(val) * SettingsController.getSettings(this).getServerRefresh() * 1000;
         long millis = calculatedValue;
         DateTime dt = new DateTime(millis);
         DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
@@ -415,7 +417,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent filterIntent = new Intent(MapsActivity.this,FilterActivity.class);
         startActivity(filterIntent);
     }
-
     public void reloadFilters() {
         try {
             filterItems.clear();
@@ -424,7 +425,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
     }
-
     public void logOut() {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -462,12 +462,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         //createMarkerList();
     }
-
     public void startRefresher() {
-        Observable.interval(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+        final DateTime date = new DateTime();
+        //If our Subscription is subscribed (As in is running)
+        //Then lets unsubscribe them so we can create a new one
+        if (refresher != null) {
+            if (!refresher.isUnsubscribed()) {
+                refresher.unsubscribe();
+            }
+        }
+        //Using RX java we setup an interval to refresh the map
+        refresher = Observable.interval(SettingsController.getSettings(this).getMapRefresh(), TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long aLong) {
+                        Interval interval = new Interval(date, new DateTime());
+                        long time = interval.toDurationMillis() / 1000;
+                        System.out.println("Refreshing " + String.valueOf(time));
                         refreshMap();
                     }
                 });
@@ -480,6 +491,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     @Override
     protected void onResume() {
+        System.out.println("Resume");
         super.onResume();
         realm = Realm.getDefaultInstance();
         reloadFilters();

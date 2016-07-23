@@ -10,4 +10,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class Settings {
     boolean boundingBoxEnabled;
+    int serverRefresh;
+    int mapRefresh;
 }

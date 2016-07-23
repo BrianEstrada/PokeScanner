@@ -9,23 +9,54 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_weight="1"
         android:gravity="center_vertical|center_horizontal">
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/showRange"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="@string/show_range"
-            />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical|center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/show_range"
+                android:id="@+id/tvShowDesc"
+                android:textAlignment="center"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:gravity="center_vertical|center_horizontal">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="203dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal">
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/showRange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_weight="1"
         android:gravity="center_vertical|center_horizontal">
 
@@ -42,8 +73,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/map_refresh"
                 android:id="@+id/tvMapDesc"
-                android:layout_marginLeft="15dp"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="15dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -80,7 +111,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_weight="1"
         android:gravity="center_vertical|center_horizontal">
 
@@ -98,7 +129,8 @@
                 android:text="@string/server_refresh"
                 android:id="@+id/tvServerDesc"
                 android:layout_marginLeft="15dp"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="15dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -135,7 +167,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_weight="1"
         android:gravity="center_vertical|center_horizontal"></LinearLayout>
 </LinearLayout>
