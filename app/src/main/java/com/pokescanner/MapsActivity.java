@@ -48,12 +48,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.loaders.MapObjectsLoadedEvent;
 import com.pokescanner.loaders.MapObjectsLoader;
 import com.pokescanner.objects.FilterItem;
+import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.MenuItem;
+import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
 import com.pokescanner.recycler.MenuRecycler;
@@ -70,9 +73,11 @@ import org.joda.time.format.DateTimeFormatter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import POGOProtos.Map.Fort.FortDataOuterClass;
 import POGOProtos.Map.Pokemon.MapPokemonOuterClass;
 import io.realm.Realm;
 import rx.Observable;
@@ -199,15 +204,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         progressBar.setProgress((pos* 100)/scanMap.size());
 
         final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getMapObjects().getCatchablePokemons();
+        final Collection<FortDataOuterClass.FortData> collectionGyms = event.getMapObjects().getGyms();
+        final Collection<FortDataOuterClass.FortData> collectionPokeStops = event.getMapObjects().getPokestops();
 
-        if (collectionPokemon != null) {
+        if ((collectionPokemon != null) && (collectionGyms != null) && (collectionPokeStops != null)) {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
-                public void execute(Realm realm) {
+                public void execute(Realm realm)
+                {
                     for (MapPokemonOuterClass.MapPokemon pokemonOut: collectionPokemon)
-                    {
                         realm.copyToRealmOrUpdate(new Pokemons(pokemonOut));
-                    }
+
+                    for (FortDataOuterClass.FortData gymOut : collectionGyms)
+                        realm.copyToRealmOrUpdate(new Gym(gymOut));
+
+                    for(FortDataOuterClass.FortData pokestopOut : collectionPokeStops)
+                        realm.copyToRealmOrUpdate(new PokeStop(pokestopOut));
                 }
             });
         }else {
@@ -229,7 +241,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             List<LatLng> corners = getCorners(scanMap);
             //Once we have the corners lets create two locations
             Location location = new Location("");
-            //set the laditude/longitude
+            //set the latitude/longitude
             location.setLatitude(corners.get(0).latitude);
             location.setLongitude(corners.get(0).longitude);
 
@@ -453,6 +465,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 realm.where(Pokemons.class).equalTo("encounterid", pokemon.getEncounterid()).findAll().deleteAllFromRealm();
             }
+        }
+        ArrayList<Gym> gyms = new ArrayList<Gym>(realm.copyFromRealm(realm.where(Gym.class).findAll()));
+        for (int i = 0;i < gyms.size(); i++)
+        {
+            Gym gym = gyms.get(i);
+            mMap.addMarker(gym.getMarker(this));
+        }
+        ArrayList<PokeStop> pokestops = new ArrayList<PokeStop>(realm.copyFromRealm(realm.where(PokeStop.class).findAll()));
+        for (int i = 0;i < pokestops.size(); i++)
+        {
+            PokeStop pokestop = pokestops.get(i);
+            mMap.addMarker(pokestop.getMarker(this));
         }
         realm.commitTransaction();
     }
