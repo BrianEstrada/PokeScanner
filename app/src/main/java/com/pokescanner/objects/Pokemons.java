@@ -41,10 +41,17 @@ import POGOProtos.Map.Pokemon.MapPokemonOuterClass;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 
 /**
  * Created by Brian on 7/21/2016.
  */
+@Data
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class Pokemons  extends RealmObject{
     int Number;
     @Index
@@ -54,8 +61,7 @@ public class Pokemons  extends RealmObject{
     long expires;
     double longitude,laditude;
 
-    public Pokemons() {
-    }
+    public Pokemons() {}
 
     public Pokemons(MapPokemonOuterClass.MapPokemon pokemonIn){
             setEncounterid(pokemonIn.getEncounterId());
@@ -64,60 +70,6 @@ public class Pokemons  extends RealmObject{
             setNumber(pokemonIn.getPokemonId().getNumber());
             setLaditude(pokemonIn.getLatitude());
             setLongitude(pokemonIn.getLongitude());
-    }
-    public Pokemons(int number, String name, int encounterid, long expires) {
-        Number = number;
-        Name = name;
-        this.encounterid = encounterid;
-        this.expires = expires;
-    }
-
-    public int getNumber() {
-        return Number;
-    }
-
-    public void setNumber(int number) {
-        Number = number;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public long getEncounterid() {
-        return encounterid;
-    }
-
-    public void setEncounterid(long encounterid) {
-        this.encounterid = encounterid;
-    }
-
-    public long getExpires() {
-        return expires;
-    }
-
-    public void setExpires(long expires) {
-        this.expires = expires;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getLaditude() {
-        return laditude;
-    }
-
-    public void setLaditude(double laditude) {
-        this.laditude = laditude;
     }
 
     public DateTime getDate() {

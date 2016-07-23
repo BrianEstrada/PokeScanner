@@ -20,46 +20,22 @@ package com.pokescanner.objects;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 
 /**
  * Created by Brian on 7/22/2016.
  */
+@Data
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class FilterItem extends RealmObject{
     @PrimaryKey
     int Number;
     String Name;
     boolean filtered;
 
-    public FilterItem(int number, String name, boolean filtered) {
-        Number = number;
-        Name = name;
-        this.filtered = filtered;
-    }
-
-    public FilterItem() {
-    }
-
-    public int getNumber() {
-        return Number;
-    }
-
-    public void setNumber(int number) {
-        Number = number;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public boolean isFiltered() {
-        return filtered;
-    }
-
-    public void setFiltered(boolean filtered) {
-        this.filtered = filtered;
-    }
+    public FilterItem() {}
 }
