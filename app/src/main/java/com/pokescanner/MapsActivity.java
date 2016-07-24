@@ -42,6 +42,7 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -64,11 +65,7 @@ import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
-import io.realm.Realm;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -76,6 +73,13 @@ import org.joda.time.DateTime;
 import org.joda.time.Instant;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.realm.Realm;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -245,12 +249,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setMyLocationEnabled(true);
             mMap.setOnCameraChangeListener(this);
             //Add padding for map buttons (ex. my location button) as we have Toolbar at top
-            mMap.setPadding(0, 0, com.pokescanner.helper.DrawableUtils.convertToPixels(MapsActivity.this, 36), 0);
+            mMap.setPadding(0, com.pokescanner.helper.DrawableUtils.convertToPixels(MapsActivity.this, 36),0 , 0);
             //Let's find our location and set it!
             Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider(criteria, true);
             currentLocation = locationManager.getLastKnownLocation(provider);
-
             //Center camera function
             centerCamera();
             startRefresher();
