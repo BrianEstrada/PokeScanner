@@ -34,10 +34,16 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/poke_scanner"
         android:id="@+id/tvTitle"
-        android:paddingBottom="20dp"
         android:textSize="40sp"
-        android:textIsSelectable="false"
-        android:layout_marginBottom="20dp" />
+        android:textIsSelectable="false" />
+
+    <TextView
+        android:text="v0.0.0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/tvVersion"
+        android:paddingBottom="20dp"/>
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"

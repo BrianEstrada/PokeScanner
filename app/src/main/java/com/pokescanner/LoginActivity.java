@@ -39,6 +39,7 @@ import com.crashlytics.android.Crashlytics;
 import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.events.AuthLoadedEvent;
 import com.pokescanner.helper.AppUpdateDialog;
+import com.pokescanner.helper.SemVer;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.helper.UiUtils;
 import com.pokescanner.loaders.AppUpdateLoader;
@@ -59,6 +60,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText etUsername;
     EditText etPassword;
     TextView tvTitle;
+    TextView tvVersion;
 
     LinearLayout Container;
     ProgressBar progressBar;
@@ -99,6 +101,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
+        tvVersion = (TextView) findViewById(R.id.tvVersion);
+        tvVersion.setText(SemVer.parse(BuildConfig.VERSION_NAME).toString());
 
         Container = (LinearLayout) findViewById(R.id.Container);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
