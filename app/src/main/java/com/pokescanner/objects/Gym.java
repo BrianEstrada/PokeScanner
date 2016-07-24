@@ -2,7 +2,6 @@ package com.pokescanner.objects;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -48,8 +47,7 @@ public class Gym extends RealmObject
         setInBattle(gymData.getIsInBattle());
     }
 
-    public MarkerOptions getMarker(Context context)
-    {
+    public MarkerOptions getMarker(Context context) {
         String uri = "gym" + getOwnedByTeamValue();
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
 

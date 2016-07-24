@@ -36,8 +36,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.pokescanner.loaders.AuthGOOGLELoader;
 import com.pokescanner.events.AuthLoadedEvent;
+import com.pokescanner.loaders.AuthGOOGLELoader;
 import com.pokescanner.loaders.AuthPTCLoader;
 import com.pokescanner.objects.User;
 
@@ -60,9 +60,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String username,password;
     Button btnRegister;
     Button btnLogin;
+    Button btnGoogleLogin;
     SharedPreferences sharedPref;
     Realm realm;
     int LOGIN_METHOD = -1;
+    String TOKEN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //get our views
+        btnGoogleLogin = (Button) findViewById(R.id.btnGoogleLogin);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
@@ -98,6 +101,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //finally we are going to ask for permission to the GPS
         getPermissions();
+
+        btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GoogleLogin();
+            }
+        });
     }
 
     @Override
@@ -108,31 +118,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //begin to show the progress bar
         showProgressbar(true);
 
-        if (isEmailValid(username)) {
-            /*
-            showToast(R.string.TRYING_GOOGLE_LOGIN);
-            showProgressbar(false);
-            */
-            LOGIN_METHOD = User.GOOGLE;
-            AuthGOOGLELoader authGOOGLELoader = new AuthGOOGLELoader(username,password);
-            authGOOGLELoader.start();
-        }else{
-            showToast(R.string.TRYING_PTC_LOGIN);
-            LOGIN_METHOD = User.PTC;
-            AuthPTCLoader authloader = new AuthPTCLoader(username,password);
-            authloader.start();
-        }
+
+        showToast(R.string.TRYING_PTC_LOGIN);
+        LOGIN_METHOD = User.PTC;
+        AuthPTCLoader authloader = new AuthPTCLoader(username,password);
+        authloader.start();
     }
 
     @Subscribe (threadMode = ThreadMode.MAIN)
-    public void onAuthLoadedEvent(AuthLoadedEvent event){
+    public void onAuthLoadedEvent(final AuthLoadedEvent event){
         showProgressbar(false);
         switch(event.getStatus()) {
             case AuthLoadedEvent.OK:
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        User user = new User(1,username,password,LOGIN_METHOD);
+                        User user = new User(1,
+                                username,
+                                password,
+                                event.getToken(),
+                                LOGIN_METHOD);
                         realm.copyToRealmOrUpdate(user);
                         startMapIntent();
                         showToast(R.string.LOGIN_OK);
@@ -200,6 +205,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
+    public void GoogleLogin(){
+        LOGIN_METHOD = User.GOOGLE;
+        showToast(R.string.TRYING_GOOGLE_LOGIN);
+        Intent intent = new Intent(this,GoogleLoginActivity.class);
+        startActivityForResult(intent, 1300);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (data == null || !data.hasExtra(GoogleLoginActivity.EXTRA_CODE)) {
+            showToast(R.string.AUTH_FAILED);
+            return;
+        }
+        String code = data.getStringExtra(GoogleLoginActivity.EXTRA_CODE);
+
+        AuthGOOGLELoader authGOOGLELoader = new AuthGOOGLELoader(code);
+        authGOOGLELoader.start();
+    }
+
 
     boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();

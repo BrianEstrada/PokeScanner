@@ -70,7 +70,7 @@ public class Pokemons  extends RealmObject{
     public DateTime getDate() {
         return new DateTime(getExpires());
     }
-    public MarkerOptions getMarker(Context context) {
+    public MarkerOptions getMarker(Context context,int scale) {
         String uri = "p" + getNumber();
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
 
@@ -85,7 +85,7 @@ public class Pokemons  extends RealmObject{
         //set our location
         LatLng position = new LatLng(getLatitude(), getLongitude());
 
-        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID,timeOut,2,context);
+        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID,timeOut,scale,context);
 
         String name = getName();
         name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();

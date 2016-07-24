@@ -47,14 +47,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pokescanner.events.ForceRefreshEvent;
+import com.pokescanner.events.PublishProgressEvent;
+import com.pokescanner.events.RestartRefreshEvent;
 import com.pokescanner.helper.PokemonListLoader;
-import com.pokescanner.events.MapObjectsLoadedEvent;
 import com.pokescanner.loaders.MapObjectsLoader;
 import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.Gym;
@@ -74,12 +76,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import POGOProtos.Map.Fort.FortDataOuterClass;
-import POGOProtos.Map.Pokemon.MapPokemonOuterClass;
 import io.realm.Realm;
 import rx.Observable;
 import rx.Subscription;
@@ -109,6 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private ArrayList<Marker> pokeMarkers = new ArrayList<>();
     private ArrayList<Marker> locationMarkers = new ArrayList<>();
+    Circle mBoundingBox = null;
 
     PokemonListLoader pokemonListLoader;
     SharedPreferences sharedPreferences;
@@ -141,7 +141,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Load our shared prefs for our scan value
         sharedPreferences = getSharedPreferences(getString(R.string.shared_key),Context.MODE_PRIVATE);
-        scanValue = sharedPreferences.getInt("scanvalue",5);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -192,12 +191,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else
         {
             pos = 1;
+            //Load our scan value
+            scanValue = sharedPreferences.getInt("scanvalue",5);
+            System.out.println(scanValue);
             //Our refresh rate to Milliseconds
             int millis = SettingsController.getSettings(this).getServerRefresh() * 1000;
             showProgressbar(true);
             progressBar.setProgress(0);
             scanMap = makeHexScanMap(mMap.getCameraPosition().target, scanValue, 1, new ArrayList<LatLng>());
-            mapObjectsLoader = new MapObjectsLoader(user, scanMap,millis);
+            mapObjectsLoader = new MapObjectsLoader(user, scanMap,millis,this);
             mapObjectsLoader.start();
         }
     }
@@ -210,44 +212,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
     }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void mapObjectsLoaded(MapObjectsLoadedEvent event) {
-        progressBar.setProgress((pos* 100)/scanMap.size());
 
-        final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getMapObjects().getCatchablePokemons();
-        final Collection<FortDataOuterClass.FortData> collectionGyms = event.getMapObjects().getGyms();
-        final Collection<FortDataOuterClass.FortData> collectionPokeStops = event.getMapObjects().getPokestops();
-
-        if ((collectionPokemon != null) && (collectionGyms != null) && (collectionPokeStops != null)) {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm)
-                {
-                    for (MapPokemonOuterClass.MapPokemon pokemonOut: collectionPokemon)
-                        realm.copyToRealmOrUpdate(new Pokemons(pokemonOut));
-
-                    for (FortDataOuterClass.FortData gymOut : collectionGyms)
-                        realm.copyToRealmOrUpdate(new Gym(gymOut));
-
-                    for(FortDataOuterClass.FortData pokestopOut : collectionPokeStops)
-                        realm.copyToRealmOrUpdate(new PokeStop(pokestopOut));
-                }
-            });
-        }else {
-            showToast(R.string.SERVER_FAILED);
-        }
-
-        if (pos==(scanMap.size())) {
-            showProgressbar(false);
-        }
-        
-        pos++;
-    }
     public void showToast(int resString) {
         Toast.makeText(MapsActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
     }
     public void createBoundingBox() {
         if (scanMap.size()>0) {
+            if (mBoundingBox != null)
+                mBoundingBox.remove();
             //To create a circle we need to get the corners
             List<LatLng> corners = getCorners(scanMap);
             //Once we have the corners lets create two locations
@@ -263,7 +235,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             float distance = location.distanceTo(location1);
 
-            mMap.addCircle(new CircleOptions().center(scanMap.get(0)).radius(distance));
+            mBoundingBox = mMap.addCircle(new CircleOptions().center(scanMap.get(0)).radius(distance));
             //mMap.addPolygon(new PolygonOptions().addAll(getCorners(scanMap)));
         }
     }
@@ -362,6 +334,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         break;
                     case 3:
                         logOut();
+                        dialog.dismiss();
                         break;
                     case 4:
                         Uri uri = Uri.parse("https://www.paypal.me/brianestrada"); // missing 'http://' will cause crashed
@@ -379,6 +352,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dialog.show();
     }
     public void searchRadiusDialog() {
+        scanValue = sharedPreferences.getInt("scanvalue",5);
+
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_search_radius);
@@ -421,8 +396,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     scanValue = saveValue;
                 }
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("scanvalue",scanValue);
-                editor.commit();
+                editor.putInt("scanvalue",saveValue);
+                editor.apply();
                 dialog.dismiss();
             }
         });
@@ -482,9 +457,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Clear our array
         pokeMarkers.clear();
 
+        //load our array
         ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
 
-        System.out.println(pokemons.size());
+        //get our icon scale from our settings
+        int scale = SettingsController.getSettings(this).getScale();
 
         for (int i = 0; i < pokemons.size(); i++) {
             Pokemons pokemon = pokemons.get(i);
@@ -497,7 +474,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         //INTENTIONALLY LEFT EMPTY
                     } else {
                         //Render him!
-                        pokeMarkers.add(mMap.addMarker(pokemon.getMarker(this)));
+                        pokeMarkers.add(mMap.addMarker(pokemon.getMarker(this,scale)));
                     }
                 } else {
                     //If he has expired lets purge him from the database
@@ -523,12 +500,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ArrayList<Gym> gyms = new ArrayList<Gym>(realm.copyFromRealm(realm.where(Gym.class).findAll()));
         ArrayList<PokeStop> pokestops = new ArrayList<PokeStop>(realm.copyFromRealm(realm.where(PokeStop.class).findAll()));
 
-        int contained = 0;
         for (int i = 0;i < gyms.size(); i++) {
             Gym gym = gyms.get(i);
             LatLng pos = new LatLng(gym.getLatitude(),gym.getLongitude());
             if (curScreen.contains(pos)) {
-                contained++;
                 locationMarkers.add(mMap.addMarker(gym.getMarker(this)));
             }
         }
@@ -537,11 +512,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             PokeStop pokestop = pokestops.get(i);
             LatLng pos = new LatLng(pokestop.getLatitude(),pokestop.getLongitude());
             if (curScreen.contains(pos)) {
-                contained++;
                 locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
             }
         }
-        System.out.println("VISIBLE GYMS:" + contained);
     }
     public void createMapObjects() {
         if (SettingsController.getSettings(this).isBoundingBoxEnabled()) {
@@ -550,12 +523,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //createMarkerList();
     }
     public void startRefresher() {
+        if (pokeonRefresher != null)
+            pokeonRefresher.unsubscribe();
+        if (gymstopRefresher != null)
+            gymstopRefresher.unsubscribe();
+
         //Using RX java we setup an interval to refresh the map
         pokeonRefresher = Observable.interval(SettingsController.getSettings(this).getMapRefresh(), TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long aLong) {
-                        System.out.println("Refreshing Pokemons");
+                        //System.out.println("Refreshing Pokemons");
                         refreshMap();
                     }
                 });
@@ -564,7 +542,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long aLong) {
-                        System.out.println("Refreshing Gyms");
+                        //System.out.println("Refreshing Gyms");
                         refreshGyms();
                     }
                 });
@@ -574,12 +552,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         refreshGyms();
         refreshMap();
     }
+    @Subscribe (threadMode = ThreadMode.MAIN)
+    public void onRestartRefreshEvent(RestartRefreshEvent event) {
+       startRefresher();
+    }
+    @Subscribe (threadMode = ThreadMode.MAIN)
+    public void onPublishProgressEvent(PublishProgressEvent event) {
+        if (event.getProgress() != -1) {
+            float progress = (float) event.getProgress() * 100 / scanMap.size();
+            progressBar.setProgress((int) progress);
+            if (Math.round(progress)==scanMap.size()) {
+                showProgressbar(false);
+            }
+        }
+    }
     public boolean doWeHavePermission() {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
     @Override
     protected void onResume() {
-        System.out.println("Resume");
         super.onResume();
         realm = Realm.getDefaultInstance();
         reloadFilters();
@@ -602,6 +593,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-
     }
 }

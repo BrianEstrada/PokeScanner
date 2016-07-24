@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal">
+        android:gravity="center_vertical|center_horizontal"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="vertical"
@@ -51,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp" />
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -58,7 +60,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal">
+        android:gravity="center_vertical|center_horizontal"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="vertical"
@@ -113,7 +116,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal">
+        android:gravity="center_vertical|center_horizontal"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="vertical"
@@ -128,7 +132,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/server_refresh"
                 android:id="@+id/tvServerDesc"
-                android:layout_marginLeft="15dp"
                 android:textAlignment="center"
                 android:textSize="15dp" />
         </LinearLayout>
@@ -169,5 +172,78 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal"></LinearLayout>
+        android:gravity="center_vertical|center_horizontal"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical|center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/icon_scale"
+                android:id="@+id/tvScaleDesc"
+                android:textAlignment="center"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:gravity="center_vertical|center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/tvScaleSpace" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="203dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal">
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seekScale"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginBottom="10dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_pokemons"
+            android:id="@+id/btnClearPokemon"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_gyms"
+            android:id="@+id/btnClearGyms"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" />
+    </LinearLayout>
+
 </LinearLayout>

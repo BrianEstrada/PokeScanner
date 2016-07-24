@@ -32,21 +32,31 @@
 
 package com.pokescanner.loaders;
 
+import android.content.Context;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.pokegoapi.api.PokemonGo;
 import com.pokegoapi.api.map.Map;
+import com.pokegoapi.api.map.MapObjects;
 import com.pokegoapi.auth.GoogleLogin;
 import com.pokegoapi.auth.PTCLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
 import com.pokegoapi.exceptions.RemoteServerException;
-import com.pokescanner.events.MapObjectsLoadedEvent;
+import com.pokescanner.events.PublishProgressEvent;
+import com.pokescanner.objects.Gym;
+import com.pokescanner.objects.PokeStop;
+import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Collection;
 import java.util.List;
 
+import POGOProtos.Map.Fort.FortDataOuterClass;
+import POGOProtos.Map.Pokemon.MapPokemonOuterClass;
 import POGOProtos.Networking.Envelopes.RequestEnvelopeOuterClass;
+import io.realm.Realm;
 import okhttp3.OkHttpClient;
 
 public class MapObjectsLoader extends Thread{
@@ -54,10 +64,15 @@ public class MapObjectsLoader extends Thread{
     List<LatLng> scanMap;
     int SLEEP_TIME;
 
-    public MapObjectsLoader(User user, List<LatLng> scanMap, int SLEEP_TIME) {
+    private Realm realm;
+
+    Context context;
+
+    public MapObjectsLoader(User user, List<LatLng> scanMap, int SLEEP_TIME,Context context) {
         this.user = user;
         this.scanMap = scanMap;
         this.SLEEP_TIME = SLEEP_TIME;
+        this.context = context;
     }
 
     @Override
@@ -72,15 +87,18 @@ public class MapObjectsLoader extends Thread{
             //Are we using a google login or a PTC login?
             if (user.getAuthType() == User.GOOGLE) {
                 //If google do this
-                authInfo = new GoogleLogin(client).login(user.getUsername(), user.getPassword());
+                System.out.println(user);
+                authInfo = new GoogleLogin(client).login(user.getToken().getId_token());
             }else {
                 //if PTC do that
+                System.out.println(user);
                 authInfo = new PTCLogin(client).login(user.getUsername(), user.getPassword());
             }
             //Once we have our token and stuff lets call our pokemonGo instance
             PokemonGo go = new PokemonGo(authInfo, client);
 
             //Finally when we load our instance we're going to go through our scanmap
+            int pos = 1;
             for (LatLng loc: scanMap) {
                 //Set the location for each looop
                 go.setLongitude(loc.longitude);
@@ -89,25 +107,50 @@ public class MapObjectsLoader extends Thread{
                 //Call the map
                 Map map = new Map(go);
 
-                //Send it off to the map thread
-                //We're going to check if we have any subscribers availible for this class
-                //If we don't we simply don't send off the objects
-                if(EventBus.getDefault().hasSubscriberForEvent(MapObjectsLoadedEvent.class)) {
-                    EventBus.getDefault().post(new MapObjectsLoadedEvent(map.getMapObjects()));
-                }
+                //Start uploading info to realm.
+                checkForPurge();
 
+                MapObjects event = map.getMapObjects();
+
+                final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getCatchablePokemons();
+                final Collection<FortDataOuterClass.FortData> collectionGyms = event.getGyms();
+                final Collection<FortDataOuterClass.FortData> collectionPokeStops = event.getPokestops();
+
+                realm = Realm.getDefaultInstance();
+                final int progress = pos;
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm)
+                    {
+                        for (MapPokemonOuterClass.MapPokemon pokemonOut: collectionPokemon)
+                            realm.copyToRealmOrUpdate(new Pokemons(pokemonOut));
+
+                        for (FortDataOuterClass.FortData gymOut : collectionGyms)
+                            realm.copyToRealmOrUpdate(new Gym(gymOut));
+
+                        for(FortDataOuterClass.FortData pokestopOut : collectionPokeStops)
+                            realm.copyToRealmOrUpdate(new PokeStop(pokestopOut));
+
+                        if (EventBus.getDefault().hasSubscriberForEvent(PublishProgressEvent.class))
+                        {
+                            EventBus.getDefault().post(new PublishProgressEvent(progress));
+                        }
+                    }
+                });
                 //Time 2 wait
+                pos++;
                 Thread.sleep(SLEEP_TIME);
             }
         } catch (InterruptedException e) {
-            EventBus.getDefault().post(new MapObjectsLoadedEvent(null));
             e.printStackTrace();
         } catch (RemoteServerException e) {
-            EventBus.getDefault().post(new MapObjectsLoadedEvent(null));
             e.printStackTrace();
         } catch (LoginFailedException e) {
-            EventBus.getDefault().post(new MapObjectsLoadedEvent(null));
             e.printStackTrace();
         }
+    }
+
+    public void checkForPurge() {
+
     }
 }

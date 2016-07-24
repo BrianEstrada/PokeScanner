@@ -37,6 +37,7 @@ public class User extends RealmObject{
     int index;
     String username;
     String password;
+    GoogleAuthToken token;
     int authType;
 
     public User() {}

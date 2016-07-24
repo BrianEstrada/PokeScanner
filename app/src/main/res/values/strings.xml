@@ -19,7 +19,8 @@
     <string name="shared_key" translatable="false">POKESCANNER</string>
     <string name="title_activity_maps">Map</string>
     <string name="scan">Scan</string>
-    <string name="login">Login</string>
+    <string name="ptclogin">PTC Login</string>
+    <string name="googlelogin">Google Login</string>
     <string name="poke_scanner" translatable="false">Poke Scanner</string>
     <string name="blacklist">Blacklist</string>
     <string name="save">Save</string>
@@ -38,7 +39,7 @@
     <string name="PERMISSION_OK">Thanks for the permission!</string>
 
     <string name="TRYING_PTC_LOGIN">Trying PTC login.</string>
-    <string name="TRYING_GOOGLE_LOGIN">Google Login is not available on this app (yet).</string>
+    <string name="TRYING_GOOGLE_LOGIN">Trying Google Login.</string>
 
     <string name="on">On</string>
     <string name="off">Off</string>
@@ -60,4 +61,12 @@
     <string name="map_refresh">Map Refresh</string>
     <string name="check_hidden">Check = Hidden</string>
     <string name="donate">Donate</string>
+    <string name="icon_scale">Icon Scale</string>
+
+    <string name="clear_gyms">Clear Gyms/Stops</string>
+    <string name="clear_pokemons">Clear Pokemons</string>
+
+    <string name="gyms_cleared">Gyms and Pokestops cleared</string>
+    <string name="pokemon_cleared">Pokemon cleared</string>
+
 </resources>

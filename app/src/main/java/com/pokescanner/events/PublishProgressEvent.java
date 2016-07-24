@@ -1,16 +1,16 @@
-package com.pokescanner.helper;
+package com.pokescanner.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-
+/**
+ * Created by Brian on 7/23/2016.
+ */
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Settings {
-    boolean boundingBoxEnabled;
-    int serverRefresh;
-    int scale;
-    int mapRefresh;
+
+public class PublishProgressEvent {
+    int progress;
 }

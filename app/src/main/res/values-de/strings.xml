@@ -24,7 +24,7 @@
     <string name="searchicon">Such Icon</string>
     <string name="select_all">Alle auswählen</string>
     <string name="server_refresh">Server Aktualisierung</string>
-    <string name="shared_key"></string>
+    <string name="shared_key">POKESCANNER</string>
     <string name="show_range">Zeige Reichweite</string>
     <string name="timeEstimate">Voraussichtliche Scan Zeit:</string>
     <string name="title_activity_maps">Karte</string>
@@ -32,7 +32,6 @@
     <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">ACHTUNG: \nBitte nutze nicht deinen eigentlichen\nPokeGo Account für diese App!</string>
     <string name="pokemon_filters">Pokemon Filter</string>
     <string name="settings">Einstellungen</string>
-    <string name="google_maps_api_key"></string>
     <string name="logout">Ausloggen</string>
     <string name="blacklist">Blacklist</string>
     <string name="map_refresh">Karten Aktualisierung</string>
