@@ -4,222 +4,173 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:layout_marginRight="15dp"
     android:minWidth="300dp">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal"
-        android:baselineAligned="false">
+        android:gravity="center_vertical|center_horizontal">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
+            android:id="@+id/tvShowDesc"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/show_range"
+            android:paddingLeft="16dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="15dp"
+            />
+
+        <View
+            android:layout_width="24dp"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:layout_width="160dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/show_range"
-                android:id="@+id/tvShowDesc"
-                android:textAlignment="center"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".5"
-            android:gravity="center_vertical|center_horizontal">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="203dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|center_horizontal">
-
+            android:layout_marginLeft="16dp"
+            >
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/showRange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp" />
-        </LinearLayout>
-
+                android:layout_gravity="center_vertical|center_horizontal"
+                />
+        </FrameLayout>
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal"
-        android:baselineAligned="false">
+        android:gravity="center_vertical|center_horizontal">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/map_refresh"
+            android:id="@+id/tvMapDesc"
+            android:paddingLeft="16dp"
+            android:textSize="15dp"
+            />
+
+        <TextView
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/_0"
+            android:id="@+id/tvMapNumber" />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:layout_width="160dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/map_refresh"
-                android:id="@+id/tvMapDesc"
-                android:textAlignment="center"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".5"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/_0"
-                android:id="@+id/tvMapNumber" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="203dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|center_horizontal">
-
-            <android.support.v7.widget.AppCompatSeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/seekMap"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp" />
-        </LinearLayout>
+            android:layout_marginLeft="16dp"
+            android:id="@+id/seekMap"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal"
-        android:baselineAligned="false">
+        android:gravity="center_vertical|center_horizontal">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/server_refresh"
+            android:id="@+id/tvServerDesc"
+            android:paddingLeft="16dp"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/_0"
+            android:id="@+id/tvServerNumber" />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:layout_width="160dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/server_refresh"
-                android:id="@+id/tvServerDesc"
-                android:textAlignment="center"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".5"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/_0"
-                android:id="@+id/tvServerNumber" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="203dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|center_horizontal">
-
-            <android.support.v7.widget.AppCompatSeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/seekServer"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp" />
-        </LinearLayout>
+            android:id="@+id/seekServer"
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_weight="1"
+        android:gravity="center_vertical|center_horizontal">
+
+        <TextView
+            android:id="@+id/tvOnlyLured"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="16dp"
+            android:text="@string/only_lured"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="15dp"
+            />
+
+        <View
+            android:layout_width="24dp"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            >
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/onlyLured"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                />
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:gravity="center_vertical|center_horizontal"
         android:baselineAligned="false">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="16dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/icon_scale"
+            android:id="@+id/tvScaleDesc"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/tvScaleSpace" />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:layout_width="160dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/icon_scale"
-                android:id="@+id/tvScaleDesc"
-                android:textAlignment="center"
-                android:textSize="15sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".5"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:id="@+id/tvScaleSpace" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="203dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|center_horizontal">
-
-            <android.support.v7.widget.AppCompatSeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/seekScale"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp" />
-        </LinearLayout>
+            android:id="@+id/seekScale"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="15dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -232,6 +183,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/clear_pokemons"
             android:id="@+id/btnClearPokemon"
             android:layout_marginRight="15dp"
@@ -240,10 +192,10 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/clear_gyms"
             android:id="@+id/btnClearGyms"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp" />
     </LinearLayout>
-
 </LinearLayout>
