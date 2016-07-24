@@ -1,0 +1,72 @@
+<!--
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="app_name" translatable="false">Poke Scanner</string>
+    <string name="shared_key" translatable="false">POKESCANNER</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="scan">Поиск</string>
+    <string name="ptclogin">PTC вход</string>
+    <string name="googlelogin">Google вход</string>
+    <string name="poke_scanner" translatable="false">Poke Scanner</string>
+    <string name="blacklist">Черный список</string>
+    <string name="save">Сохранить</string>
+    <string name="search_radius">Радиус поиска</string>
+    <string name="higher_number_slower_search">1 юнит ~= 200 метров</string>
+    <string name="cancel">Отмена</string>
+
+    <string name="none">None</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="pokemon_name">Имя покемона</string>
+
+    <string name="AUTH_FAILED">Неправильный логин или пароль</string>
+    <string name="SERVER_FAILED">Сервера не отвечают</string>
+    <string name="ERROR_FILTERS">Ошибка загрузки фильтров</string>
+    <string name="LOGIN_OK">Вход выполнен успешно</string>
+    <string name="PERMISSION_OK">Спасибо за доступ!</string>
+
+    <string name="TRYING_PTC_LOGIN">Попытка входа в PTC.</string>
+    <string name="TRYING_GOOGLE_LOGIN">Попытка входа в Google.</string>
+
+    <string name="on">Вкл</string>
+    <string name="off">Выкл</string>
+
+    <string name="username">Логни</string>
+    <string name="password">Пароль</string>
+    <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">ВНИМАНИЕ: \nНе используйте ваш основной PokeGo \nаккаунт в этом приложении!</string>
+    <string name="filter">Фильтры</string>
+    <string name="timeEstimate">Примерное время поиска: </string>
+    <string name="hide">Спрятать</string>
+    <string name="searchicon">SearchIcon</string>
+    <string name="menubutton">MenuButton</string>
+    <string name="show_range">Показывать радиус поиска</string>
+    <string name="_0" translatable="false">0</string>
+    <string name="server_refresh">Обновление сервера</string>
+    <string name="pokemon_filters">Фильтры покемонов</string>
+    <string name="settings">Настройки</string>
+    <string name="logout">Выйти</string>
+    <string name="map_refresh">Обновление карты</string>
+    <string name="check_hidden">Выбран - Спрятан</string>
+    <string name="donate">Пожертвования</string>
+    <string name="icon_scale">Размер иконок</string>
+    <string name="only_lured">Только Stopы с Lure</string>
+
+    <string name="clear_gyms">Убрать Gymы/Stopы</string>
+    <string name="clear_pokemons">Убрать покемонов</string>
+
+    <string name="gyms_cleared">Gymы и Pokestopы убраны</string>
+    <string name="pokemon_cleared">Pokemonы убраны</string>
+</resources>
