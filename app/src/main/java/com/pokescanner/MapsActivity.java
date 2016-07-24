@@ -434,22 +434,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ArrayList<Gym> gyms = new ArrayList<Gym>(realm.copyFromRealm(realm.where(Gym.class).findAll()));
         ArrayList<PokeStop> pokestops = new ArrayList<PokeStop>(realm.copyFromRealm(realm.where(PokeStop.class).findAll()));
 
-        for (int i = 0;i < gyms.size(); i++) {
-            Gym gym = gyms.get(i);
-            LatLng pos = new LatLng(gym.getLatitude(),gym.getLongitude());
-            if (curScreen.contains(pos)) {
-                locationMarkers.add(mMap.addMarker(gym.getMarker(this)));
+        if(SettingsController.getSettings(MapsActivity.this).isGymsEnabled())
+        {
+            for (int i = 0; i < gyms.size(); i++) {
+                Gym gym = gyms.get(i);
+                LatLng pos = new LatLng(gym.getLatitude(), gym.getLongitude());
+                if (curScreen.contains(pos)) {
+                    locationMarkers.add(mMap.addMarker(gym.getMarker(this)));
+                }
             }
         }
 
         boolean showAllStops = !Settings.get(this).isShowOnlyLured();
 
-        for (int i = 0;i < pokestops.size(); i++) {
-            PokeStop pokestop = pokestops.get(i);
-            LatLng pos = new LatLng(pokestop.getLatitude(),pokestop.getLongitude());
-            if (curScreen.contains(pos)) {
-                if (pokestop.isHasLureInfo() || showAllStops) {
-                    locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
+        if(SettingsController.getSettings(MapsActivity.this).isPokestopsEnabled())
+        {
+            for (int i = 0; i < pokestops.size(); i++) {
+                PokeStop pokestop = pokestops.get(i);
+                LatLng pos = new LatLng(pokestop.getLatitude(), pokestop.getLongitude());
+                if (curScreen.contains(pos)) {
+                    if (pokestop.isHasLureInfo() || showAllStops) {
+                        locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
+                    }
                 }
             }
         }
