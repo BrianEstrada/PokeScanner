@@ -69,4 +69,11 @@
 
     <string name="gyms_cleared">Gyms and Pokestops cleared</string>
     <string name="pokemon_cleared">Pokemon cleared</string>
+    <string name="version_check_failed">Version check failed.</string>
+    <string name="updating_pokescanner">Updating Poke Scanner</string>
+    <string name="update">Update</string>
+    <string name="update_available_title">Update available</string>
+    <string name="update_check_failed">Update check failed.</string>
+    <string name="changes">Changes:</string>
+    <string name="update_available_long">An update for Poke Scanner is available.</string>
 </resources>

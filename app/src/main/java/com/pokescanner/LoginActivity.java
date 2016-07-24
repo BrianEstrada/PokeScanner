@@ -36,9 +36,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.events.AuthLoadedEvent;
+import com.pokescanner.helper.AppUpdateDialog;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.helper.UiUtils;
+import com.pokescanner.loaders.AppUpdateLoader;
 import com.pokescanner.loaders.AuthGOOGLELoader;
 import com.pokescanner.loaders.AuthPTCLoader;
 import com.pokescanner.objects.User;
@@ -114,6 +117,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 GoogleLogin();
             }
         });
+
+        new AppUpdateLoader().start();
     }
 
     @Override
@@ -164,6 +169,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
 
+    }
+
+    @Subscribe (threadMode = ThreadMode.MAIN)
+    public void onAppUpdateEvent(final AppUpdateEvent event) {
+        switch (event.getStatus()) {
+            case AppUpdateEvent.OK:
+                new AppUpdateDialog(LoginActivity.this, event.getAppUpdate());
+                break;
+            case AppUpdateEvent.FAILED:
+                showToast(R.string.update_check_failed);
+                break;
+        }
     }
 
     public void showToast(int resString) {
