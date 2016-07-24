@@ -437,8 +437,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ArrayList<Gym> gyms = new ArrayList<Gym>(realm.copyFromRealm(realm.where(Gym.class).findAll()));
         ArrayList<PokeStop> pokestops = new ArrayList<PokeStop>(realm.copyFromRealm(realm.where(PokeStop.class).findAll()));
 
-        if(SettingsController.getSettings(MapsActivity.this).isGymsEnabled())
-        {
+        if(SettingsController.getSettings(MapsActivity.this).isGymsEnabled()) {
             for (int i = 0; i < gyms.size(); i++) {
                 Gym gym = gyms.get(i);
                 LatLng pos = new LatLng(gym.getLatitude(), gym.getLongitude());
@@ -450,8 +449,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         boolean showAllStops = !Settings.get(this).isShowOnlyLured();
 
-        if(SettingsController.getSettings(MapsActivity.this).isPokestopsEnabled())
-        {
+        if(SettingsController.getSettings(MapsActivity.this).isPokestopsEnabled()) {
             for (int i = 0; i < pokestops.size(); i++) {
                 PokeStop pokestop = pokestops.get(i);
                 LatLng pos = new LatLng(pokestop.getLatitude(), pokestop.getLongitude());
@@ -466,6 +464,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void createMapObjects() {
         if (SettingsController.getSettings(this).isBoundingBoxEnabled()) {
             createBoundingBox();
+        }else
+        {
+            if (mBoundingBox != null)
+            {
+                mBoundingBox.remove();
+                mBoundingBox = null;
+            }
         }
         //createMarkerList();
     }

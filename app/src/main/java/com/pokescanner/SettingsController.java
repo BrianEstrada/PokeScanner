@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -13,6 +12,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.RestartRefreshEvent;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.objects.Gym;
@@ -34,10 +34,6 @@ public class SettingsController {
     public static final String SHOW_ONLY_LURED = "showOnlyLured";
     public static final String SHOW_GYMS = "showGyms";
     public static final String SHOW_POKESTOPS = "showPokestops";
-
-    //
-    // THIS IS NOT FINISHED!!!
-    //
 
     public static void showSettingDialog(final Context context) {
         final Dialog dialog = new Dialog(context);
@@ -73,6 +69,7 @@ public class SettingsController {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b)
             {
                 Settings.get(context).toBuilder().gymsEnabled(b).build().save(context);
+                forceRefresh();
             }
         });
 
@@ -83,6 +80,7 @@ public class SettingsController {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b)
             {
                 Settings.get(context).toBuilder().pokestopsEnabled(b).build().save(context);
+                forceRefresh();
             }
         });
 
@@ -91,6 +89,7 @@ public class SettingsController {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
                 Settings.get(context).toBuilder().boundingBoxEnabled(b).build().save(context);
+                forceRefresh();
             }
         });
 
@@ -99,6 +98,7 @@ public class SettingsController {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 Settings.get(context).toBuilder().showOnlyLured(b).build().save(context);
+                forceRefresh();
             }
         });
 
@@ -233,5 +233,11 @@ public class SettingsController {
             .putBoolean(SHOW_GYMS, settings.isGymsEnabled())
             .putBoolean(SHOW_POKESTOPS, settings.isPokestopsEnabled())
             .apply();
+    }
+
+    public static void forceRefresh() {
+        if (EventBus.getDefault().hasSubscriberForEvent(ForceRefreshEvent.class)) {
+            EventBus.getDefault().post(new ForceRefreshEvent());
+        }
     }
 }

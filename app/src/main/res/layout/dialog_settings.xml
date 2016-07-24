@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_marginRight="15dp"
     android:minWidth="300dp">
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -41,7 +44,108 @@
                 />
         </FrameLayout>
     </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical|center_horizontal">
 
+        <TextView
+            android:id="@+id/tvShowGyms"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="16dp"
+            android:text="@string/show_gyms"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="15dp" />
+
+        <View
+            android:layout_width="24dp"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp">
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/showGyms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical|center_horizontal">
+
+        <TextView
+            android:id="@+id/tvOnlyLured"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="16dp"
+            android:text="@string/only_lured"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="15dp"
+            />
+
+        <View
+            android:layout_width="24dp"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            >
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/onlyLured"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                />
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical|center_horizontal">
+
+        <TextView
+            android:id="@+id/tvShowPokestops"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="16dp"
+            android:text="@string/show_pokestops"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="15dp" />
+
+        <View
+            android:layout_width="24dp"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp">
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/showPokestops"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal" />
+
+        </FrameLayout>
+
+    </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -111,40 +215,6 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:gravity="center_vertical|center_horizontal">
-
-        <TextView
-            android:id="@+id/tvOnlyLured"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="16dp"
-            android:text="@string/only_lured"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="15dp"
-            />
-
-        <View
-            android:layout_width="24dp"
-            android:layout_height="wrap_content" />
-
-        <FrameLayout
-            android:layout_width="160dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            >
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/onlyLured"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                />
-        </FrameLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
         android:gravity="center_vertical|center_horizontal"
         android:baselineAligned="false">
 
@@ -173,75 +243,7 @@
             android:layout_marginLeft="15dp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:gravity="center_vertical|center_horizontal">
 
-        <TextView
-            android:id="@+id/tvShowGyms"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="16dp"
-            android:text="@string/show_gyms"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="15dp" />
-
-        <View
-            android:layout_width="24dp"
-            android:layout_height="wrap_content" />
-
-        <FrameLayout
-            android:layout_width="160dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp">
-
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/showGyms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal" />
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:gravity="center_vertical|center_horizontal">
-
-        <TextView
-            android:id="@+id/tvShowPokestops"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="16dp"
-            android:text="@string/show_pokestops"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="15dp" />
-
-        <View
-            android:layout_width="24dp"
-            android:layout_height="wrap_content" />
-
-        <FrameLayout
-            android:layout_width="160dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp">
-
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/showPokestops"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal" />
-
-        </FrameLayout>
-
-    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -269,3 +271,4 @@
             android:layout_marginRight="15dp" />
     </LinearLayout>
 </LinearLayout>
+</ScrollView>
