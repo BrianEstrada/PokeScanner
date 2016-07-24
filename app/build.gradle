@@ -16,8 +16,8 @@ android {
         applicationId "com.pokescanner"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 9
-        versionName "1.4.1"
+        versionCode 10
+        versionName "1.5.0"
         multiDexEnabled true
     }
     buildTypes {
@@ -25,6 +25,9 @@ android {
             resValue "string", "google_maps_api_key", "AIzaSyAuejt-XF3VYk1X4NN9aje_EKqv1pb9Jcg"
         }
         release {
+            lintOptions {
+                disable 'MissingTranslation'
+            }
             resValue "string", "google_maps_api_key", "AIzaSyAuejt-XF3VYk1X4NN9aje_EKqv1pb9Jcg"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

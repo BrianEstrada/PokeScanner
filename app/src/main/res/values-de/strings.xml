@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation" >
     <string name="AUTH_FAILED">Falsche Login Daten</string>
     <string name="ERROR_FILTERS">Fehler beim Laden der Filter</string>
     <string name="LOGIN_OK">Login erfolgreich</string>
@@ -11,7 +13,10 @@
     <string name="filter">Filter</string>
     <string name="hide">Verstecken</string>
     <string name="higher_number_slower_search">1 Einheit ~= 200 Meter</string>
-    <string name="login">Login</string>
+
+    <string name="ptclogin">PTC Login</string>
+    <string name="googlelogin">Google Login</string>
+
     <string name="menubutton">Menü Button</string>
     <string name="none">Keine</string>
     <string name="off">Aus</string>
@@ -24,7 +29,6 @@
     <string name="searchicon">Such Icon</string>
     <string name="select_all">Alle auswählen</string>
     <string name="server_refresh">Server Aktualisierung</string>
-    <string name="shared_key">POKESCANNER</string>
     <string name="show_range">Zeige Reichweite</string>
     <string name="timeEstimate">Voraussichtliche Scan Zeit:</string>
     <string name="title_activity_maps">Karte</string>
@@ -36,4 +40,6 @@
     <string name="blacklist">Blacklist</string>
     <string name="map_refresh">Karten Aktualisierung</string>
     <string name="check_hidden">Ausgewählt = Versteckt</string>
+    <string name="pokemon_cleared"></string>
+    <string name="clear_gyms"></string>
 </resources>

@@ -13,7 +13,6 @@
   <string name="filter">Filtry</string>
   <string name="hide">Ukryj</string>
   <string name="higher_number_slower_search">1 jednostka ~= 200 metrów</string>
-  <string name="login">Logowanie</string>
   <string name="logout">Wyloguj</string>
   <string name="map_refresh">Odśwież mapę</string>
   <string name="menubutton">Przycisk Menu</string>
@@ -30,10 +29,11 @@
   <string name="searchicon">Ikona skanowania</string>
   <string name="server_refresh">Odświeżenie serwera</string>
   <string name="settings">Ustawienia</string>
-  <string name="shared_key" translatable="false"></string>
   <string name="show_range">Pokaż zasięg</string>
   <string name="timeEstimate">Estymowany czas skanowania</string>
   <string name="title_activity_maps">Mapa</string>
   <string name="username">Login</string>
   <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">OSTRZEŻENIE:\nNie używaj swojego głównego PokeGo\nkonta do tej aplikacji!</string>
+  <string name="ptclogin">PTC Login</string>
+  <string name="googlelogin">Google Login</string>
 </resources>
