@@ -26,6 +26,7 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -83,10 +84,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         realm = Realm.getDefaultInstance();
 
-        if  (realm.where(User.class).findAll().size() != 0) {
-            startMapIntent();
-        }
-
         //get our views
         btnGoogleLogin = (Button) findViewById(R.id.btnGoogleLogin);
         btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -111,6 +108,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 GoogleLogin();
             }
         });
+
+        if  (realm.where(User.class).findAll().size() != 0)
+        {
+            User user = realm.where(User.class).findFirst();
+            if(user.getAuthType() == User.PTC)
+            {
+                etUsername.setText(user.getUsername());
+                etPassword.setText(user.getPassword());
+                btnLogin.performClick();
+            }
+            else
+                onAuthLoadedEvent(new AuthLoadedEvent(AuthLoadedEvent.OK, user.getToken()));
+        }
     }
 
     @Override
@@ -137,6 +147,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
+                        LOGIN_METHOD = User.GOOGLE;
                         User user = new User(1,
                                 username,
                                 password,
@@ -216,7 +227,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void GoogleLogin(){
-        LOGIN_METHOD = User.GOOGLE;
         showToast(R.string.TRYING_GOOGLE_LOGIN);
         Intent intent = new Intent(this,GoogleLoginActivity.class);
         startActivityForResult(intent, 1300);
