@@ -40,6 +40,11 @@
     <string name="blacklist">Blacklist</string>
     <string name="map_refresh">Karten Aktualisierung</string>
     <string name="check_hidden">Ausgewählt = Versteckt</string>
-    <string name="pokemon_cleared"></string>
-    <string name="clear_gyms"></string>
+    <string name="pokemon_cleared">Pokemons gelöscht</string>
+    <string name="clear_gyms">Arenen löschen</string>
+    <string name="clear_pokemons">Pokemons löschen</string>
+    <string name="donate">Spenden</string>
+    <string name="icon_scale">Icon Größe</string>
+    <string name="gyms_cleared">Arenen und Pokemons gelöscht</string>
+    <string name="only_lured">Nur Pokestops mit Lockmodul</string>
 </resources>
