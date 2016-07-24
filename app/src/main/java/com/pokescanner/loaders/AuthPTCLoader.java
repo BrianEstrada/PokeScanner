@@ -42,7 +42,6 @@ public class AuthPTCLoader extends Thread {
             OkHttpClient client = new OkHttpClient();
             PTCLogin ptcLogin = new PTCLogin(client);
             RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo auth = ptcLogin.login(username, password);
-            System.out.println(auth);
             if (auth.hasToken()) {
                 EventBus.getDefault().post(new AuthLoadedEvent(AuthLoadedEvent.OK));
             }else{

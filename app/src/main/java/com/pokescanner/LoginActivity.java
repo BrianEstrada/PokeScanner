@@ -19,7 +19,6 @@
 package com.pokescanner;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -61,13 +60,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     ProgressBar progressBar;
 
     String username,password;
-    Button btnRegister;
     Button btnLogin;
     Button btnGoogleLogin;
-    SharedPreferences sharedPref;
+
     Realm realm;
     int LOGIN_METHOD = -1;
-    String TOKEN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,6 +221,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = new Intent(this,GoogleLoginActivity.class);
         startActivityForResult(intent, 1300);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -235,11 +233,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         AuthGOOGLELoader authGOOGLELoader = new AuthGOOGLELoader(code);
         authGOOGLELoader.start();
-    }
-
-
-    boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     @Override

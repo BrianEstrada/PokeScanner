@@ -25,8 +25,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.pokescanner.LoginActivity"
     android:gravity="center_vertical|center_horizontal"
-    android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
@@ -64,7 +63,6 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/etPassword"
             android:hint="@string/password" />
@@ -76,14 +74,16 @@
             android:id="@+id/btnLogin"
             android:layout_marginTop="25dp"
             android:background="@color/colorAccent"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            android:textColor="@android:color/white" />
 
         <Button
             android:layout_width="180dp"
             android:layout_height="37dp"
             android:text="@string/googlelogin"
             android:id="@+id/btnGoogleLogin"
-            android:background="@color/colorAccent" />
+            android:background="@color/colorAccent"
+            android:textColor="@android:color/white" />
 
         <TextView
             android:layout_width="wrap_content"
