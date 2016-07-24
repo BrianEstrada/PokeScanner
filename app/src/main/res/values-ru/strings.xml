@@ -35,7 +35,7 @@
     <string name="AUTH_FAILED">Неправильный логин или пароль</string>
     <string name="SERVER_FAILED">Сервера не отвечают</string>
     <string name="ERROR_FILTERS">Ошибка загрузки фильтров</string>
-    <string name="LOGIN_OK"Вход выполнен успешно</string>
+    <string name="LOGIN_OK">Вход выполнен успешно</string>
     <string name="PERMISSION_OK">Спасибо за доступ!</string>
 
     <string name="TRYING_PTC_LOGIN">Попытка входа в PTC.</string>
@@ -62,7 +62,7 @@
     <string name="check_hidden">Выбран - Спрятан</string>
     <string name="donate">Пожертвования</string>
     <string name="icon_scale">Размер иконок</string>
-    <string name="only_lured">Только P-Stops с Lure</string>
+    <string name="only_lured">Только Stopы с Lure</string>
 
     <string name="clear_gyms">Убрать Gymы/Stopы</string>
     <string name="clear_pokemons">Убрать покемонов</string>
