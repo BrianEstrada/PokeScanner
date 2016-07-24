@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -32,8 +33,6 @@ public class SettingsController {
     private static final String LAST_USERNAME = "lastUsername";
     public static final String SHOW_ONLY_LURED = "showOnlyLured";
 
-    private static int iconScale = 2;
-
     //
     // THIS IS NOT FINISHED!!!
     //
@@ -46,6 +45,7 @@ public class SettingsController {
         Settings settings = getSettings(context);
         int mapRefresh = settings.getMapRefresh();
         int serverRefresh = settings.getServerRefresh();
+        int iconScale = settings.getScale();
 
         SwitchCompat showRange = (SwitchCompat) dialog.findViewById(R.id.showRange);
 
@@ -188,8 +188,8 @@ public class SettingsController {
         return new Settings(
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
             sharedPrefs.getInt(SERVER_REFRESH_RATE, 3),
-            sharedPrefs.getInt(MAP_REFRESH_RATE, 3),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
+            sharedPrefs.getInt(MAP_REFRESH_RATE, 3),
             sharedPrefs.getString(LAST_USERNAME, ""),
             sharedPrefs.getBoolean(SHOW_ONLY_LURED, true)
         );
