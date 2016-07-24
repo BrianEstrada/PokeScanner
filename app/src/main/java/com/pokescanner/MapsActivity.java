@@ -57,6 +57,7 @@ import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.PublishProgressEvent;
 import com.pokescanner.events.RestartRefreshEvent;
 import com.pokescanner.helper.PokemonListLoader;
+import com.pokescanner.helper.Settings;
 import com.pokescanner.loaders.MapObjectsLoader;
 import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.Gym;
@@ -508,11 +509,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
+        boolean showAllStops = !Settings.get(this).isShowOnlyLured();
+
         for (int i = 0;i < pokestops.size(); i++) {
             PokeStop pokestop = pokestops.get(i);
             LatLng pos = new LatLng(pokestop.getLatitude(),pokestop.getLongitude());
             if (curScreen.contains(pos)) {
-                locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
+                if (pokestop.isHasLureInfo() || showAllStops) {
+                    locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
+                }
             }
         }
     }

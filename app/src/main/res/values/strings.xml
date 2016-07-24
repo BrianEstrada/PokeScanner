@@ -62,11 +62,11 @@
     <string name="check_hidden">Check = Hidden</string>
     <string name="donate">Donate</string>
     <string name="icon_scale">Icon Scale</string>
+    <string name="only_lured">Only Lured P-Stops</string>
 
     <string name="clear_gyms">Clear Gyms/Stops</string>
     <string name="clear_pokemons">Clear Pokemons</string>
 
     <string name="gyms_cleared">Gyms and Pokestops cleared</string>
     <string name="pokemon_cleared">Pokemon cleared</string>
-
 </resources>

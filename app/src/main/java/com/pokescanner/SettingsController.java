@@ -30,11 +30,9 @@ public class SettingsController {
     private static final String MAP_REFRESH_RATE = "mapRefreshRate";
     private static final String POKEMON_ICON_SCALE = "pokemonIconScale";
     private static final String LAST_USERNAME = "lastUsername";
+    public static final String SHOW_ONLY_LURED = "showOnlyLured";
 
-    static int mapRefresh = 3;
-    static int serverRefresh = 3;
-    static int iconScale = 2;
-    static boolean boundingBox = false;
+    private static int iconScale = 2;
 
     //
     // THIS IS NOT FINISHED!!!
@@ -62,11 +60,21 @@ public class SettingsController {
         final TextView tvServerNumber = (TextView) dialog.findViewById(R.id.tvServerNumber);
         final TextView tvScaleNumber = (TextView) dialog.findViewById(R.id.tvScaleSpace);
 
-        showRange.setChecked(getSettings(context).isBoundingBoxEnabled());
+        SwitchCompat onlyLured = (SwitchCompat) dialog.findViewById(R.id.onlyLured);
+
+        showRange.setChecked(settings.isBoundingBoxEnabled());
         showRange.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
                 Settings.get(context).toBuilder().boundingBoxEnabled(b).build().save(context);
+            }
+        });
+
+        onlyLured.setChecked(settings.isShowOnlyLured());
+        onlyLured.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Settings.get(context).toBuilder().showOnlyLured(b).build().save(context);
             }
         });
 
@@ -182,7 +190,8 @@ public class SettingsController {
             sharedPrefs.getInt(SERVER_REFRESH_RATE, 3),
             sharedPrefs.getInt(MAP_REFRESH_RATE, 3),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
-            sharedPrefs.getString(LAST_USERNAME, "")
+            sharedPrefs.getString(LAST_USERNAME, ""),
+            sharedPrefs.getBoolean(SHOW_ONLY_LURED, true)
         );
     }
 
@@ -194,6 +203,7 @@ public class SettingsController {
             .putInt(MAP_REFRESH_RATE, settings.getMapRefresh())
             .putInt(POKEMON_ICON_SCALE, settings.getScale())
             .putString(LAST_USERNAME, settings.getLastUsername())
+            .putBoolean(SHOW_ONLY_LURED, settings.isShowOnlyLured())
             .apply();
     }
 }

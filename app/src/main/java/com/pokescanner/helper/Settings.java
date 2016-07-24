@@ -20,6 +20,7 @@ public class Settings {
     int scale;
     int mapRefresh;
     String lastUsername;
+    boolean showOnlyLured;
 
     public void save(Context context) {
         SettingsController.saveSettings(context, this);
