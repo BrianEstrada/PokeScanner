@@ -18,10 +18,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MapsActivity" >
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
         android:name="com.pokescanner.helper.CustomMapFragment"
@@ -29,57 +29,41 @@
         android:layout_height="match_parent"
         tools:context="com.pokescanner.MapsActivity" />
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="#00ffffff"/>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="75dp"
+    <RelativeLayout
+        android:layout_width="88dp"
+        android:layout_height="88dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_vertical|center_horizontal"
-        android:background="@color/colorPrimaryTransparent"
-        android:id="@+id/linearLayout">
+        android:layout_alignParentRight="true"
+        android:clickable="true">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".6"
-            android:gravity="center_vertical|center_horizontal">
-
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/imageButton"
-                android:src="@drawable/ic_menu_white_36dp"
-                android:background="@drawable/rounded_corners"
-                android:contentDescription="@string/menubutton" />
-        </LinearLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnSearch"
+            android:layout_centerInParent="true"
+            android:layout_margin="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/colorPrimaryDark"
+            android:src="@drawable/ic_track_changes_white_24dp" />
 
         <ProgressBar
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:id="@+id/progressBar"
-            android:visibility="invisible"
-            android:layout_weight="1.7" />
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:padding="6dp"
+            android:rotation="-90"
+            android:layout_centerInParent="true"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/circular_progress" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal">
-
-            <Button
-                android:id="@+id/btnSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:text="@string/scan"
-                android:textColor="#ffffff" />
-        </LinearLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

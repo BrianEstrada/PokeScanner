@@ -28,20 +28,20 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -60,12 +60,14 @@ import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.loaders.MapObjectsLoader;
 import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.Gym;
-import com.pokescanner.objects.MenuItem;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
-import com.pokescanner.recycler.MenuRecycler;
-
+import io.realm.Realm;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -73,13 +75,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Instant;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.realm.Realm;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -90,15 +85,15 @@ import static com.pokescanner.helper.Generation.hexagonal_number;
 import static com.pokescanner.helper.Generation.makeHexScanMap;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener {
 
-    Button button;
+    FloatingActionButton button;
     ProgressBar progressBar;
     private GoogleMap mMap;
+    Toolbar toolbar;
 
     LocationManager locationManager;
     Location currentLocation;
-    ImageButton imageButton;
 
     User user;
     Realm realm;
@@ -160,9 +155,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
 
-        imageButton = (ImageButton) findViewById(R.id.imageButton);
-        button = (Button) findViewById(R.id.btnSearch);
+        button = (FloatingActionButton) findViewById(R.id.btnSearch);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -171,15 +166,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 PokeScan();
             }
         });
-
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMenu();
-            }
-        });
-
-
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+        toolbar.setOverflowIcon(ContextCompat.getDrawable(MapsActivity.this, R.drawable.ic_settings_black_24dp));
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
@@ -254,6 +243,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Set our map stuff
             mMap.setMyLocationEnabled(true);
             mMap.setOnCameraChangeListener(this);
+            //Add padding for map buttons (ex. my location button) as we have Toolbar at top
+            mMap.setPadding(0, 0, com.pokescanner.helper.DrawableUtils.convertToPixels(MapsActivity.this, 36), 0);
             //Let's find our location and set it!
             Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider(criteria, true);
@@ -279,11 +270,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void showProgressbar(boolean status) {
         if (status) {
             progressBar.setVisibility(View.VISIBLE);
-            button.setText(getString(R.string.cancel));
+            button.setImageDrawable(ContextCompat.getDrawable(MapsActivity.this, R.drawable.ic_pause_white_24dp));
             SCANNING_STATUS = true;
         } else {
             progressBar.setVisibility(View.INVISIBLE);
-            button.setText(getString(R.string.scan));
+            button.setImageDrawable(ContextCompat.getDrawable(MapsActivity.this, R.drawable.ic_track_changes_white_24dp));
             SCANNING_STATUS = false;
         }
     }
@@ -292,65 +283,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationManager cm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         return cm.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
-    //Menu Related Functions
-    public void showMenu() {
-        ArrayList<MenuItem> items = new ArrayList<>();
 
-        items.add(new MenuItem(getString(R.string.search_radius),0,null));
-        items.add(new MenuItem(getString(R.string.filter),1,null));
-        items.add(new MenuItem(getString(R.string.settings),2,null));
-        items.add(new MenuItem(getString(R.string.logout),3,null));
-        items.add(new MenuItem(getString(R.string.donate),4,null));
-
-        final RecyclerView.Adapter mAdapter;
-        RecyclerView.LayoutManager mLayoutManager;
-
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        dialog.setContentView(R.layout.dialog_menu);
-
-
-        final RecyclerView invoicesRecycler = (RecyclerView) dialog.findViewById(R.id.recycler);
-        invoicesRecycler.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        invoicesRecycler.setLayoutManager(mLayoutManager);
-
-        mAdapter = new MenuRecycler(items, new MenuRecycler.onItemClickListener() {
-            @Override
-            public void onItemClick(MenuItem item) {
-                switch(item.getAction()){
-                    case 0:
-                        searchRadiusDialog();
-                        dialog.dismiss();
-                        break;
-                    case 1:
-                        startDialogActivity();
-                        dialog.dismiss();
-                        break;
-                    case 2:
-                        dialog.dismiss();
-                        SettingsController.showSettingDialog(MapsActivity.this);
-                        break;
-                    case 3:
-                        logOut();
-                        dialog.dismiss();
-                        break;
-                    case 4:
-                        Uri uri = Uri.parse("https://www.paypal.me/brianestrada"); // missing 'http://' will cause crashed
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        startActivity(intent);
-                        dialog.dismiss();
-                        break;
-                }
-
-            }
-        });
-
-        invoicesRecycler.setAdapter(mAdapter);
-
-        dialog.show();
-    }
     public void searchRadiusDialog() {
         scanValue = sharedPreferences.getInt("scanvalue",5);
 
@@ -593,5 +526,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
+    }
+
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.action_search_radius:
+                searchRadiusDialog();
+                break;
+            case R.id.action_filter:
+                startDialogActivity();
+                break;
+            case R.id.action_settings:
+                SettingsController.showSettingDialog(MapsActivity.this);
+                break;
+            case R.id.action_logout:
+                logOut();
+                break;
+            case R.id.action_donate:
+                Uri uri = Uri.parse("https://www.paypal.me/brianestrada"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 }
