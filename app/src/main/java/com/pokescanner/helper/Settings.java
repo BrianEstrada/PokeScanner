@@ -21,6 +21,8 @@ public class Settings {
     int mapRefresh;
     String lastUsername;
     boolean showOnlyLured;
+    boolean gymsEnabled;
+    boolean pokestopsEnabled;
 
     public void save(Context context) {
         SettingsController.saveSettings(context, this);

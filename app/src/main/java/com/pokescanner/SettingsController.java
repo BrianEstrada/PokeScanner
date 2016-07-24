@@ -31,6 +31,8 @@ public class SettingsController {
     private static final String POKEMON_ICON_SCALE = "pokemonIconScale";
     private static final String LAST_USERNAME = "lastUsername";
     public static final String SHOW_ONLY_LURED = "showOnlyLured";
+    public static final String SHOW_GYMS = "showGyms";
+    public static final String SHOW_POKESTOPS = "showPokestops";
 
     private static int iconScale = 2;
 
@@ -61,6 +63,28 @@ public class SettingsController {
         final TextView tvScaleNumber = (TextView) dialog.findViewById(R.id.tvScaleSpace);
 
         SwitchCompat onlyLured = (SwitchCompat) dialog.findViewById(R.id.onlyLured);
+        SwitchCompat showGyms = (SwitchCompat) dialog.findViewById(R.id.showGyms);
+        SwitchCompat showPokeStops = (SwitchCompat) dialog.findViewById(R.id.showPokestops);
+
+        showGyms.setChecked(settings.isGymsEnabled());
+        showGyms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b)
+            {
+                Settings.get(context).toBuilder().gymsEnabled(b).build().save(context);
+            }
+        });
+
+        showPokeStops.setChecked(settings.isPokestopsEnabled());
+        showPokeStops.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b)
+            {
+                Settings.get(context).toBuilder().pokestopsEnabled(b).build().save(context);
+            }
+        });
 
         showRange.setChecked(settings.isBoundingBoxEnabled());
         showRange.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -191,7 +215,9 @@ public class SettingsController {
             sharedPrefs.getInt(MAP_REFRESH_RATE, 3),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
             sharedPrefs.getString(LAST_USERNAME, ""),
-            sharedPrefs.getBoolean(SHOW_ONLY_LURED, true)
+            sharedPrefs.getBoolean(SHOW_ONLY_LURED, true),
+            sharedPrefs.getBoolean(SHOW_GYMS, true),
+            sharedPrefs.getBoolean(SHOW_POKESTOPS, true)
         );
     }
 
@@ -204,6 +230,8 @@ public class SettingsController {
             .putInt(POKEMON_ICON_SCALE, settings.getScale())
             .putString(LAST_USERNAME, settings.getLastUsername())
             .putBoolean(SHOW_ONLY_LURED, settings.isShowOnlyLured())
+            .putBoolean(SHOW_GYMS, settings.isGymsEnabled())
+            .putBoolean(SHOW_POKESTOPS, settings.isPokestopsEnabled())
             .apply();
     }
 }
