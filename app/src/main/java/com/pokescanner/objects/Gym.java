@@ -55,13 +55,14 @@ public class Gym extends RealmObject
         Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, "Gym", 2, context);
 
         String guardPokemonName = getGuardPokemonName();
+        String gymPoints = getGymPoints();
         guardPokemonName = guardPokemonName.substring(0, 1).toUpperCase() + guardPokemonName.substring(1).toLowerCase();
 
         MarkerOptions gymMarker = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(out))
                 .position(position)
                 .title("Gym")
-                .snippet("Guarded by : " + guardPokemonName);
+                .snippet("Guarded by : " + guardPokemonName + "\nPoints: " + gymPoints);
         return gymMarker;
     }
 }
