@@ -37,6 +37,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.pokescanner.events.AuthLoadedEvent;
+import com.pokescanner.helper.Settings;
+import com.pokescanner.helper.UiUtils;
 import com.pokescanner.loaders.AuthGOOGLELoader;
 import com.pokescanner.loaders.AuthPTCLoader;
 import com.pokescanner.objects.User;
@@ -49,7 +51,8 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     EditText etUsername;
     EditText etPassword;
     TextView tvTitle;
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
         }
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
                 .name(Realm.DEFAULT_REALM_NAME)
@@ -97,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Container = (LinearLayout) findViewById(R.id.Container);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+        etUsername.setText(Settings.get(this).getLastUsername());
+
+        Button btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(this);
 
         //finally we are going to ask for permission to the GPS
@@ -117,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         password = etPassword.getText().toString();
         //begin to show the progress bar
         showProgressbar(true);
+        UiUtils.hideKeyboard(etPassword);
 
 
         showToast(R.string.TRYING_PTC_LOGIN);
@@ -141,6 +148,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         realm.copyToRealmOrUpdate(user);
                         startMapIntent();
                         showToast(R.string.LOGIN_OK);
+
+                        LoginActivity context = LoginActivity.this;
+                        Settings.get(context).toBuilder()
+                            .lastUsername(user.getUsername())
+                            .build().save(context);
                     }
                 });
                 break;
@@ -155,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void showToast(int resString) {
-        Toast.makeText(MainActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
+        Toast.makeText(LoginActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
     }
 
     public void startMapIntent() {
