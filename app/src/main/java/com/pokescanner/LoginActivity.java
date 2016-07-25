@@ -104,6 +104,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                LOGIN_METHOD = User.GOOGLE;
                 GoogleLogin();
             }
         });
