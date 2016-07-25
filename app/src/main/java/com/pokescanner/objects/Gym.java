@@ -52,7 +52,7 @@ public class Gym extends RealmObject
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
 
         LatLng position = new LatLng(getLatitude(), getLongitude());
-        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, "Gym", 2, context);
+        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, "Gym", 1, context);
 
         String guardPokemonName = getGuardPokemonName();
         long gymPoints = getPoints();
