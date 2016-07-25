@@ -34,6 +34,7 @@ public class SettingsController {
     public static final String SHOW_ONLY_LURED = "showOnlyLured";
     public static final String SHOW_GYMS = "showGyms";
     public static final String SHOW_POKESTOPS = "showPokestops";
+    private static final String KEY_LOCK_GPS = "lockGpsEnabled";
 
     public static void showSettingDialog(final Context context) {
         final Dialog dialog = new Dialog(context);
@@ -46,6 +47,8 @@ public class SettingsController {
         int iconScale = settings.getScale();
 
         SwitchCompat showRange = (SwitchCompat) dialog.findViewById(R.id.showRange);
+
+        SwitchCompat lockGps = (SwitchCompat) dialog.findViewById(R.id.lockGps);
 
         Button btnClearPokemon = (Button) dialog.findViewById(R.id.btnClearPokemon);
         Button btnClearGyms = (Button) dialog.findViewById(R.id.btnClearGyms);
@@ -89,6 +92,15 @@ public class SettingsController {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
                 Settings.get(context).toBuilder().boundingBoxEnabled(b).build().save(context);
+                forceRefresh();
+            }
+        });
+
+        lockGps.setChecked(settings.isLockGpsEnabled());
+        lockGps.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
+                Settings.get(context).toBuilder().lockGpsEnabled(b).build().save(context);
                 forceRefresh();
             }
         });
@@ -211,6 +223,7 @@ public class SettingsController {
         );
         return new Settings(
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
+            sharedPrefs.getBoolean(KEY_LOCK_GPS, false),
             sharedPrefs.getInt(SERVER_REFRESH_RATE, 1),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
             sharedPrefs.getInt(MAP_REFRESH_RATE, 2),
@@ -225,6 +238,7 @@ public class SettingsController {
         context.getSharedPreferences(context.getString(R.string.shared_key), Context.MODE_PRIVATE)
             .edit()
             .putBoolean(KEY_BOUNDING_BOX, settings.isBoundingBoxEnabled())
+            .putBoolean(KEY_LOCK_GPS, settings.isLockGpsEnabled())
             .putInt(SERVER_REFRESH_RATE, settings.getServerRefresh())
             .putInt(MAP_REFRESH_RATE, settings.getMapRefresh())
             .putInt(POKEMON_ICON_SCALE, settings.getScale())

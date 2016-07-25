@@ -65,6 +65,7 @@
     <string name="only_lured">Only Lured P-Stops</string>
     <string name="show_gyms">Show Gyms</string>
     <string name="show_pokestops">Show PokeStops</string>
+    <string name="lock_gps">Scan Based on GPS</string>
 
     <string name="clear_gyms">Clear Gyms/Stops</string>
     <string name="clear_pokemons">Clear Pokemons</string>
