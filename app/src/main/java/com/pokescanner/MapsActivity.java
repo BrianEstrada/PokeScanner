@@ -33,7 +33,6 @@ import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -57,6 +56,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.pokescanner.events.ForceLogoutEvent;
 import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.PublishProgressEvent;
 import com.pokescanner.events.RestartRefreshEvent;
@@ -396,6 +396,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void execute(Realm realm) {
                 realm.where(User.class).findAll().deleteAllFromRealm();
+                realm.where(PokeStop.class).findAll().deleteAllFromRealm();
+                realm.where(Pokemons.class).findAll().deleteAllFromRealm();
+                realm.where(Gym.class).findAll().deleteAllFromRealm();
                 Intent intent = new Intent(MapsActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -503,9 +506,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
-
-    public boolean shouldGymBeRemoved(Gym gym)
-    {
+    public boolean shouldGymBeRemoved(Gym gym) {
         GymFilter currentGymFilter = GymFilter.getGymFilter(MapsActivity.this);
         int guardPokemonCp = gym.getGuardPokemonCp();
         int minCp = currentGymFilter.getGuardPokemonMinCp();
@@ -530,7 +531,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return false;
     }
-
     public void createMapObjects() {
         if (SettingsController.getSettings(this).isBoundingBoxEnabled()) {
             createBoundingBox();
@@ -587,12 +587,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             progressBar.setProgress((int) progress);
         }
     }
+    @Subscribe (threadMode = ThreadMode.MAIN)
+    public void onForceLogoutEvent(ForceLogoutEvent event) {
+        showToast(R.string.LOGOUT_ERROR);
+        logOut();
+    }
     public boolean doWeHavePermission() {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
     @Override
     protected void onResume() {
         super.onResume();
+        pokemonsMarkerMap.clear();
+        mMap.clear();
         realm = Realm.getDefaultInstance();
         reloadFilters();
     }
@@ -611,17 +618,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         realm.close();
         super.onDestroy();
     }
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
     }
-
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
-
     @Override public boolean onOptionsItemSelected(android.view.MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

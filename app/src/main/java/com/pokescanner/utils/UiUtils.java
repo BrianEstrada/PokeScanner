@@ -1,4 +1,4 @@
-package com.pokescanner.helper;
+package com.pokescanner.utils;
 
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
