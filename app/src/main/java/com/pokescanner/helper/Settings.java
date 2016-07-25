@@ -2,7 +2,7 @@ package com.pokescanner.helper;
 
 import android.content.Context;
 
-import com.pokescanner.SettingsController;
+import com.pokescanner.utils.SettingsUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,10 +26,10 @@ public class Settings {
     boolean pokestopsEnabled;
 
     public void save(Context context) {
-        SettingsController.saveSettings(context, this);
+        SettingsUtil.saveSettings(context, this);
     }
 
     public static Settings get(Context context) {
-        return SettingsController.getSettings(context);
+        return SettingsUtil.getSettings(context);
     }
 }

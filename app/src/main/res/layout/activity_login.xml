@@ -103,6 +103,15 @@
             android:textAlignment="center"
             android:layout_marginTop="20dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/check_server_status"
+            android:id="@+id/tvCheckServer"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/colorPrimaryDark" />
+
     </LinearLayout>
 
 </LinearLayout>

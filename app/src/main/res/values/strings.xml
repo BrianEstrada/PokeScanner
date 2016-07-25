@@ -60,18 +60,34 @@
     <string name="neutral_gyms">Neutral gyms</string>
     <string name="guard_pokemon_cp">Guard pokemon CP</string>
     <string name="_0" translatable="false">0</string>
-    <string name="server_refresh">Server Refresh</string>
-    <string name="pokemon_filters">Pokemon Filters</string>
+
+
     <string name="settings">Settings</string>
     <string name="logout">Log out</string>
-    <string name="map_refresh">Map Refresh</string>
     <string name="check_hidden">Check = Hidden</string>
+
+    <string name="server_refresh">Server Refresh</string>
+    <string name="server_refresh_desc">Adjust the rate at which the map is scanned (If you are on a poor connection you should be on slow)</string>
+    <string name="pokemon_filters">Pokemon Filters</string>
+    <string name="map_refresh">Map Refresh</string>
+    <string name="map_refresh_desc">Adjust the rate at which the map refreshes (Older devices should be on the slower setting)</string>
     <string name="donate">Donate</string>
+
+    <string name="category_donate">Donate and support continued development!</string>
+    <string name="category_range_options">Range Options</string>
+    <string name="category_map_options">Map Options</string>
+    <string name="category_extendedMap_options">Advance Map Options</string>
+    .
     <string name="icon_scale">Icon Scale</string>
-    <string name="only_lured">Only Lured P-Stops</string>
+    <string name="icon_scale_desc">Adjust the size of the icons</string>
+    <string name="only_lured">Only Lured Pokestops</string>
+    <string name="only_lured_desc">Displays only Pokestops with active lures</string>
     <string name="show_gyms">Show Gyms</string>
+    <string name="show_gyms_desc">Enables/Disables Gyms on the map</string>
     <string name="show_pokestops">Show PokeStops</string>
+    <string name="show_pokestop_desc">Enables/Disables Pokestops on the map</string>
     <string name="lock_gps">Scan Based on GPS</string>
+    <string name="lock_gps_desc">Instead of scanning in the center of view (wherever you\'re looking) it will scan your location</string>
 
     <string name="clear_gyms">Clear Gyms/Stops</string>
     <string name="clear_pokemons">Clear Pokemons</string>
@@ -91,4 +107,5 @@
 
     <string name="ERROR_GENERATING_GRID">Error Generating Grid, Try again.</string>
     <string name="LOGOUT_ERROR">Server not responding, Logging out</string>
+    <string name="check_server_status">Check Server Status</string>
 </resources>

@@ -47,6 +47,10 @@
             android:label="@string/title_activity_maps"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
