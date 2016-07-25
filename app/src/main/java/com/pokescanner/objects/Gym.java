@@ -24,6 +24,7 @@ public class Gym extends RealmObject
     int ownedByTeamValue;
     double latitude,longitude;
     int guardPokemonNo;
+    int guardPokemonCp;
     long points;
     boolean inBattle;
     @Index
@@ -45,6 +46,7 @@ public class Gym extends RealmObject
         setId(gymData.getId());
         setPoints(gymData.getGymPoints());
         setInBattle(gymData.getIsInBattle());
+        setGuardPokemonCp(gymData.getGuardPokemonCp());
     }
 
     public MarkerOptions getMarker(Context context) {

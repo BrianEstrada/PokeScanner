@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class Settings {
     boolean boundingBoxEnabled;
+    boolean lockGpsEnabled;
     int serverRefresh;
     int scale;
     int mapRefresh;

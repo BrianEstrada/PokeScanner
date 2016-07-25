@@ -74,14 +74,12 @@ public class Pokemons  extends RealmObject{
         String uri = "p" + getNumber();
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
 
-
-        Interval interval;
         //Find our interval
-        interval = new Interval(new Instant(), getDate());
-        //turn our interval into MM:SS
-        DateTime dt = new DateTime(interval.toDurationMillis());
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
-        String timeOut = fmt.print(dt);
+        String timeOut = "";
+        if (getDate().isAfter(new Instant())) {
+            timeOut = getExpireTime();
+        }
+
         //set our location
         LatLng position = new LatLng(getLatitude(), getLongitude());
 
@@ -99,5 +97,20 @@ public class Pokemons  extends RealmObject{
                 .snippet(snippetmessage);
 
         return pokeIcon;
+    }
+
+    public Bitmap getBitmap(Context context,int scale){
+        String uri = "p" + getNumber();
+        int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
+        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID,getExpireTime(),scale,context);
+        return out;
+    }
+    public String getExpireTime() {
+        Interval interval;
+        interval = new Interval(new Instant(), getDate());
+        //turn our interval into MM:SS
+        DateTime dt = new DateTime(interval.toDurationMillis());
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
+        return fmt.print(dt);
     }
 }

@@ -52,7 +52,7 @@ public class Generation {
                 // Add in the point, no translation since 1st layer
                 scanMap.add(loc);
             } else {
-                double distance = 173.2; // in meters
+                double distance = 200; // in meters
                 // add a point that is distance due north
                 scanMap.add(translate(loc, 0.0, distance));
                 // go south-east
