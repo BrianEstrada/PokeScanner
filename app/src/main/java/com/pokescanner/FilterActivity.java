@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import io.realm.Case;
 import io.realm.Realm;
+import io.realm.Sort;
 
 /**
  * Created by Brian on 7/22/2016.
@@ -57,7 +58,7 @@ public class FilterActivity extends AppCompatActivity implements TextWatcher {
             @Override
             public void execute(Realm realm) {
                 filterItems.clear();
-                filterItems.addAll(realm.copyFromRealm(realm.where(FilterItem.class).findAll().sort("Number")));
+                filterItems.addAll(realm.copyFromRealm(realm.where(FilterItem.class).findAll().sort("filtered", Sort.DESCENDING)));
             }
         });
     }

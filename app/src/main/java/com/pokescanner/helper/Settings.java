@@ -23,6 +23,7 @@ public class Settings {
     boolean showOnlyLured;
     boolean gymsEnabled;
     boolean pokestopsEnabled;
+    boolean showLuredPokemon;
 
     public void save(Context context) {
         SettingsController.saveSettings(context, this);

@@ -77,14 +77,11 @@ public class Pokemons  extends RealmObject{
 
         Interval interval;
         //Find our interval
-        String timeOut = "";
-        if (getDate().isAfter(new Instant())) {
-            interval = new Interval(new Instant(), getDate());
-            //turn our interval into MM:SS
-            DateTime dt = new DateTime(interval.toDurationMillis());
-            DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
-            timeOut = fmt.print(dt);
-        }
+        interval = new Interval(new Instant(), getDate());
+        //turn our interval into MM:SS
+        DateTime dt = new DateTime(interval.toDurationMillis());
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
+        String timeOut = fmt.print(dt);
         //set our location
         LatLng position = new LatLng(getLatitude(), getLongitude());
 
@@ -93,11 +90,13 @@ public class Pokemons  extends RealmObject{
         String name = getName();
         name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 
+        String snippetmessage = "Expires: " + timeOut;
+
         MarkerOptions pokeIcon = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(out))
                 .position(position)
                 .title(name)
-                .snippet(timeOut);
+                .snippet(snippetmessage);
 
         return pokeIcon;
     }

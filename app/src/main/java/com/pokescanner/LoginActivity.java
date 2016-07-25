@@ -104,7 +104,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LOGIN_METHOD = User.GOOGLE;
                 GoogleLogin();
             }
         });
@@ -118,10 +117,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 etPassword.setText(user.getPassword());
                 btnLogin.performClick();
             }
-            else {
-                LOGIN_METHOD = User.GOOGLE;
+            else
                 onAuthLoadedEvent(new AuthLoadedEvent(AuthLoadedEvent.OK, user.getToken()));
-            }
         }
     }
 
@@ -149,6 +146,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
+                        LOGIN_METHOD = User.GOOGLE;
                         User user = new User(1,
                                 username,
                                 password,

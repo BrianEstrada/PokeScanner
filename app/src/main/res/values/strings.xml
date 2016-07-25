@@ -32,7 +32,7 @@
     <string name="select_all">Select All</string>
     <string name="pokemon_name">Pokemon Name</string>
 
-    <string name="AUTH_FAILED">Bad Login Credentials</string>
+    <string name="AUTH_FAILED">Login failed!</string>
     <string name="SERVER_FAILED">Servers not responding</string>
     <string name="ERROR_FILTERS">Error loading filters</string>
     <string name="LOGIN_OK">Login Successful</string>
@@ -65,6 +65,7 @@
     <string name="only_lured">Only Lured P-Stops</string>
     <string name="show_gyms">Show Gyms</string>
     <string name="show_pokestops">Show PokeStops</string>
+    <string name="show_lured_pokemon">Show Lure Pokémon</string>
 
     <string name="clear_gyms">Clear Gyms/Stops</string>
     <string name="clear_pokemons">Clear Pokemons</string>
@@ -72,13 +73,4 @@
     <string name="gyms_cleared">Gyms and Pokestops cleared</string>
     <string name="pokemon_cleared">Pokemon cleared</string>
     <string name="icon">Icon</string>
-
-    <string name="settingsbutton">SettingsButton</string>
-    <string name="version_check_failed">Version check failed.</string>
-    <string name="updating_pokescanner">Updating Poke Scanner</string>
-    <string name="update">Update</string>
-    <string name="update_available_title">Update available</string>
-    <string name="update_check_failed">Update check failed.</string>
-    <string name="changes">Changes:</string>
-    <string name="update_available_long">An update for Poke Scanner is available.</string>
 </resources>

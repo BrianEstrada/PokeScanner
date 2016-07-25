@@ -29,5 +29,3 @@ cache.properties.lock
 !/.gitignore
 *.iml
 .properties
-*keys.xml
-app/fabric.properties

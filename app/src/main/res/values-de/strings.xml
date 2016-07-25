@@ -47,11 +47,4 @@
     <string name="icon_scale">Icon Größe</string>
     <string name="gyms_cleared">Arenen und Pokemons gelöscht</string>
     <string name="only_lured">Nur Pokestops mit Lockmodul</string>
-    <string name="version_check_failed">Versions Check fehlgeschlagen.</string>
-    <string name="update">Aktualisieren</string>
-    <string name="update_available_title">Aktualisierung verfügbar</string>
-    <string name="update_check_failed">Suche nach Aktualisierungen fehlgeschlagen</string>
-    <string name="updating_pokescanner">Aktualisiere Poke Scanner</string>
-    <string name="update_available_long">Ein Update für Poke Scanner ist verfügbar.</string>
-    <string name="changes">Änderungen:</string>
 </resources>

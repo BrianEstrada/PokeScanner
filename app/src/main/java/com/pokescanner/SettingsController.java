@@ -34,6 +34,7 @@ public class SettingsController {
     public static final String SHOW_ONLY_LURED = "showOnlyLured";
     public static final String SHOW_GYMS = "showGyms";
     public static final String SHOW_POKESTOPS = "showPokestops";
+    public static final String SHOW_LURED_POKEMON = "showluredpokemon";
 
     public static void showSettingDialog(final Context context) {
         final Dialog dialog = new Dialog(context);
@@ -61,6 +62,7 @@ public class SettingsController {
         SwitchCompat onlyLured = (SwitchCompat) dialog.findViewById(R.id.onlyLured);
         SwitchCompat showGyms = (SwitchCompat) dialog.findViewById(R.id.showGyms);
         SwitchCompat showPokeStops = (SwitchCompat) dialog.findViewById(R.id.showPokestops);
+        SwitchCompat showluredpokemon = (SwitchCompat) dialog.findViewById(R.id.showLuredPokemon);
 
         showGyms.setChecked(settings.isGymsEnabled());
         showGyms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
@@ -98,6 +100,15 @@ public class SettingsController {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 Settings.get(context).toBuilder().showOnlyLured(b).build().save(context);
+                forceRefresh();
+            }
+        });
+
+        showluredpokemon.setChecked(settings.isShowLuredPokemon());
+        showluredpokemon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Settings.get(context).toBuilder().showLuredPokemon(b).build().save(context);
                 forceRefresh();
             }
         });
@@ -211,13 +222,14 @@ public class SettingsController {
         );
         return new Settings(
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
-            sharedPrefs.getInt(SERVER_REFRESH_RATE, 1),
+            sharedPrefs.getInt(SERVER_REFRESH_RATE, 3),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
-            sharedPrefs.getInt(MAP_REFRESH_RATE, 2),
+            sharedPrefs.getInt(MAP_REFRESH_RATE, 3),
             sharedPrefs.getString(LAST_USERNAME, ""),
             sharedPrefs.getBoolean(SHOW_ONLY_LURED, true),
             sharedPrefs.getBoolean(SHOW_GYMS, true),
-            sharedPrefs.getBoolean(SHOW_POKESTOPS, true)
+            sharedPrefs.getBoolean(SHOW_POKESTOPS, true),
+                sharedPrefs.getBoolean(SHOW_LURED_POKEMON, true)
         );
     }
 
@@ -232,6 +244,7 @@ public class SettingsController {
             .putBoolean(SHOW_ONLY_LURED, settings.isShowOnlyLured())
             .putBoolean(SHOW_GYMS, settings.isGymsEnabled())
             .putBoolean(SHOW_POKESTOPS, settings.isPokestopsEnabled())
+                .putBoolean(SHOW_LURED_POKEMON, settings.isShowLuredPokemon())
             .apply();
     }
 

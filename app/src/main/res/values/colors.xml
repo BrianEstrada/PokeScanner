@@ -16,9 +16,11 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#F44336</color>
+    <color name="colorPrimaryold">#F44336</color>
+    <color name="colorPrimary">#F2160A</color>
     <color name="colorPrimaryTransparent">#80F44336</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
+    <color name="colorPrimaryDarkold">#D32F2F</color>
+    <color name="colorPrimaryDark">#DA1409</color>
     <color name="colorAccent">#448AFF</color>
     <color name="markerTextBackground">#BF757575</color>
 </resources>
