@@ -73,7 +73,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:id="@+id/etPassword"
-            android:hint="@string/password" />
+            android:hint="@string/password"
+            android:inputType="textPassword"/>
 
         <Button
             android:layout_width="180dp"
