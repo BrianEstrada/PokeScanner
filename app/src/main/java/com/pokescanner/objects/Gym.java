@@ -78,11 +78,13 @@ public class Gym extends RealmObject
         else if (gymPoints < 50000) level = 9;
         else level = 10;
 
+        int CP = getGuardPokemonCp();
+
         MarkerOptions gymMarker = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(out))
                 .position(position)
                 .title(teamname)
-                .snippet("Level: " + level + " | Points: " + gymPoints);
+                .snippet("Level: " + level + " | Points: " + gymPoints + " | CP: " + CP);
         return gymMarker;
     }
 }

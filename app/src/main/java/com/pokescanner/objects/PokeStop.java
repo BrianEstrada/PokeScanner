@@ -76,11 +76,14 @@ public class PokeStop extends RealmObject
                 activePokemonName = activePokemonName.substring(0, 1).toUpperCase() + activePokemonName.substring(1).toLowerCase();
                 snippetMessage = "Lure Expires: " + timeout + " | Current Lure Pokémon: " + activePokemonName;
             }
-            else
+            else {
                 uri = "stop";
+                setHasLureInfo(false);
+            }
         }
         else
             uri = "stop";
+
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
 
         LatLng position = new LatLng(getLatitude(), getLongitude());

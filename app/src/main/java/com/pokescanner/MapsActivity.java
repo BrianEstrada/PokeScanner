@@ -430,18 +430,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (curScreen.contains(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))) {
                 //If yes then has he expired?
                 if (pokemon.getDate().isAfter(new Instant())) {
-                    //Okay finally is he contained within our hashmap?
+                    // Okay finally is he contained within our hashmap?
                     if (pokemonsMarkerMap.containsKey(pokemon)) {
-                        //Well if he is then lets pull out our marker.
-                        Marker marker = pokemonsMarkerMap.get(pokemon);
-                        //Update our icon
-                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(pokemon.getBitmap(this,scale)));
-                        //Update the snippet
-                        marker.setSnippet(pokemon.getExpireTime());
-                        //Was our marker window open when we updated?
-                        if (marker.isInfoWindowShown()) {
-                            //Alright lets redraw it!
-                            marker.showInfoWindow();
+                        //If the pokemon is filtered...
+                        if (realm.copyFromRealm(realm.where(FilterItem.class).equalTo("Number", pokemon.getNumber()).findFirst()).isFiltered()) {
+                            //remove the marker
+                            if (pokemonsMarkerMap.get(pokemon) != null)
+                                pokemonsMarkerMap.get(pokemon).remove();
+                        }
+
+                        else {
+                            //Add the marker!
+                            Marker marker = pokemonsMarkerMap.get(pokemon);
+                            //Update our icon
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(pokemon.getBitmap(this, scale)));
+                            //Update the snippet
+                            String THEsnippet = "Expires: " + pokemon.getExpireTime();
+                            marker.setSnippet(THEsnippet);
+                            //Was our marker window open when we updated?
+                            if (marker.isInfoWindowShown()) {
+                                //Alright lets redraw it!
+                                marker.showInfoWindow();
+                            }
                         }
                     } else {
                         //If our pokemon wasn't in our hashmap lets add him
@@ -488,17 +498,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         boolean showAllStops = !Settings.get(this).isShowOnlyLured();
 
+        //if Pokestops are enabled...
         if(SettingsController.getSettings(MapsActivity.this).isPokestopsEnabled()) {
+            //for each pokestop...
             for (int i = 0; i < pokestops.size(); i++) {
                 PokeStop pokestop = pokestops.get(i);
                 LatLng pos = new LatLng(pokestop.getLatitude(), pokestop.getLongitude());
+                //if it's on the screen
                 if (curScreen.contains(pos)) {
+                    //if it's lured
                     if (pokestop.isHasLureInfo()) {
-                        if (SettingsController.getSettings(MapsActivity.this).isShowLuredPokemon()) {
-                            locationMarkers.add(mMap.addMarker(pokestop.getMarker2(this)));
+                        //check if the pokemon is being filtered
+                        int pokemonNo = (int) pokestop.getActivePokemonNo();
+                        if (realm.copyFromRealm(realm.where(FilterItem.class).equalTo("Number", pokemonNo).findFirst()).isFiltered()) {
+                            //if it is, just show a lured stop icon
+                            locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
                         }
-                        else locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
+
+                        //otherwise...
+                        else {
+                            //show the pokemon icon if the setting is enabled
+                            if (SettingsController.getSettings(MapsActivity.this).isShowLuredPokemon()) {
+                                locationMarkers.add(mMap.addMarker(pokestop.getMarker2(this)));
+                            }
+                            //otherwise show the lured stop icon
+                            else locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
+                        }
                     }
+                    //otherwise show the normal stop icon
                     else if (showAllStops) {
                         locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
                     }
