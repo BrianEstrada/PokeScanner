@@ -81,4 +81,6 @@
     <string name="update_check_failed">Update check failed.</string>
     <string name="changes">Changes:</string>
     <string name="update_available_long">An update for Poke Scanner is available.</string>
+
+    <string name="ERROR_GENERATING_GRID">Error Generating Grid, Try again.</string>
 </resources>

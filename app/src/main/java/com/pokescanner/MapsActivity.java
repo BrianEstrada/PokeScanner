@@ -204,6 +204,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (scanMap != null) {
                 mapObjectsLoader = new MapObjectsLoader(user, scanMap, millis, this);
                 mapObjectsLoader.start();
+            }else
+            {
+                showToast(R.string.ERROR_GENERATING_GRID);
             }
         }
     }
