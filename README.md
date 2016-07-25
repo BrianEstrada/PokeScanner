@@ -29,6 +29,7 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 - Toggleable continuous scanning
 
 
-# Known issues that I don't know how to fix
+# Known issues that I don't know how to fix yet
 - Sometimes scanning stops working until until I logoff and login again (maybe login info expires or something?)
 - App crashes when switching back to it after switching to another app if it was automatically closed
+- mispelled pokemon names
