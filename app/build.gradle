@@ -65,6 +65,7 @@ dependencies {
     compile 'com.android.support:design:24.0.+'
 
     compile 'com.google.maps.android:android-maps-utils:0.4+'
+    compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;

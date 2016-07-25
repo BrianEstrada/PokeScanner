@@ -47,12 +47,18 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">WARNING: \nPlease do not use your main PokeGo \naccount for this app!</string>
-    <string name="filter">Filter</string>
+    <string name="filter_pokemon">Filter pokemon</string>
+    <string name="filter_gyms">Filter gyms</string>
     <string name="timeEstimate">Estimate Scan Time: </string>
     <string name="hide">Hide</string>
     <string name="searchicon">SearchIcon</string>
     <string name="menubutton">MenuButton</string>
     <string name="show_range">Show Range</string>
+    <string name="yellow_team">Yellow team</string>
+    <string name="blue_team">Blue team</string>
+    <string name="red_team">Red team</string>
+    <string name="neutral_gyms">Neutral gyms</string>
+    <string name="guard_pokemon_cp">Guard pokemon CP</string>
     <string name="_0" translatable="false">0</string>
     <string name="server_refresh">Server Refresh</string>
     <string name="pokemon_filters">Pokemon Filters</string>
