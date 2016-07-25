@@ -206,7 +206,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             int millis = SettingsController.getSettings(this).getServerRefresh() * 1000;
             showProgressbar(true);
             progressBar.setProgress(0);
-            scanMap = makeHexScanMap(mMap.getCameraPosition().target, scanValue, 1, new ArrayList<LatLng>());
+            LatLng pos = mMap.getCameraPosition().target;
+            if (SettingsController.getSettings(this).isLockGpsEnabled() && currentLocation != null && doWeHavePermission()) {
+                pos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            }
+            scanMap = makeHexScanMap(pos, scanValue, 1, new ArrayList<LatLng>());
             if (scanMap != null) {
                 mapObjectsLoader = new MapObjectsLoader(user, scanMap, millis, this);
                 mapObjectsLoader.start();
