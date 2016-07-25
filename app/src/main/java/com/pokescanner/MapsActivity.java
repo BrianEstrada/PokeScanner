@@ -38,6 +38,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -57,6 +58,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.PublishProgressEvent;
 import com.pokescanner.events.RestartRefreshEvent;
+import com.pokescanner.helper.CustomMapFragment;
 import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.loaders.MapObjectsLoader;
@@ -143,7 +145,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sharedPreferences = getSharedPreferences(getString(R.string.shared_key),Context.MODE_PRIVATE);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mapFragment = (CustomMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -174,9 +176,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         toolbar.setOverflowIcon(ContextCompat.getDrawable(MapsActivity.this, R.drawable.ic_settings_black_24dp));
+        getSupportActionBar().hide();
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
+        ImageButton btnSettings = (ImageButton) findViewById(R.id.btnSettings);
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toolbar.showOverflowMenu();
+            }
+        });
     }
 
     public void PokeScan() {
@@ -250,9 +258,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Set our map stuff
             mMap.setMyLocationEnabled(true);
             mMap.setOnCameraChangeListener(this);
-            //Add padding for map buttons (ex. my location button) as we have Toolbar at top
-            mMap.setPadding(0, com.pokescanner.helper.DrawableUtils.convertToPixels(MapsActivity.this, 36),0 , 0);
             //Let's find our location and set it!
+            mMap.getUiSettings().setMapToolbarEnabled(false);
             Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider(criteria, true);
             currentLocation = locationManager.getLastKnownLocation(provider);
@@ -261,6 +268,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             startRefresher();
         }
     }
+
     public void centerCamera() {
         if (currentLocation != null && doWeHavePermission()) {
             LatLng target = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());

@@ -72,4 +72,5 @@
     <string name="gyms_cleared">Gyms and Pokestops cleared</string>
     <string name="pokemon_cleared">Pokemon cleared</string>
     <string name="icon">Icon</string>
+    <string name="settingsbutton">SettingsButton</string>
 </resources>
