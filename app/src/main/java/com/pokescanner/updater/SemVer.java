@@ -1,4 +1,4 @@
-package com.pokescanner.helper;
+package com.pokescanner.updater;
 
 import lombok.Getter;
 

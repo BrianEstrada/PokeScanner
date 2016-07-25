@@ -1,4 +1,4 @@
-package com.pokescanner.helper;
+package com.pokescanner.updater;
 
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 
 import com.pokescanner.R;
-import com.pokescanner.objects.AppUpdate;
 
 import java.io.File;
 
