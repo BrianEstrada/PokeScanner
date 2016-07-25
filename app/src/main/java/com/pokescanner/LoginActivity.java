@@ -117,8 +117,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 etPassword.setText(user.getPassword());
                 btnLogin.performClick();
             }
-            else
+            else {
+                LOGIN_METHOD = User.GOOGLE;
                 onAuthLoadedEvent(new AuthLoadedEvent(AuthLoadedEvent.OK, user.getToken()));
+            }
         }
     }
 
@@ -146,7 +148,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        LOGIN_METHOD = User.GOOGLE;
                         User user = new User(1,
                                 username,
                                 password,
