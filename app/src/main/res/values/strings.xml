@@ -1,0 +1,75 @@
+<!--
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="app_name" translatable="false">Poke Scanner</string>
+    <string name="shared_key" translatable="false">POKESCANNER</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="scan">Scan</string>
+    <string name="ptclogin">PTC Login</string>
+    <string name="googlelogin">Google Login</string>
+    <string name="poke_scanner" translatable="false">Poke Scanner</string>
+    <string name="blacklist">Blacklist</string>
+    <string name="save">Save</string>
+    <string name="search_radius">Search Radius</string>
+    <string name="higher_number_slower_search">1 Unit ~= 200 Meters</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="none">None</string>
+    <string name="select_all">Select All</string>
+    <string name="pokemon_name">Pokemon Name</string>
+
+    <string name="AUTH_FAILED">Bad Login Credentials</string>
+    <string name="SERVER_FAILED">Servers not responding</string>
+    <string name="ERROR_FILTERS">Error loading filters</string>
+    <string name="LOGIN_OK">Login Successful</string>
+    <string name="PERMISSION_OK">Thanks for the permission!</string>
+
+    <string name="TRYING_PTC_LOGIN">Trying PTC login.</string>
+    <string name="TRYING_GOOGLE_LOGIN">Trying Google Login.</string>
+
+    <string name="on">On</string>
+    <string name="off">Off</string>
+
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">WARNING: \nPlease do not use your main PokeGo \naccount for this app!</string>
+    <string name="filter">Filter</string>
+    <string name="timeEstimate">Estimate Scan Time: </string>
+    <string name="hide">Hide</string>
+    <string name="searchicon">SearchIcon</string>
+    <string name="menubutton">MenuButton</string>
+    <string name="show_range">Show Range</string>
+    <string name="_0" translatable="false">0</string>
+    <string name="server_refresh">Server Refresh</string>
+    <string name="pokemon_filters">Pokemon Filters</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Log out</string>
+    <string name="map_refresh">Map Refresh</string>
+    <string name="check_hidden">Check = Hidden</string>
+    <string name="donate">Donate</string>
+    <string name="icon_scale">Icon Scale</string>
+    <string name="only_lured">Only Lured P-Stops</string>
+    <string name="show_gyms">Show Gyms</string>
+    <string name="show_pokestops">Show PokeStops</string>
+
+    <string name="clear_gyms">Clear Gyms/Stops</string>
+    <string name="clear_pokemons">Clear Pokemons</string>
+
+    <string name="gyms_cleared">Gyms and Pokestops cleared</string>
+    <string name="pokemon_cleared">Pokemon cleared</string>
+    <string name="icon">Icon</string>
+</resources>
