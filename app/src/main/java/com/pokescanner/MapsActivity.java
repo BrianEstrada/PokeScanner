@@ -33,6 +33,7 @@ import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -60,6 +61,7 @@ import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.PublishProgressEvent;
 import com.pokescanner.events.RestartRefreshEvent;
 import com.pokescanner.helper.CustomMapFragment;
+import com.pokescanner.helper.GymFilter;
 import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.loaders.MapObjectsLoader;
@@ -374,7 +376,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
         return fmt.print(dt);
     }
-    public void startDialogActivity() {
+    public void startPokemonFilterActivity() {
         Intent filterIntent = new Intent(MapsActivity.this,FilterActivity.class);
         startActivity(filterIntent);
     }
@@ -450,7 +452,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }else {
                     //If our pokemon expired lets remove the marker
-                    pokemonsMarkerMap.get(pokemon).remove();
+                    if(pokemonsMarkerMap.get(pokemon) != null)
+                        pokemonsMarkerMap.get(pokemon).remove();
                     //Then remove the pokemon
                     pokemonsMarkerMap.remove(pokemon);
                     //Finally lets remove him from our realm.
@@ -480,7 +483,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (int i = 0; i < gyms.size(); i++) {
                 Gym gym = gyms.get(i);
                 LatLng pos = new LatLng(gym.getLatitude(), gym.getLongitude());
-                if (curScreen.contains(pos)) {
+                if (curScreen.contains(pos) && !shouldGymBeRemoved(gym)) {
                     locationMarkers.add(mMap.addMarker(gym.getMarker(this)));
                 }
             }
@@ -500,6 +503,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+
+    public boolean shouldGymBeRemoved(Gym gym)
+    {
+        GymFilter currentGymFilter = GymFilter.getGymFilter(MapsActivity.this);
+        int guardPokemonCp = gym.getGuardPokemonCp();
+        int minCp = currentGymFilter.getGuardPokemonMinCp();
+        int maxCp = currentGymFilter.getGuardPokemonMaxCp();
+        if(!((guardPokemonCp >= minCp) && (guardPokemonCp <= maxCp)) && (guardPokemonCp != 0))
+            return true;
+        int ownedByTeamValue = gym.getOwnedByTeamValue();
+        switch (ownedByTeamValue)
+        {
+            case 0 : if(!currentGymFilter.isNeutralGymsEnabled())
+                         return true;
+                     break;
+            case 1 : if(!currentGymFilter.isBlueGymsEnabled())
+                         return true;
+                     break;
+            case 2 : if(!currentGymFilter.isRedGymsEnabled())
+                         return true;
+                     break;
+            case 3 : if(!currentGymFilter.isYellowGymsEnabled())
+                         return true;
+                     break;
+        }
+        return false;
+    }
+
     public void createMapObjects() {
         if (SettingsController.getSettings(this).isBoundingBoxEnabled()) {
             createBoundingBox();
@@ -511,7 +542,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mBoundingBox = null;
             }
         }
-        createMarkerList();
+        //createMarkerList();
     }
     public void startRefresher() {
         if (pokeonRefresher != null)
@@ -545,7 +576,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     @Subscribe (threadMode = ThreadMode.MAIN)
     public void onRestartRefreshEvent(RestartRefreshEvent event) {
-       startRefresher();
+        refreshGyms();
+        refreshMap();
+        startRefresher();
     }
     @Subscribe (threadMode = ThreadMode.MAIN)
     public void onPublishProgressEvent(PublishProgressEvent event) {
@@ -597,8 +630,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.action_search_radius:
                 searchRadiusDialog();
                 break;
-            case R.id.action_filter:
-                startDialogActivity();
+            case R.id.action_filter_pokemon:
+                startPokemonFilterActivity();
+                break;
+            case R.id.action_filter_gyms:
+                GymFilters.showGymFiltersDialog(MapsActivity.this);
                 break;
             case R.id.action_settings:
                 SettingsController.showSettingDialog(MapsActivity.this);
