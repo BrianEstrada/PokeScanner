@@ -211,9 +211,9 @@ public class SettingsController {
         );
         return new Settings(
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
-            sharedPrefs.getInt(SERVER_REFRESH_RATE, 3),
+            sharedPrefs.getInt(SERVER_REFRESH_RATE, 1),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
-            sharedPrefs.getInt(MAP_REFRESH_RATE, 3),
+            sharedPrefs.getInt(MAP_REFRESH_RATE, 2),
             sharedPrefs.getString(LAST_USERNAME, ""),
             sharedPrefs.getBoolean(SHOW_ONLY_LURED, true),
             sharedPrefs.getBoolean(SHOW_GYMS, true),
