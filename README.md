@@ -24,14 +24,5 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 # Contributions
 Anyone is welcome to help out on the project just go ahead and submit any changes and I'll aprove em!
 
-# Feature Requests
-- Add a service
-- Notification when pokemons are in the area
-- List pokemon in the area
-- Add Gyms
-- Add Pokestops
 
-
-For everyone asking if they can donate I've posted a link below
-
-[![Buy Me a Coffee](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/brianestrada)
+For discussion, Feature requeuest and just general information follow us at [/r/PokeScanner](https://www.reddit.com/r/PokeScanner)
