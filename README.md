@@ -9,29 +9,26 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 - Press Scan and where ever your camera is centered is where the application will scan
 
 
-###[Download Section](https://github.com/BrianEstrada/PokeScanner/releases)
+# Tweaks
+- Changed the Pokemon icons from the really old sprites to Pokemon Shuffle icons (I think they are easier to distinguish!)
+- Changed the Gym icons and Pokestop icons
+- Can toggle whether to show the Pokemon icon that is currently at a Lured Pokestop instead of the Lured Pokestop icon
+- Filtered Pokemon will show up at the top of the Filtered list
+- Snippets (the tooptips that pop up from clicking a marker on the map) have more useful info (in my opinion)
+- Pokestops and Gyms don't have their text above them (it was too cluttered in my opinion) (Lured Pokestops still have their timer)
+- Some other minor stuff I forget
+
 
 # Credits
 - [Java Api](https://github.com/Grover-c13/PokeGOAPI-Java/)
-- Tsunamii (Material Icon)
-- swhittaker
-- toumeitou
-- leTokki
-- ljk1291
-- fizzxed
+- [Original](https://github.com/BrianEstrada/PokeScanner)
 
 
-# Contributions
-Anyone is welcome to help out on the project just go ahead and submit any changes and I'll aprove em!
-
-# Feature Requests
-- Add a service
-- Notification when pokemons are in the area
-- List pokemon in the area
-- Add Gyms
-- Add Pokestops
+# To be attempted
+- Notifications
+- Toggleable continuous scanning
 
 
-For everyone asking if they can donate I've posted a link below
-
-[![Buy Me a Coffee](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/brianestrada)
+# Known issues that I don't know how to fix
+- Sometimes scanning stops working until until I logoff and login again (maybe login info expires or something?)
+- App crashes when switching back to it after switching to another app if it was automatically closed
