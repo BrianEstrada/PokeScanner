@@ -234,7 +234,6 @@ public class SettingsController {
         );
         return new Settings(
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
-            sharedPrefs.getInt(SERVER_REFRESH_RATE, 3),
             sharedPrefs.getBoolean(KEY_LOCK_GPS, false),
             sharedPrefs.getInt(SERVER_REFRESH_RATE, 1),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
