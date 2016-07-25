@@ -57,6 +57,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.PublishProgressEvent;
 import com.pokescanner.events.RestartRefreshEvent;
@@ -70,6 +71,9 @@ import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
+import com.pokescanner.updater.AppUpdate;
+import com.pokescanner.updater.AppUpdateDialog;
+import com.pokescanner.updater.AppUpdateLoader;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -587,6 +591,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             progressBar.setProgress((int) progress);
         }
     }
+    @Subscribe (threadMode = ThreadMode.MAIN)
+    public void onAppUpdateEvent(AppUpdateEvent event) {
+        switch (event.getStatus()) {
+            case AppUpdateEvent.OK:
+                new AppUpdateDialog(MapsActivity.this, event.getAppUpdate());
+                break;
+            case AppUpdateEvent.FAILED:
+                showToast(R.string.update_check_failed);
+                break;
+        }
+    }
     public boolean doWeHavePermission() {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
@@ -595,6 +610,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onResume();
         realm = Realm.getDefaultInstance();
         reloadFilters();
+        new AppUpdateLoader().start();
     }
     @Override
     public void onStart() {
