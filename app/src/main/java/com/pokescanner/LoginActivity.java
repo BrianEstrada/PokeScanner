@@ -36,11 +36,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.events.AuthLoadedEvent;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.loaders.AuthGOOGLELoader;
 import com.pokescanner.loaders.AuthPTCLoader;
 import com.pokescanner.objects.User;
+import com.pokescanner.updater.AppUpdateDialog;
+import com.pokescanner.updater.AppUpdateLoader;
 import com.pokescanner.utils.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -125,6 +128,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 LOGIN_METHOD = User.GOOGLE;
                 onAuthLoadedEvent(new AuthLoadedEvent(AuthLoadedEvent.OK, user.getToken()));
             }
+        }else
+        {
+            new AppUpdateLoader().start();
         }
 
         tvCheckServer.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +190,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
     }
-
+    @Subscribe (threadMode = ThreadMode.MAIN)
+    public void onAppUpdateEvent(AppUpdateEvent event) {
+        switch (event.getStatus()) {
+            case AppUpdateEvent.OK:
+                new AppUpdateDialog(LoginActivity.this, event.getAppUpdate());
+                break;
+            case AppUpdateEvent.FAILED:
+                showToast(R.string.update_check_failed);
+                break;
+        }
+    }
     public void showToast(int resString) {
         Toast.makeText(LoginActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
     }

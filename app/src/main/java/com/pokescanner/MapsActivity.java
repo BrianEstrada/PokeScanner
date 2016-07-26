@@ -406,6 +406,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 pokemonsMarkerMap.put(pokemon, mMap.addMarker(pokemon.getMarker(this, scale)));
                             }
                         }
+                    } else {
+                        //If our pokemon expired lets remove the marker
+                        if (pokemonsMarkerMap.get(pokemon) != null)
+                            pokemonsMarkerMap.get(pokemon).remove();
+                        //Then remove the pokemon
+                        pokemonsMarkerMap.remove(pokemon);
+                        //Finally lets remove him from our realm.
+                        realm.beginTransaction();
+                        realm.where(Pokemons.class).equalTo("encounterid", pokemon.getEncounterid()).findAll().deleteAllFromRealm();
+                        realm.commitTransaction();
                     }
                 } else {
                     //If our pokemon expired lets remove the marker
@@ -413,10 +423,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         pokemonsMarkerMap.get(pokemon).remove();
                     //Then remove the pokemon
                     pokemonsMarkerMap.remove(pokemon);
-                    //Finally lets remove him from our realm.
-                    realm.beginTransaction();
-                    realm.where(Pokemons.class).equalTo("encounterid", pokemon.getEncounterid()).findAll().deleteAllFromRealm();
-                    realm.commitTransaction();
                 }
             }
         }
