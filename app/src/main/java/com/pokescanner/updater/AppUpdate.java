@@ -1,4 +1,4 @@
-package com.pokescanner.objects;
+package com.pokescanner.updater;
 
 import lombok.Getter;
 import lombok.AllArgsConstructor;

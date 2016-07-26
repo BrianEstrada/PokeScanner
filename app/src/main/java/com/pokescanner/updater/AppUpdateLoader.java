@@ -1,9 +1,7 @@
-package com.pokescanner.loaders;
+package com.pokescanner.updater;
 
 import com.pokescanner.BuildConfig;
 import com.pokescanner.events.AppUpdateEvent;
-import com.pokescanner.helper.SemVer;
-import com.pokescanner.objects.AppUpdate;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;

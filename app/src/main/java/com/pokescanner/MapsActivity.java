@@ -20,6 +20,7 @@ package com.pokescanner;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -49,6 +50,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.events.ForceLogoutEvent;
 import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.PublishProgressEvent;
@@ -63,6 +65,8 @@ import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
+import com.pokescanner.updater.AppUpdateDialog;
+import com.pokescanner.updater.AppUpdateLoader;
 import com.pokescanner.utils.LocationUtils;
 import com.pokescanner.utils.SettingsUtil;
 
@@ -99,7 +103,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     LocationManager locationManager;
     Location currentLocation;
-    CameraPosition curentCameraPos;
+    CameraPosition currentCameraPos;
 
     User user;
     Realm realm;
@@ -107,10 +111,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<LatLng> scanMap = new ArrayList<>();
     ArrayList<FilterItem> filterItems = new ArrayList<>();
 
-    private Map<PokeStop, Marker> pokeStopMarkerMap = new HashMap<PokeStop, Marker>();
-    private Map<Gym, Marker> gymMarkerMap = new HashMap<Gym, Marker>();
     private Map<Pokemons, Marker> pokemonsMarkerMap = new HashMap<Pokemons, Marker>();
-    private ArrayList<Marker> pokeMarkers = new ArrayList<>();
     private ArrayList<Marker> locationMarkers = new ArrayList<>();
     Circle mBoundingBox = null;
 
@@ -230,13 +231,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void createBoundingBoxPreview() {
-        if (curentCameraPos != null) {
+        if (currentCameraPos != null) {
             if (mBoundingBox != null) {
                 mBoundingBox.remove();
             }
             int scanDist = Settings.get(this).getScanValue();
             mBoundingBox = mMap.addCircle(new CircleOptions()
-                    .center(curentCameraPos.target)
+                    .center(currentCameraPos.target)
                     .radius(scanDist * 150)
                     .strokeWidth(5)
                     .strokeColor(Color.parseColor("#80d22d2d")));
@@ -563,6 +564,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         logOut();
     }
 
+    @Subscribe (threadMode = ThreadMode.MAIN)
+    public void onAppUpdateEvent(AppUpdateEvent event) {
+        switch (event.getStatus()) {
+            case AppUpdateEvent.OK:
+                new AppUpdateDialog(MapsActivity.this, event.getAppUpdate());
+                break;
+            case AppUpdateEvent.FAILED:
+                showToast(R.string.update_check_failed);
+                break;
+        }
+    }
+
+    public boolean doWeHavePermission() {
+        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -574,6 +591,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         onRestartRefreshEvent(new RestartRefreshEvent());
         realm = Realm.getDefaultInstance();
         reloadFilters();
+        new AppUpdateLoader().start();
     }
 
     @Override
@@ -603,7 +621,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        curentCameraPos = cameraPosition;
+        currentCameraPos = cameraPosition;
     }
 
     public void popupMenu() {

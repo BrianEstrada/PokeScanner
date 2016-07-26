@@ -1,6 +1,6 @@
 package com.pokescanner.events;
 
-import com.pokescanner.objects.AppUpdate;
+import com.pokescanner.updater.AppUpdate;
 
 import lombok.Getter;
 
