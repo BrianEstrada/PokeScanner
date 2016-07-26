@@ -6,15 +6,15 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/settings"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
         android:title="@string/logout"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_donate"
         android:orderInCategory="100"
         android:title="@string/donate"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>

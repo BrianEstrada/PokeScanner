@@ -25,14 +25,14 @@ import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -94,6 +94,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     FloatingActionButton button;
     ProgressBar progressBar;
     private GoogleMap mMap;
+    ImageButton btnSettings;
     Toolbar toolbar;
 
     LocationManager locationManager;
@@ -172,14 +173,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        ImageButton btnSettings = (ImageButton) findViewById(R.id.btnSettings);
+        btnSettings = (ImageButton) findViewById(R.id.btnSettings);
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openOptionsMenu();
+                popupMenu();
             }
         });
     }
+
     public void PokeScan() {
         if (SCANNING_STATUS) {
             stopPokeScan();
@@ -230,7 +232,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             int scanDist = Settings.get(this).getScanValue();
             mBoundingBox = mMap.addCircle(new CircleOptions()
                     .center(curentCameraPos.target)
-                    .radius(scanDist*200)
+                    .radius(scanDist*190)
                     .strokeWidth(5)
                     .strokeColor(Color.parseColor("#80d22d2d")));
         }
@@ -562,15 +564,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onCameraChange(CameraPosition cameraPosition) {
         curentCameraPos = cameraPosition;
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        new MenuInflater(this).inflate(R.menu.main_menu, menu);
-        return (super.onCreateOptionsMenu(menu));
+    public void popupMenu() {
+        PopupMenu popup = new PopupMenu(MapsActivity.this, btnSettings);
+        popup.getMenuInflater().inflate(R.menu.main_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch(item.getItemId())
+                {
+                    case R.id.action_settings:
+                        Intent settingsIntent = new Intent(MapsActivity.this,SettingsActivity.class);
+                        startActivity(settingsIntent);
+                        break;
+                    case R.id.action_logout:
+                        logOut();
+                        break;
+                    case R.id.action_donate:
+                        String url = "https://www.paypal.me/brianestrada";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                        break;
+                }
+                return true;
+            }
+        });
+        popup.show();
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
 }

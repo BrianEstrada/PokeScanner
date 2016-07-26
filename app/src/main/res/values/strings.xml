@@ -26,7 +26,7 @@
     <string name="save">Save</string>
     <string name="search_radius">Search Radius</string>
     <string name="search_radius_desc">Allows you to change the search radius of Poke Scanner (warning large values will slow down your device)</string>
-    <string name="higher_number_slower_search">1 Unit ~= 200 Meters</string>
+    <string name="higher_number_slower_search">1 Unit ≈ 200 Meters</string>
     <string name="cancel">Cancel</string>
     <string name="filter">Filter</string>
     <string name="none">None</string>
