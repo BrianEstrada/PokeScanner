@@ -24,9 +24,9 @@ android {
     defaultConfig {
         applicationId "com.pokescanner"
         minSdkVersion 19
-        targetSdkVersion 24
-        versionCode 20
-        versionName "1.5.4"
+        targetSdkVersion 23
+        versionCode 21
+        versionName "1.6.5"
         multiDexEnabled true
     }
     buildTypes {

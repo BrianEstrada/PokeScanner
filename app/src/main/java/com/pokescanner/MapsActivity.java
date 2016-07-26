@@ -17,6 +17,7 @@
 
 package com.pokescanner;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -185,10 +186,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 if (directionsPosition != null) {
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q="+directionsPosition.latitude+","+directionsPosition.longitude);
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    startActivity(mapIntent);
+                    try {
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + directionsPosition.latitude + "," + directionsPosition.longitude);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }catch (ActivityNotFoundException e) {
+                        Toast.makeText(MapsActivity.this, "Google Maps not installed.", Toast.LENGTH_LONG).show();
+                    }
                 }else {
                     showToast(R.string.ERROR_NO_DIRECTION_SELECTED);
                 }
