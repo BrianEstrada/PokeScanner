@@ -26,6 +26,13 @@ A Scanning tool dedicated to helping you locate pokemon in your area.
 - [fizzxed](https://github.com/fizzxed)
 - [EZTEQ](https://github.com/EZTEQ)
 
+#Translators
+- Thanya31 (Spanish)
+- Chemi (Hebrew)
+- Sébastien(French)
+- MrYadro (Russian)
+- EZTEQ (German)
+- tajchert (Polish)
 
 # Contributions
 Anyone is welcome to help out on the project just go ahead and submit any changes and I'll aprove em!
