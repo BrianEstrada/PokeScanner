@@ -570,18 +570,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         logOut();
     }
 
-    @Subscribe (threadMode = ThreadMode.MAIN)
-    public void onAppUpdateEvent(AppUpdateEvent event) {
-        switch (event.getStatus()) {
-            case AppUpdateEvent.OK:
-                new AppUpdateDialog(MapsActivity.this, event.getAppUpdate());
-                break;
-            case AppUpdateEvent.FAILED:
-                showToast(R.string.update_check_failed);
-                break;
-        }
-    }
-
     public boolean doWeHavePermission() {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
@@ -597,7 +585,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         onRestartRefreshEvent(new RestartRefreshEvent());
         realm = Realm.getDefaultInstance();
         reloadFilters();
-        new AppUpdateLoader().start();
     }
 
     @Override
