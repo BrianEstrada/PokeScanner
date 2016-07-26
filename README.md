@@ -1,5 +1,9 @@
 # PokeScanner
-A Scanning tool dedicated to helping you locate pokemon in your area. Currently the tool is very limited in range I'm working on a fix to increase the range of the scanning tool.
+A Scanning tool dedicated to helping you locate pokemon in your area. 
+
+![Map](http://i.imgur.com/u8zPO1B.png)
+![Map](http://i.imgur.com/7szBuM0.png)
+![Map](http://i.imgur.com/aHofJAV.png)
 
 # Instructions
 - Download the APK
@@ -13,12 +17,13 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 
 # Credits
 - [Java Api](https://github.com/Grover-c13/PokeGOAPI-Java/)
-- Tsunamii (Material Icon)
-- swhittaker
-- toumeitou
-- leTokki
-- ljk1291
-- fizzxed
+- [Tsunamii](https://github.com/Tsunamii) (Material Icon)
+- [rhari991](https://github.com/rhari991)
+- [swhittaker](https://github.com/swhittaker)
+- [toumeitou](https://github.com/toumeitou)
+- [leTokki](https://github.com/leTokki)
+- [ljk1291](https://github.com/ljk1291)
+- [fizzxed](https://github.com/fizzxed)
 
 
 # Contributions
