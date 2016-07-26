@@ -34,6 +34,10 @@
             android:title="@string/show_gym_filter"
             android:summary="@string/show_gym_filter_desc"
             android:key="gym_filter"/>
+        <Preference
+            android:title="@string/show_expiration_filter"
+            android:summary="@string/show_expiration_filter_desc"
+            android:key="expiration_filter"/>
     </PreferenceCategory>
 
     <PreferenceCategory
