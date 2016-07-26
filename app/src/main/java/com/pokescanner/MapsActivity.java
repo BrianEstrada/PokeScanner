@@ -31,6 +31,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -49,7 +50,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.events.ForceLogoutEvent;
 import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.PublishProgressEvent;
@@ -64,9 +64,8 @@ import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
-import com.pokescanner.updater.AppUpdateDialog;
-import com.pokescanner.updater.AppUpdateLoader;
 import com.pokescanner.utils.LocationUtils;
+import com.pokescanner.utils.MarkerDetails;
 import com.pokescanner.utils.SettingsUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -111,7 +110,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ArrayList<FilterItem> filterItems = new ArrayList<>();
 
     private Map<Pokemons, Marker> pokemonsMarkerMap = new HashMap<Pokemons, Marker>();
-    private ArrayList<Marker> locationMarkers = new ArrayList<>();
+    private Map<Gym, Marker> gymMarkerMap = new HashMap<Gym, Marker>();
+    private Map<PokeStop, Marker> pokestopMarkerMap = new HashMap<PokeStop, Marker>();
     Circle mBoundingBox = null;
 
     PokemonListLoader pokemonListLoader;
@@ -276,8 +276,43 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setMyLocationEnabled(true);
             mMap.setOnCameraChangeListener(this);
             //Let's find our location and set it!
-            mMap.getUiSettings().setMapToolbarEnabled(true);
-            mMap.getUiSettings().setCompassEnabled(false);
+            mMap.getUiSettings().setMapToolbarEnabled(false);
+            mMap.getUiSettings().setCompassEnabled(true);
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+            {
+                @Override
+                public boolean onMarkerClick(Marker marker)
+                {
+                    Object markerKey = null;
+                    for (Map.Entry<Pokemons, Marker> pokemonsMarkerEntry : pokemonsMarkerMap.entrySet()) {
+                        if (pokemonsMarkerEntry.getValue().equals(marker)) {
+                            markerKey = pokemonsMarkerEntry.getKey();
+                            break;
+                        }
+                    }
+                    if(markerKey == null)
+                    {
+                        for (Map.Entry<Gym, Marker> gymMarkerEntry : gymMarkerMap.entrySet()) {
+                            if (gymMarkerEntry.getValue().equals(marker)) {
+                                markerKey = gymMarkerEntry.getKey();
+                                break;
+                            }
+                        }
+                    }
+                    if(markerKey == null)
+                    {
+                        for (Map.Entry<PokeStop, Marker> pokeStopMarkerEntry : pokestopMarkerMap.entrySet()) {
+                            if (pokeStopMarkerEntry.getValue().equals(marker)) {
+                                markerKey = pokeStopMarkerEntry.getKey();
+                                break;
+                            }
+                        }
+                    }
+                    if(markerKey != null)
+                        MarkerDetails.showMarkerDetailsDialog(MapsActivity.this, markerKey, currentLocation);
+                    return false;
+                }
+            });
             //Center camera function
             centerCamera();
             startRefresher();
@@ -422,17 +457,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void refreshGyms() {
+    public void refreshGymsAndPokestops() {
         //The the map bounds
         if (mMap != null) {
             LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
 
-            //Before we refresh we want to remove the old markets so lets do that first
-            for (Marker marker : locationMarkers) {
-                marker.remove();
-            }
-            //Clear our array
-            locationMarkers.clear();
+            //Before we refresh we want to remove the old markers so lets do that first
+            for (Map.Entry<Gym, Marker> gymMarker : gymMarkerMap.entrySet())
+                gymMarker.getValue().remove();
+            for (Map.Entry<PokeStop, Marker> pokestopMarker : pokestopMarkerMap.entrySet())
+                pokestopMarker.getValue().remove();
+
+            //Clear the hashmaps
+            gymMarkerMap.clear();;
+            pokestopMarkerMap.clear();
+
             //Once we refresh our markers lets go ahead and load our pokemans
             ArrayList<Gym> gyms = new ArrayList<Gym>(realm.copyFromRealm(realm.where(Gym.class).findAll()));
             ArrayList<PokeStop> pokestops = new ArrayList<PokeStop>(realm.copyFromRealm(realm.where(PokeStop.class).findAll()));
@@ -442,7 +481,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Gym gym = gyms.get(i);
                     LatLng pos = new LatLng(gym.getLatitude(), gym.getLongitude());
                     if (curScreen.contains(pos) && !shouldGymBeRemoved(gym)) {
-                        locationMarkers.add(mMap.addMarker(gym.getMarker(this)));
+                        Marker marker = mMap.addMarker(gym.getMarker(this));
+                        gymMarkerMap.put(gym, marker);
                     }
                 }
             }
@@ -455,7 +495,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LatLng pos = new LatLng(pokestop.getLatitude(), pokestop.getLongitude());
                     if (curScreen.contains(pos)) {
                         if (pokestop.isHasLureInfo() || showAllStops) {
-                            locationMarkers.add(mMap.addMarker(pokestop.getMarker(this)));
+                            Marker marker = mMap.addMarker(pokestop.getMarker(this));
+                            pokestopMarkerMap.put(pokestop, marker);
                         }
                     }
                 }
@@ -524,21 +565,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void call(Long aLong) {
                         //System.out.println("Refreshing Gyms");
-                        refreshGyms();
+                        refreshGymsAndPokestops();
                     }
                 });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void forceRefreshEvent(ForceRefreshEvent event) {
-        refreshGyms();
+        refreshGymsAndPokestops();
         refreshMap();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRestartRefreshEvent(RestartRefreshEvent event) {
         System.out.println(Settings.get(this).getServerRefresh());
-        refreshGyms();
+        refreshGymsAndPokestops();
         refreshMap();
         startRefresher();
     }
