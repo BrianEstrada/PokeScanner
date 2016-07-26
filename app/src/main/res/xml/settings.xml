@@ -3,12 +3,25 @@
 
     <PreferenceCategory
         android:title="@string/category_donate">
-    <Preference android:title="@string/donate" >
+    <Preference android:title="@string/donate">
         <intent android:action="android.intent.action.VIEW"
             android:data="https://www.paypal.me/brianestrada" />
     </Preference>
     </PreferenceCategory>
-
+    <PreferenceCategory
+        android:title="@string/category_update">
+        <Preference
+            android:title="@string/Check_For_Update"
+            android:summary="@string/Check_For_Update_desc"
+            android:key="update"/>
+    <SwitchPreference
+        android:key="updatesEnabled"
+        android:title="@string/enable_update"
+        android:summary="@string/enable_update_desc"
+        android:defaultValue="true"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+    </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/category_range_options">
         <SwitchPreference
@@ -112,7 +125,10 @@
             android:key="clear_pokestops"/>
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/logout">
     <Preference
         android:title="@string/logout"
         android:key="logout"/>
+    </PreferenceCategory>
 </PreferenceScreen>

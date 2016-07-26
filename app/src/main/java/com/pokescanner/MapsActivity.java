@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
@@ -64,8 +65,8 @@ import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
-import com.pokescanner.utils.LocationUtils;
 import com.pokescanner.utils.MarkerDetails;
+import com.pokescanner.utils.PermissionUtils;
 import com.pokescanner.utils.SettingsUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -105,6 +106,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     User user;
     Realm realm;
+
+    LatLng directionsPosition;
 
     List<LatLng> scanMap = new ArrayList<>();
     ArrayList<FilterItem> filterItems = new ArrayList<>();
@@ -271,7 +274,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @SuppressWarnings({"MissingPermission"})
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (LocationUtils.doWeHaveGPSandLOC(this)) {
+        if (PermissionUtils.doWeHaveGPSandLOC(this)) {
             //Set our map stuff
             mMap.setMyLocationEnabled(true);
             mMap.setOnCameraChangeListener(this);
@@ -321,7 +324,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @SuppressWarnings({"MissingPermission"})
     public boolean centerCamera() {
-        if (LocationUtils.doWeHaveGPSandLOC(this)) {
+        if (PermissionUtils.doWeHaveGPSandLOC(this)) {
             Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider(criteria, true);
             currentLocation = locationManager.getLastKnownLocation(provider);

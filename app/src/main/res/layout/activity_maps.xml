@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnSettings"
-        android:src="@drawable/ic_settings_black_24dp"
+        android:src="@drawable/ic_settings_red_500_36dp"
         android:contentDescription="@string/settingsbutton"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"

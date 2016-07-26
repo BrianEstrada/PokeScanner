@@ -26,16 +26,18 @@ public class AppUpdateDialog {
                         downloadAndInstallAppUpdate(context, update);
                     }
                 })
-                .setNegativeButton(context.getString(R.string.cancel), null)
-                .setCancelable(false)
-                .setOnDismissListener(new DialogInterface.OnDismissListener()
-                {
+                .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onDismiss(DialogInterface dialogInterface)
-                    {
-                        ((LoginActivity) context).checkIfUserIsLoggedIn();
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                            if (context instanceof LoginActivity) {
+                                ((LoginActivity) context).checkIfUserIsLoggedIn();
+                            }else
+                            {
+                                //Do nothing?
+                            }
                     }
-                });
+                })
+                .setCancelable(false);
 
         dialog.show();
     }

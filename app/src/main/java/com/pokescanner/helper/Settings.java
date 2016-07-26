@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Settings {
+    boolean updatesEnabled;
     boolean boundingBoxEnabled;
     boolean lockGpsEnabled;
     int scanValue;

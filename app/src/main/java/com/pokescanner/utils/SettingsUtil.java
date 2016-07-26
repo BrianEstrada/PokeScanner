@@ -9,6 +9,7 @@ import com.pokescanner.helper.Settings;
 
 public class SettingsUtil {
 
+    public static final String ENABLE_UPDATES = "updatesEnabled";
     public static final String KEY_BOUNDING_BOX = "boundingBoxEnabled";
     public static final String SHOW_ONLY_LURED = "showOnlyLured";
     public static final String SHOW_GYMS = "showGyms";
@@ -28,6 +29,7 @@ public class SettingsUtil {
             Context.MODE_PRIVATE
         );
         return new Settings(
+            sharedPrefs.getBoolean(ENABLE_UPDATES,true),
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
             sharedPrefs.getBoolean(KEY_LOCK_GPS, false),
             sharedPrefs.getInt(SCAN_VALUE, 4),
@@ -44,6 +46,7 @@ public class SettingsUtil {
     public static void saveSettings(Context context, Settings settings) {
         context.getSharedPreferences(context.getString(R.string.shared_key), Context.MODE_PRIVATE)
             .edit()
+            .putBoolean(ENABLE_UPDATES,settings.isUpdatesEnabled())
             .putBoolean(KEY_BOUNDING_BOX, settings.isBoundingBoxEnabled())
             .putBoolean(KEY_LOCK_GPS, settings.isLockGpsEnabled())
             .putInt(SCAN_VALUE,settings.getScanValue())
