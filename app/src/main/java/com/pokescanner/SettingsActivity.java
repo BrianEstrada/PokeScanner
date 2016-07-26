@@ -14,13 +14,21 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
+import com.pokescanner.updater.AppUpdateDialog;
+import com.pokescanner.updater.AppUpdateLoader;
+import com.pokescanner.utils.PermissionUtils;
 import com.pokescanner.utils.SettingsUtil;
 import com.pokescanner.utils.UiUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import io.realm.Realm;
 
@@ -28,7 +36,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     SharedPreferences preferences;
     Preference scan_dialog,gym_filter,pokemon_filter;
     Preference clear_pokemon,clear_gyms,clear_pokestops;
-    Preference logout;
+    Preference logout,update;
     Realm realm;
     int scanValue;
 
@@ -138,7 +146,31 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return true;
             }
         });
+
+        update = (Preference) getPreferenceManager().findPreference("update");
+        update.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                new AppUpdateLoader().start();
+                return true;
+            }
+        });
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAppUpdateEvent(AppUpdateEvent event) {
+        switch (event.getStatus()) {
+            case AppUpdateEvent.OK:
+                if (PermissionUtils.doWeHaveReadWritePermission(this)) {
+                    new AppUpdateDialog(SettingsActivity.this, event.getAppUpdate());
+                }
+                break;
+            case AppUpdateEvent.FAILED:
+                Toast.makeText(SettingsActivity.this, getString(R.string.update_check_failed), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
@@ -232,6 +264,18 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override

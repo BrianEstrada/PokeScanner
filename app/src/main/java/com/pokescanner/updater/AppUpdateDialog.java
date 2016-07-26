@@ -33,7 +33,12 @@ public class AppUpdateDialog {
                     @Override
                     public void onDismiss(DialogInterface dialogInterface)
                     {
-                        ((LoginActivity) context).checkIfUserIsLoggedIn();
+                        if (context instanceof LoginActivity) {
+                            ((LoginActivity) context).checkIfUserIsLoggedIn();
+                        }else
+                        {
+                            //Do nothing?
+                        }
                     }
                 });
 

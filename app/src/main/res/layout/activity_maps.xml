@@ -62,13 +62,23 @@
             android:progressDrawable="@drawable/circular_progress"
             android:indeterminate="false" />
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnDirections"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_navigation_blue_500_36dp"
+            android:background="@android:color/transparent"
+            android:layout_margin="25dp" />
+
     </RelativeLayout>
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnSettings"
-        android:src="@drawable/ic_settings_black_24dp"
+        android:src="@drawable/ic_settings_red_500_36dp"
         android:contentDescription="@string/settingsbutton"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"

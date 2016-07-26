@@ -10,8 +10,12 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/category_update">
+        <Preference
+            android:title="@string/Check_For_Update"
+            android:summary="@string/Check_For_Update_desc"
+            android:key="update"/>
     <SwitchPreference
-        android:key="enableUpdates"
+        android:key="updatesEnabled"
         android:title="@string/enable_update"
         android:summary="@string/enable_update_desc"
         android:defaultValue="true"

@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
@@ -49,7 +50,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.events.ForceLogoutEvent;
 import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.PublishProgressEvent;
@@ -64,9 +64,7 @@ import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
-import com.pokescanner.updater.AppUpdateDialog;
-import com.pokescanner.updater.AppUpdateLoader;
-import com.pokescanner.utils.LocationUtils;
+import com.pokescanner.utils.PermissionUtils;
 import com.pokescanner.utils.SettingsUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -91,12 +89,12 @@ import static com.pokescanner.helper.Generation.getCorners;
 import static com.pokescanner.helper.Generation.makeHexScanMap;
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener {
 
     FloatingActionButton button;
     ProgressBar progressBar;
     private GoogleMap mMap;
-    ImageButton btnSettings;
+    ImageButton btnSettings,btnDirections;
     Toolbar toolbar;
     RelativeLayout main;
 
@@ -106,6 +104,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     User user;
     Realm realm;
+
+    LatLng directionsPosition;
 
     List<LatLng> scanMap = new ArrayList<>();
     ArrayList<FilterItem> filterItems = new ArrayList<>();
@@ -177,6 +177,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent settingsIntent = new Intent(MapsActivity.this, SettingsActivity.class);
                 startActivity(settingsIntent);
+            }
+        });
+
+        btnDirections = (ImageButton) findViewById(R.id.btnDirections);
+        btnDirections.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (directionsPosition != null) {
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q="+directionsPosition.latitude+","+directionsPosition.longitude);
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+                }else {
+                    showToast(R.string.ERROR_NO_DIRECTION_SELECTED);
+                }
             }
         });
     }
@@ -271,12 +286,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @SuppressWarnings({"MissingPermission"})
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (LocationUtils.doWeHaveGPSandLOC(this)) {
+        if (PermissionUtils.doWeHaveGPSandLOC(this)) {
+            mMap.setOnMarkerClickListener(this);
             //Set our map stuff
             mMap.setMyLocationEnabled(true);
             mMap.setOnCameraChangeListener(this);
             //Let's find our location and set it!
-            mMap.getUiSettings().setMapToolbarEnabled(true);
+            mMap.getUiSettings().setMapToolbarEnabled(false);
             mMap.getUiSettings().setCompassEnabled(false);
             //Center camera function
             centerCamera();
@@ -286,7 +302,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @SuppressWarnings({"MissingPermission"})
     public boolean centerCamera() {
-        if (LocationUtils.doWeHaveGPSandLOC(this)) {
+        if (PermissionUtils.doWeHaveGPSandLOC(this)) {
             Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider(criteria, true);
             currentLocation = locationManager.getLastKnownLocation(provider);
@@ -622,5 +638,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         popup.show();
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        directionsPosition = marker.getPosition();
+        return false;
     }
 }

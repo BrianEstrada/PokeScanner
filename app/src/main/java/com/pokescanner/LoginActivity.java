@@ -45,6 +45,7 @@ import com.pokescanner.loaders.AuthPTCLoader;
 import com.pokescanner.objects.User;
 import com.pokescanner.updater.AppUpdateDialog;
 import com.pokescanner.updater.AppUpdateLoader;
+import com.pokescanner.utils.PermissionUtils;
 import com.pokescanner.utils.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -202,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onAppUpdateEvent(AppUpdateEvent event) {
         switch (event.getStatus()) {
             case AppUpdateEvent.OK:
-                if (doWeHaveReadWritePermission()) {
+                if (PermissionUtils.doWeHaveReadWritePermission(this)) {
                     new AppUpdateDialog(LoginActivity.this, event.getAppUpdate());
                 }else
                 {
@@ -220,7 +221,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void startMapIntent() {
-        if (doWeHaveLocationPermission()) {
+        if (PermissionUtils.doWeHaveLocationPermission(this)) {
             Intent intent = new Intent(this, MapsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -246,16 +247,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             progressBar.setVisibility(View.GONE);
             Container.setVisibility(View.VISIBLE);
         }
-    }
-
-    //Permission Stuff
-    public boolean doWeHaveLocationPermission() {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public boolean doWeHaveReadWritePermission() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     public void getReadWritePermission() {
