@@ -74,7 +74,7 @@
     <string name="map_refresh_desc">Adjust the rate at which the map refreshes (Older devices should be on the slower setting)</string>
     <string name="donate">Donate</string>
 
-    <string name="category_donate">Donate and support continued development!</string>
+    <string name="category_donate">Donate and Support continued development!</string>
     <string name="category_range_options">Range Options</string>
     <string name="category_map_options">Map Options</string>
     <string name="category_extendedMap_options">Advance Map Options</string>
@@ -127,6 +127,7 @@
     <string name="update_available_long">An update for Poke Scanner is available.</string>
 
     <string name="ERROR_GENERATING_GRID">Error Generating Grid, Try again.</string>
+    <string name="CAMERA_CENTER_FAILED">Failed to center camera.</string>
     <string name="LOGOUT_ERROR">Server not responding, Logging out</string>
     <string name="check_server_status">Check Server Status</string>
 </resources>

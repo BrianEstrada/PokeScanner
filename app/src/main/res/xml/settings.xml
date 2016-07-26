@@ -118,4 +118,8 @@
             android:summary="@string/clear_pokestops_desc"
             android:key="clear_pokestops"/>
     </PreferenceCategory>
+
+    <Preference
+        android:title="@string/logout"
+        android:key="logout"/>
 </PreferenceScreen>

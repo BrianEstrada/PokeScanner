@@ -19,6 +19,7 @@ import com.pokescanner.helper.Settings;
 import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
+import com.pokescanner.objects.User;
 import com.pokescanner.utils.SettingsUtil;
 import com.pokescanner.utils.UiUtils;
 
@@ -28,6 +29,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     SharedPreferences sharedPreferences;
     Preference scan_dialog,gym_filter,pokemon_filter;
     Preference clear_pokemon,clear_gyms,clear_pokestops;
+    Preference logout;
     Realm realm;
     int scanValue;
 
@@ -128,6 +130,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return true;
             }
         });
+
+        logout = (Preference) getPreferenceManager().findPreference("logout");
+        logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                logOut();
+                return true;
+            }
+        });
     }
 
     @Override
@@ -207,6 +217,22 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
         dialog.show();
+    }
+
+    public void logOut() {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.where(User.class).findAll().deleteAllFromRealm();
+                realm.where(PokeStop.class).findAll().deleteAllFromRealm();
+                realm.where(Pokemons.class).findAll().deleteAllFromRealm();
+                realm.where(Gym.class).findAll().deleteAllFromRealm();
+                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override

@@ -25,7 +25,6 @@ import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
@@ -37,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -96,6 +96,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     ImageButton btnSettings;
     Toolbar toolbar;
+    RelativeLayout main;
 
     LocationManager locationManager;
     Location currentLocation;
@@ -153,6 +154,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //This class is used to load and save our filters
         pokemonListLoader = new PokemonListLoader(this);
+        //load our main layout
+        main = (RelativeLayout) findViewById(R.id.main);
 
         try {
             //let's try and load our filters
@@ -177,7 +180,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                popupMenu();
+                Intent settingsIntent = new Intent(MapsActivity.this,SettingsActivity.class);
+                startActivity(settingsIntent);
             }
         });
     }
@@ -272,27 +276,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setMyLocationEnabled(true);
             mMap.setOnCameraChangeListener(this);
             //Let's find our location and set it!
-            mMap.getUiSettings().setMapToolbarEnabled(false);
-            Criteria criteria = new Criteria();
-            String provider = locationManager.getBestProvider(criteria, true);
-            currentLocation = locationManager.getLastKnownLocation(provider);
+            mMap.getUiSettings().setMapToolbarEnabled(true);
+            mMap.getUiSettings().setCompassEnabled(false);
             //Center camera function
             centerCamera();
             startRefresher();
         }
     }
+
+    @SuppressWarnings({"MissingPermission"})
     public boolean centerCamera() {
-        if (LocationUtils.isGPSEnabled(this) && LocationUtils.doWeHavePermission(this)) {
-            LatLng target = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            CameraPosition position = this.mMap.getCameraPosition();
+        if (LocationUtils.doWeHaveGPSandLOC(this)) {
+            Criteria criteria = new Criteria();
+            String provider = locationManager.getBestProvider(criteria, true);
+            currentLocation = locationManager.getLastKnownLocation(provider);
 
-            CameraPosition.Builder builder = new CameraPosition.Builder();
-            builder.zoom(15);
-            builder.target(target);
+            if (currentLocation != null) {
+                LatLng target = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                CameraPosition position = this.mMap.getCameraPosition();
 
-            this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
-            return true;
+                CameraPosition.Builder builder = new CameraPosition.Builder();
+                builder.zoom(15);
+                builder.target(target);
+
+                this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
+                return true;
+            }
+            showToast(R.string.CAMERA_CENTER_FAILED);
+            return false;
         }
+        showToast(R.string.CAMERA_CENTER_FAILED);
         return false;
     }
     public void showProgressbar(boolean status) {
@@ -315,9 +328,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
     public void logOut() {
-        pokeonRefresher.unsubscribe();
-        gymstopRefresher.unsubscribe();
-
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -558,6 +568,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     @Override
     protected void onPause() {
+        pokeonRefresher.unsubscribe();
+        gymstopRefresher.unsubscribe();
         super.onPause();
     }
     @Override
@@ -577,12 +589,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     case R.id.action_logout:
                         logOut();
-                        break;
-                    case R.id.action_donate:
-                        String url = "https://www.paypal.me/brianestrada";
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
                         break;
                 }
                 return true;

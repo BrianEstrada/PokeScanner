@@ -82,7 +82,7 @@ public class PokeStop extends RealmObject
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
 
         LatLng position = new LatLng(getLatitude(), getLongitude());
-        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, iconMessage, 1, context);
+        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, iconMessage, 2, context);
 
         MarkerOptions pokestopMarker = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(out))
