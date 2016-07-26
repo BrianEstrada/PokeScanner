@@ -126,6 +126,14 @@
     <string name="changes">Changes:</string>
     <string name="update_available_long">is available.</string>
 
+    <string name="guard_pokemon">Guard pokemon : </string>
+    <string name="gym_points">Gym points : </string>
+    <string name="expires_in">Expires in : </string>
+    <string name="lure_expires_in">Lure expires in : </string>
+    <string name="lured_pokemon">Lured pokemon</string>
+    <string name="open_in_gmaps">Open in Google Maps</string>
+    <string name="get_directions">In-App directions</string>
+
     <string name="ERROR_GENERATING_GRID">Error Generating Grid, Try again.</string>
     <string name="CAMERA_CENTER_FAILED">Failed to center camera.</string>
     <string name="LOGOUT_ERROR">Server not responding, Logging out</string>
