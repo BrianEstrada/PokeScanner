@@ -121,7 +121,7 @@
     <string name="update_available_title">Update available</string>
     <string name="update_check_failed">Update check failed.</string>
     <string name="changes">Changes:</string>
-    <string name="update_available_long">An update for Poke Scanner is available.</string>
+    <string name="update_available_long">is available.</string>
 
     <string name="ERROR_GENERATING_GRID">Error Generating Grid, Try again.</string>
     <string name="CAMERA_CENTER_FAILED">Failed to center camera.</string>

@@ -116,6 +116,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        tvCheckServer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showServerStatus();
+            }
+        });
+
+        new AppUpdateLoader().start();
+    }
+
+    public void checkIfUserIsLoggedIn()
+    {
         if  (realm.where(User.class).findAll().size() != 0)
         {
             User user = realm.where(User.class).findFirst();
@@ -129,17 +141,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 LOGIN_METHOD = User.GOOGLE;
                 onAuthLoadedEvent(new AuthLoadedEvent(AuthLoadedEvent.OK, user.getToken()));
             }
-        }else
-        {
-            new AppUpdateLoader().start();
         }
-
-        tvCheckServer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showServerStatus();
-            }
-        });
     }
 
     @Override
