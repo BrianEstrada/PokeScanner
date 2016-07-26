@@ -20,6 +20,7 @@ package com.pokescanner;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
@@ -37,10 +38,10 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.pokescanner.events.AuthLoadedEvent;
 import com.pokescanner.helper.Settings;
-import com.pokescanner.utils.UiUtils;
 import com.pokescanner.loaders.AuthGOOGLELoader;
 import com.pokescanner.loaders.AuthPTCLoader;
 import com.pokescanner.objects.User;
+import com.pokescanner.utils.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,6 +56,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText etUsername;
     EditText etPassword;
     TextView tvTitle;
+    TextView tvCheckServer;
 
     LinearLayout Container;
     ProgressBar progressBar;
@@ -89,6 +91,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
+        tvCheckServer = (TextView) findViewById(R.id.tvCheckServer);
 
         Container = (LinearLayout) findViewById(R.id.Container);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -123,6 +126,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 onAuthLoadedEvent(new AuthLoadedEvent(AuthLoadedEvent.OK, user.getToken()));
             }
         }
+
+        tvCheckServer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showServerStatus();
+            }
+        });
     }
 
     @Override
@@ -191,6 +201,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    public void showServerStatus() {
+        String url = "http://ispokemongodownornot.com/";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
     //if this value is true then lets hide the login and show the progress bar
     public void showProgressbar(boolean status) {
         if (status)
@@ -226,13 +242,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
-
     public void GoogleLogin(){
         showToast(R.string.TRYING_GOOGLE_LOGIN);
         Intent intent = new Intent(this,GoogleLoginActivity.class);
         startActivityForResult(intent, 1300);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -249,19 +263,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             showToast(R.string.AUTH_FAILED);
         }
     }
-
     @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
     }
-
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
-
     @Override
     protected void onDestroy() {
         realm.close();

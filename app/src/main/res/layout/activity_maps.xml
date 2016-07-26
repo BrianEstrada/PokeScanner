@@ -31,13 +31,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
-    <android.support.v7.widget.Toolbar
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/toolbar" />
-
     <RelativeLayout
         android:layout_width="88dp"
         android:layout_height="88dp"
@@ -80,6 +73,8 @@
         android:layout_margin="25dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:contentDescription="@string/settingsbutton" />
+        android:contentDescription="@string/settingsbutton"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:backgroundTintMode="multiply" />
 
 </RelativeLayout>

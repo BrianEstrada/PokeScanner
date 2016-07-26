@@ -3,21 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.MainActivity">
     <item
-        android:id="@+id/action_search_radius"
-        android:orderInCategory="100"
-        android:title="@string/search_radius"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_filter_pokemon"
-        android:orderInCategory="100"
-        android:title="@string/filter_pokemon"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_filter_gyms"
-        android:orderInCategory="100"
-        android:title="@string/filter_gyms"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/settings"

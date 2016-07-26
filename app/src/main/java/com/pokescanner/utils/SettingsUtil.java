@@ -4,26 +4,24 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.pokescanner.R;
-import com.pokescanner.events.ForceRefreshEvent;
-import com.pokescanner.events.RestartRefreshEvent;
 import com.pokescanner.helper.Settings;
-
-import org.greenrobot.eventbus.EventBus;
 
 
 public class SettingsUtil {
 
-    static final String KEY_BOUNDING_BOX = "boundingBoxEnabled";
-    static final String SHOW_ONLY_LURED = "showOnlyLured";
-    static final String SHOW_GYMS = "showGyms";
-    static final String SHOW_POKESTOPS = "showPokestops";
-    static final String KEY_LOCK_GPS = "lockGpsEnabled";
+    public static final String KEY_BOUNDING_BOX = "boundingBoxEnabled";
+    public static final String SHOW_ONLY_LURED = "showOnlyLured";
+    public static final String SHOW_GYMS = "showGyms";
+    public static final String SHOW_POKESTOPS = "showPokestops";
+    public static final String KEY_LOCK_GPS = "lockGpsEnabled";
 
-    static final String SERVER_REFRESH_RATE = "serverRefreshRate";
-    static final String MAP_REFRESH_RATE = "mapRefreshRate";
-    static final String POKEMON_ICON_SCALE = "pokemonIconScale";
+    public static final String SERVER_REFRESH_RATE = "serverRefreshRate";
+    public static final String MAP_REFRESH_RATE = "mapRefreshRate";
+    public static final String POKEMON_ICON_SCALE = "pokemonIconScale";
+    public static final String SCAN_VALUE = "scanValue";
+    public static final String SCAN_PREVIEW = "boundingPreviewEnabled";
 
-    static final String LAST_USERNAME = "lastUsername";
+    public static final String LAST_USERNAME = "lastUsername";
 
     public static Settings getSettings(Context context) {
         SharedPreferences sharedPrefs = context.getSharedPreferences(
@@ -32,7 +30,9 @@ public class SettingsUtil {
         );
         return new Settings(
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
+            sharedPrefs.getBoolean(SCAN_PREVIEW,false),
             sharedPrefs.getBoolean(KEY_LOCK_GPS, false),
+            sharedPrefs.getInt(SCAN_VALUE, 4),
             sharedPrefs.getInt(SERVER_REFRESH_RATE, 1),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
             sharedPrefs.getInt(MAP_REFRESH_RATE, 2),
@@ -47,7 +47,9 @@ public class SettingsUtil {
         context.getSharedPreferences(context.getString(R.string.shared_key), Context.MODE_PRIVATE)
             .edit()
             .putBoolean(KEY_BOUNDING_BOX, settings.isBoundingBoxEnabled())
+            .putBoolean(SCAN_PREVIEW,settings.isBoundingPreviewEnabled())
             .putBoolean(KEY_LOCK_GPS, settings.isLockGpsEnabled())
+            .putInt(SCAN_VALUE,settings.getScanValue())
             .putInt(SERVER_REFRESH_RATE, settings.getServerRefresh())
             .putInt(MAP_REFRESH_RATE, settings.getMapRefresh())
             .putInt(POKEMON_ICON_SCALE, settings.getScale())
@@ -56,17 +58,5 @@ public class SettingsUtil {
             .putBoolean(SHOW_GYMS, settings.isGymsEnabled())
             .putBoolean(SHOW_POKESTOPS, settings.isPokestopsEnabled())
             .apply();
-    }
-
-    public static void forceRefresh() {
-        if (EventBus.getDefault().hasSubscriberForEvent(ForceRefreshEvent.class)) {
-            EventBus.getDefault().post(new ForceRefreshEvent());
-        }
-    }
-
-    public static void restartRefresh() {
-        if (EventBus.getDefault().hasSubscriberForEvent(ForceRefreshEvent.class)) {
-            EventBus.getDefault().post(new RestartRefreshEvent());
-        }
     }
 }

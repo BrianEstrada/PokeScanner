@@ -61,7 +61,7 @@
     <string name="only_lured">Только Stopы с Lure</string>
 
     <string name="clear_gyms">Убрать Gymы/Stopы</string>
-    <string name="clear_pokemons">Убрать покемонов</string>
+    <string name="clear_pokemon">Убрать покемонов</string>
 
     <string name="gyms_cleared">Gymы и Pokestopы убраны</string>
     <string name="pokemon_cleared">Pokemonы убраны</string>

@@ -14,10 +14,33 @@
         <SwitchPreference
             android:key="boundingBoxEnabled"
             android:title="@string/show_range"
-            android:summary="Something Goes here"
+            android:summary="@string/show_range_desc"
             android:defaultValue="false"
             android:layout_height="match_parent"
             android:layout_width="wrap_content" />
+        <SwitchPreference
+            android:key="boundingPreviewEnabled"
+            android:title="@string/show_preview"
+            android:summary="@string/show_preview_desc"
+            android:defaultValue="false"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+        <Preference
+            android:title="@string/search_radius"
+            android:summary="@string/search_radius_desc"
+            android:key="scan_dialog"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/category_filters">
+        <Preference
+            android:title="@string/show_pokemon_filter"
+            android:summary="@string/show_pokemon_filter_desc"
+            android:key="pokemon_filter"/>
+        <Preference
+            android:title="@string/show_gym_filter"
+            android:summary="@string/show_gym_filter_desc"
+            android:key="gym_filter"/>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -78,5 +101,21 @@
             android:entries="@array/IconScale"
             android:entryValues="@array/IconScaleValues"
             android:defaultValue="2" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/category_clear">
+        <Preference
+            android:title="@string/clear_pokemon"
+            android:summary="@string/clear_pokemon_desc"
+            android:key="clear_pokemon"/>
+        <Preference
+            android:title="@string/clear_gyms"
+            android:summary="@string/clear_gyms_desc"
+            android:key="clear_gyms"/>
+        <Preference
+            android:title="@string/clear_pokestops"
+            android:summary="@string/clear_pokestops_desc"
+            android:key="clear_pokestops"/>
     </PreferenceCategory>
 </PreferenceScreen>

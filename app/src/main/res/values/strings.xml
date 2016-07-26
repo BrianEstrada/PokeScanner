@@ -25,9 +25,10 @@
     <string name="blacklist">Blacklist</string>
     <string name="save">Save</string>
     <string name="search_radius">Search Radius</string>
+    <string name="search_radius_desc">Allows you to change the search radius of Poke Scanner (warning large values will slow down your device)</string>
     <string name="higher_number_slower_search">1 Unit ~= 200 Meters</string>
     <string name="cancel">Cancel</string>
-
+    <string name="filter">Filter</string>
     <string name="none">None</string>
     <string name="select_all">Select All</string>
     <string name="pokemon_name">Pokemon Name</string>
@@ -53,13 +54,13 @@
     <string name="hide">Hide</string>
     <string name="searchicon">SearchIcon</string>
     <string name="menubutton">MenuButton</string>
-    <string name="show_range">Show Range</string>
     <string name="yellow_team">Yellow team</string>
     <string name="blue_team">Blue team</string>
     <string name="red_team">Red team</string>
     <string name="neutral_gyms">Neutral gyms</string>
     <string name="guard_pokemon_cp">Guard pokemon CP</string>
     <string name="_0" translatable="false">0</string>
+
 
 
     <string name="settings">Settings</string>
@@ -77,7 +78,29 @@
     <string name="category_range_options">Range Options</string>
     <string name="category_map_options">Map Options</string>
     <string name="category_extendedMap_options">Advance Map Options</string>
-    .
+    <string name="category_filters">Filter Options</string>
+    <string name="category_clear">Clear Options</string>
+
+
+    <string name="show_range">Show Range</string>
+    <string name="show_range_desc">Creates a black round circle around the scanning area.</string>
+
+    <string name="show_preview">Show Range Preview</string>
+    <string name="show_preview_desc">Creates a preview of the scanning area that shows where you will be scanning.</string>
+
+    <string name="show_pokemon_filter">Pokemon Filter</string>
+    <string name="show_pokemon_filter_desc">Allows you to pick and choose which pokemon appear on the map</string>
+    <string name="show_gym_filter">Gym Filter</string>
+    <string name="show_gym_filter_desc">Allows you to pick which gyms will appear on the map</string>
+
+    <string name="clear_pokemon">Clear Pokemon</string>
+    <string name="clear_pokemon_desc">Cleared the current Pokemon</string>
+    <string name="clear_pokestops">Clear Pokestops</string>
+    <string name="clear_pokestops_desc">Clears the current Pokestops</string>
+    <string name="clear_gyms">Clear Gyms</string>
+    <string name="clear_gyms_desc">Clears the current Gyms</string>
+
+
     <string name="icon_scale">Icon Scale</string>
     <string name="icon_scale_desc">Adjust the size of the icons</string>
     <string name="only_lured">Only Lured Pokestops</string>
@@ -89,11 +112,9 @@
     <string name="lock_gps">Scan Based on GPS</string>
     <string name="lock_gps_desc">Instead of scanning in the center of view (wherever you\'re looking) it will scan your location</string>
 
-    <string name="clear_gyms">Clear Gyms/Stops</string>
-    <string name="clear_pokemons">Clear Pokemons</string>
-
-    <string name="gyms_cleared">Gyms and Pokestops cleared</string>
-    <string name="pokemon_cleared">Pokemon cleared</string>
+    <string name="gyms_cleared">Gyms Cleared</string>
+    <string name="pokestops_cleared">Pokestops Cleared</string>
+    <string name="pokemon_cleared">Pokemon Cleared</string>
     <string name="icon">Icon</string>
 
     <string name="settingsbutton">SettingsButton</string>

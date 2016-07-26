@@ -18,14 +18,13 @@
 
 package com.pokescanner;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
@@ -34,13 +33,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -70,7 +66,6 @@ import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
 import com.pokescanner.utils.LocationUtils;
 import com.pokescanner.utils.SettingsUtil;
-import com.pokescanner.utils.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -103,6 +98,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     LocationManager locationManager;
     Location currentLocation;
+    CameraPosition curentCameraPos;
 
     User user;
     Realm realm;
@@ -124,8 +120,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     int pos = 1;
     //Used for determining Scan status
     boolean SCANNING_STATUS = false;
-    //Default size for our scan grid
-    int scanValue = 5;
     //Used for our refreshing of the map
     Subscription pokeonRefresher,gymstopRefresher;
 
@@ -169,7 +163,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         button = (FloatingActionButton) findViewById(R.id.btnSearch);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -183,19 +176,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MapsActivity.this,SettingsActivity.class);
-                startActivity(intent);
+                openOptionsMenu();
             }
         });
     }
-
     public void PokeScan() {
         if (SCANNING_STATUS) {
             stopPokeScan();
         }else {
             pos = 1;
             //Load our scan value
-            scanValue = sharedPreferences.getInt("scanvalue",5);
+            int scanValue = sharedPreferences.getInt(SettingsUtil.SCAN_VALUE,5);
             //Our refresh rate to Milliseconds
             int millis = SettingsUtil.getSettings(this).getServerRefresh() * 1000;
 
@@ -231,10 +222,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void showToast(int resString) {
         Toast.makeText(MapsActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
     }
+    public void createBoundingBoxPreview(){
+        if (curentCameraPos != null) {
+            if (mBoundingBox != null) {
+                mBoundingBox.remove();
+            }
+            int scanDist = Settings.get(this).getScanValue();
+            mBoundingBox = mMap.addCircle(new CircleOptions()
+                    .center(curentCameraPos.target)
+                    .radius(scanDist*200)
+                    .strokeWidth(5)
+                    .strokeColor(Color.parseColor("#80d22d2d")));
+        }
+    }
     public void createBoundingBox() {
         if (scanMap.size()>0) {
             if (mBoundingBox != null)
                 mBoundingBox.remove();
+
+            LatLng loc = scanMap.get(0);
+
             //To create a circle we need to get the corners
             List<LatLng> corners = getCorners(scanMap);
             //Once we have the corners lets create two locations
@@ -245,12 +252,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             Location location1 = new Location("");
             //set the laditude/longitude
-            location1.setLatitude(scanMap.get(0).latitude);
-            location1.setLongitude(scanMap.get(0).longitude);
+            location1.setLatitude(loc.latitude);
+            location1.setLongitude(loc.longitude);
 
             float distance = location.distanceTo(location1);
 
-            mBoundingBox = mMap.addCircle(new CircleOptions().center(scanMap.get(0)).radius(distance));
+            mBoundingBox = mMap.addCircle(new CircleOptions().center(loc).radius(distance));
             //mMap.addPolygon(new PolygonOptions().addAll(getCorners(scanMap)));
         }
     }
@@ -296,70 +303,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             button.setImageDrawable(ContextCompat.getDrawable(MapsActivity.this, R.drawable.ic_track_changes_white_24dp));
             SCANNING_STATUS = false;
         }
-    }
-    //I don't think we're using this
-    public void searchRadiusDialog() {
-        scanValue = sharedPreferences.getInt("scanvalue",5);
-
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_search_radius);
-
-        final SeekBar seekBar = (SeekBar) dialog.findViewById(R.id.seekBar);
-        Button btnSave = (Button) dialog.findViewById(R.id.btnAccept);
-        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-        final TextView tvNumber = (TextView) dialog.findViewById(R.id.tvNumber);
-        final TextView tvEstimate = (TextView) dialog.findViewById(R.id.tvEstimate);
-        tvNumber.setText(String.valueOf(scanValue));
-        tvEstimate.setText(getString(R.string.timeEstimate) + " " + UiUtils.getSearchTime(scanValue,this));
-        seekBar.setProgress(scanValue);
-        seekBar.setMax(12);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                tvNumber.setText(String.valueOf(i));
-                tvEstimate.setText(getString(R.string.timeEstimate) + " " + UiUtils.getSearchTime(i,MapsActivity.this));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int saveValue = seekBar.getProgress();
-                if (saveValue == 0) {
-                    //We don't want a value of 0, No one likes 0 :{
-                    scanValue = 1;
-                } else {
-                    scanValue = saveValue;
-                }
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("scanvalue",saveValue);
-                editor.apply();
-                dialog.dismiss();
-            }
-        });
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-    public void startPokemonFilterActivity() {
-        Intent filterIntent = new Intent(MapsActivity.this,FilterActivity.class);
-        startActivity(filterIntent);
     }
     public void reloadFilters() {
         try {
@@ -516,8 +459,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     public void createMapObjects() {
         if (SettingsUtil.getSettings(this).isBoundingBoxEnabled()) {
-            createBoundingBox();
-        }else
+            if (SCANNING_STATUS) {
+                createBoundingBox();
+            }else
+            {
+                if (Settings.get(this).isBoundingBoxEnabled())
+                {
+                    createBoundingBoxPreview();
+                }
+            }
+        } else
         {
             if (mBoundingBox != null)
             {
@@ -609,40 +560,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
+        curentCameraPos = cameraPosition;
     }
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        new MenuInflater(this).inflate(R.menu.main_menu, menu);
+        return (super.onCreateOptionsMenu(menu));
     }
-    @Override public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
-            case R.id.action_search_radius:
-                searchRadiusDialog();
-                break;
-            case R.id.action_filter_pokemon:
-                startPokemonFilterActivity();
-                break;
-            case R.id.action_filter_gyms:
-                GymFilters.showGymFiltersDialog(MapsActivity.this);
-                break;
-            case R.id.action_settings:
-                //SettingsController.showSettingDialog(MapsActivity.this);
-                break;
-            case R.id.action_logout:
-                logOut();
-                break;
-            case R.id.action_donate:
-                Uri uri = Uri.parse(""); // missing 'http://' will cause crashed
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                break;
-            default:
-                break;
-        }
-        return true;
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
+
 }
