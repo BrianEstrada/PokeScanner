@@ -132,10 +132,10 @@
     <string name="Get_Permission_Auto_Updater">Permission de mettre à jour automatiquement !</string>
 
     <string name="auto_update_denied">Permission refusée! Mise à jour automatique désactivée :(</string>
-    <string name="location_denied">L'application ne fonctionnera pas sans géolocalisation!</string>
+    <string name="location_denied">L\'application ne fonctionnera pas sans géolocalisation !</string>
 
     <string name="Check_For_Update">Rechercher une mise à jour</string>
     <string name="Check_For_Update_desc">Rechercher une mise à jour manuellement</string>
 
-    <string name="ERROR_NO_DIRECTION_SELECTED">Pas de marqueur sélectionné pour un itinéraire!</string>
+    <string name="ERROR_NO_DIRECTION_SELECTED">Pas de marqueur sélectionné pour un itinéraire !</string>
 </resources>
