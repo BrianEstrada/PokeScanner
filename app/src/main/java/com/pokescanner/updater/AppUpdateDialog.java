@@ -9,15 +9,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 
+import com.pokescanner.LoginActivity;
 import com.pokescanner.R;
 
 import java.io.File;
 
 public class AppUpdateDialog {
     public AppUpdateDialog(final Context context, final AppUpdate update) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(context)
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(context)
                 .setTitle(R.string.update_available_title)
-                .setMessage(context.getString(R.string.update_available_long) + "\n\n" + context.getString(R.string.changes) + "\n" + update.getChangelog())
+                .setMessage(context.getString(R.string.app_name) + " " + update.getVersion() + " " + context.getString(R.string.update_available_long) + "\n\n" + context.getString(R.string.changes) + "\n\n" + update.getChangelog())
                 .setIcon(R.mipmap.ic_launcher)
                 .setPositiveButton(context.getString(R.string.update), new DialogInterface.OnClickListener() {
                     @Override
@@ -25,7 +26,16 @@ public class AppUpdateDialog {
                         downloadAndInstallAppUpdate(context, update);
                     }
                 })
-                .setNegativeButton(context.getString(R.string.cancel), null);
+                .setNegativeButton(context.getString(R.string.cancel), null)
+                .setCancelable(false)
+                .setOnDismissListener(new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface)
+                    {
+                        ((LoginActivity) context).checkIfUserIsLoggedIn();
+                    }
+                });
 
         dialog.show();
     }

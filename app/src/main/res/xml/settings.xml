@@ -18,13 +18,6 @@
             android:defaultValue="false"
             android:layout_height="match_parent"
             android:layout_width="wrap_content" />
-        <SwitchPreference
-            android:key="boundingPreviewEnabled"
-            android:title="@string/show_preview"
-            android:summary="@string/show_preview_desc"
-            android:defaultValue="false"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content" />
         <Preference
             android:title="@string/search_radius"
             android:summary="@string/search_radius_desc"

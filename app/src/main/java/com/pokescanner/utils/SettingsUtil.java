@@ -19,7 +19,6 @@ public class SettingsUtil {
     public static final String MAP_REFRESH_RATE = "mapRefreshRate";
     public static final String POKEMON_ICON_SCALE = "pokemonIconScale";
     public static final String SCAN_VALUE = "scanValue";
-    public static final String SCAN_PREVIEW = "boundingPreviewEnabled";
 
     public static final String LAST_USERNAME = "lastUsername";
 
@@ -30,7 +29,6 @@ public class SettingsUtil {
         );
         return new Settings(
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
-            sharedPrefs.getBoolean(SCAN_PREVIEW,false),
             sharedPrefs.getBoolean(KEY_LOCK_GPS, false),
             sharedPrefs.getInt(SCAN_VALUE, 4),
             sharedPrefs.getInt(SERVER_REFRESH_RATE, 1),
@@ -47,7 +45,6 @@ public class SettingsUtil {
         context.getSharedPreferences(context.getString(R.string.shared_key), Context.MODE_PRIVATE)
             .edit()
             .putBoolean(KEY_BOUNDING_BOX, settings.isBoundingBoxEnabled())
-            .putBoolean(SCAN_PREVIEW,settings.isBoundingPreviewEnabled())
             .putBoolean(KEY_LOCK_GPS, settings.isLockGpsEnabled())
             .putInt(SCAN_VALUE,settings.getScanValue())
             .putInt(SERVER_REFRESH_RATE, settings.getServerRefresh())
