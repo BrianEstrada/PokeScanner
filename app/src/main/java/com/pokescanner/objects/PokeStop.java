@@ -64,31 +64,53 @@ public class PokeStop extends RealmObject
         {
             if(getExpiryTime().isAfter(new Instant()))  //The lure is currently active
             {
-                uri = "stop_lure";
                 Interval interval = new Interval(new Instant(), getExpiryTime());
                 DateTime dt = new DateTime(interval.toDurationMillis());
                 DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
-                iconMessage = fmt.print(dt);
 
                 String activePokemonName = getActivePokemonName();
                 activePokemonName = activePokemonName.substring(0, 1).toUpperCase() + activePokemonName.substring(1).toLowerCase();
                 snippetMessage = "A lure is active here, and has attracted a " + activePokemonName;
             }
-            else
-                uri = "stop";
         }
-        else
-            uri = "stop";
-        int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
 
         LatLng position = new LatLng(getLatitude(), getLongitude());
-        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, iconMessage, 2, context);
 
         MarkerOptions pokestopMarker = new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromBitmap(out))
+                .icon(BitmapDescriptorFactory.fromBitmap(getBitmap(context)))
                 .position(position)
                 .title("Pokestop")
                 .snippet(snippetMessage);
         return pokestopMarker;
+    }
+
+    public String getLureExpiryTime()
+    {
+        String result = "";
+        if(hasLureInfo && getExpiryTime().isAfter(new Instant()))
+        {
+            Interval interval = new Interval(new Instant(), getExpiryTime());
+            DateTime dt = new DateTime(interval.toDurationMillis());
+            DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
+            result = fmt.print(dt);
+        }
+        return result;
+    }
+
+    public String getLuredPokemonName()
+    {
+        String luredPokemonName = getActivePokemonName();
+        luredPokemonName = luredPokemonName.substring(0, 1).toUpperCase() + luredPokemonName.substring(1).toLowerCase();
+        return luredPokemonName;
+    }
+
+    public Bitmap getBitmap(Context context)
+    {
+        String uri = "stop";
+        if(hasLureInfo && getExpiryTime().isAfter(new Instant()))
+             uri = "stop_lure";
+        int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
+        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, "", 2, context);
+        return out;
     }
 }

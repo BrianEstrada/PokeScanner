@@ -50,21 +50,38 @@ public class Gym extends RealmObject
     }
 
     public MarkerOptions getMarker(Context context) {
-        String uri = "gym" + getOwnedByTeamValue();
-        int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
-
         LatLng position = new LatLng(getLatitude(), getLongitude());
-        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, "Gym", 2, context);
 
         String guardPokemonName = getGuardPokemonName();
         long gymPoints = getPoints();
         guardPokemonName = guardPokemonName.substring(0, 1).toUpperCase() + guardPokemonName.substring(1).toLowerCase();
 
         MarkerOptions gymMarker = new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromBitmap(out))
+                .icon(BitmapDescriptorFactory.fromBitmap(getBitmap(context)))
                 .position(position)
-                .title("Gym")
+                .title(getTitle())
                 .snippet("Guarded by : " + guardPokemonName + "\nPoints: " + gymPoints);
         return gymMarker;
+    }
+
+    public Bitmap getBitmap(Context context)
+    {
+        String uri = "gym" + getOwnedByTeamValue();
+        int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
+        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, "Gym", 2, context);
+        return out;
+    }
+
+    public String getTitle()
+    {
+        int ownedBy = getOwnedByTeamValue();
+        if(ownedBy == 0)
+            return "Neutral Gym";
+        else if(ownedBy == 1)
+            return "Blue Gym";
+        else if(ownedBy == 2)
+            return "Red Gym";
+        else
+            return "Yellow Gym";
     }
 }
