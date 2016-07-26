@@ -41,6 +41,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         Settings settings = SettingsUtil.getSettings(this);
 
         preferences.edit()
+                .putBoolean(SettingsUtil.ENABLE_UPDATES,settings.isUpdatesEnabled())
                 .putBoolean(SettingsUtil.KEY_BOUNDING_BOX,settings.isBoundingBoxEnabled())
                 .putString(SettingsUtil.SCAN_VALUE,String.valueOf(settings.getScanValue()))
                 .putBoolean(SettingsUtil.SHOW_ONLY_LURED,settings.isShowOnlyLured())
@@ -143,6 +144,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         System.out.println(sharedPreferences.getAll().toString());
         SettingsUtil.saveSettings(this,new Settings(
+                sharedPreferences.getBoolean(SettingsUtil.ENABLE_UPDATES,true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_BOUNDING_BOX, false),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_LOCK_GPS, false),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SCAN_VALUE,"4")),

@@ -80,7 +80,10 @@
     <string name="category_extendedMap_options">Advance Map Options</string>
     <string name="category_filters">Filter Options</string>
     <string name="category_clear">Clear Options</string>
+    <string name="category_update">Update Options</string>
 
+    <string name="enable_update">Enable Auto-Updates</string>
+    <string name="enable_update_desc">Checks every time you start to the app if there is an update (On by default).</string>
 
     <string name="show_range">Show Range</string>
     <string name="show_range_desc">Creates a black round circle around the scanning area.</string>
@@ -127,4 +130,10 @@
     <string name="CAMERA_CENTER_FAILED">Failed to center camera.</string>
     <string name="LOGOUT_ERROR">Server not responding, Logging out</string>
     <string name="check_server_status">Check Server Status</string>
+
+    <string name="Permission_Required_Auto_Updater">Permission is required for the auto-updater!</string>
+    <string name="Get_Permission_Auto_Updater">Getting permission for auto updater!</string>
+
+    <string name="auto_update_denied">Permission Denied! Disabling auto updater :(</string>
+    <string name="location_denied">App will not work without location!</string>
 </resources>

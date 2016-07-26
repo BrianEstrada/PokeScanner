@@ -15,7 +15,6 @@
  */
 
 
-
 package com.pokescanner;
 
 import android.Manifest;
@@ -24,6 +23,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -62,10 +62,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     TextView tvTitle;
     TextView tvCheckServer;
 
+    LinearLayout main;
     LinearLayout Container;
     ProgressBar progressBar;
 
-    String username,password;
+    String username, password;
     Button btnLogin;
     Button btnGoogleLogin;
 
@@ -97,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvCheckServer = (TextView) findViewById(R.id.tvCheckServer);
 
+        main = (LinearLayout) findViewById(R.id.main);
         Container = (LinearLayout) findViewById(R.id.Container);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -106,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnLogin.setOnClickListener(this);
 
         //finally we are going to ask for permission to the GPS
-        getPermissions();
+        getLocationPermission();
 
         btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,21 +125,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        new AppUpdateLoader().start();
+        if (Settings.get(this).isUpdatesEnabled()) {
+            new AppUpdateLoader().start();
+        }else
+        {
+            checkIfUserIsLoggedIn();
+        }
     }
 
-    public void checkIfUserIsLoggedIn()
-    {
-        if  (realm.where(User.class).findAll().size() != 0)
-        {
+    public void checkIfUserIsLoggedIn() {
+        if (realm.where(User.class).findAll().size() != 0) {
             User user = realm.where(User.class).findFirst();
-            if(user.getAuthType() == User.PTC)
-            {
+            if (user.getAuthType() == User.PTC) {
                 etUsername.setText(user.getUsername());
                 etPassword.setText(user.getPassword());
                 btnLogin.performClick();
-            }
-            else {
+            } else {
                 LOGIN_METHOD = User.GOOGLE;
                 onAuthLoadedEvent(new AuthLoadedEvent(AuthLoadedEvent.OK, user.getToken()));
             }
@@ -156,13 +159,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         showToast(R.string.TRYING_PTC_LOGIN);
         LOGIN_METHOD = User.PTC;
-        AuthPTCLoader authloader = new AuthPTCLoader(username,password);
+        AuthPTCLoader authloader = new AuthPTCLoader(username, password);
         authloader.start();
     }
 
-    @Subscribe (threadMode = ThreadMode.MAIN)
-    public void onAuthLoadedEvent(final AuthLoadedEvent event){
-        switch(event.getStatus()) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAuthLoadedEvent(final AuthLoadedEvent event) {
+        switch (event.getStatus()) {
             case AuthLoadedEvent.OK:
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
@@ -178,8 +181,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         LoginActivity context = LoginActivity.this;
                         Settings.get(context).toBuilder()
-                            .lastUsername(user.getUsername())
-                            .build().save(context);
+                                .lastUsername(user.getUsername())
+                                .build().save(context);
                     }
                 });
                 break;
@@ -194,30 +197,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
     }
-    @Subscribe (threadMode = ThreadMode.MAIN)
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAppUpdateEvent(AppUpdateEvent event) {
         switch (event.getStatus()) {
             case AppUpdateEvent.OK:
-                new AppUpdateDialog(LoginActivity.this, event.getAppUpdate());
+                if (doWeHaveReadWritePermission()) {
+                    new AppUpdateDialog(LoginActivity.this, event.getAppUpdate());
+                }else
+                {
+                    getReadWritePermission();
+                }
                 break;
             case AppUpdateEvent.FAILED:
                 showToast(R.string.update_check_failed);
                 break;
         }
     }
+
     public void showToast(int resString) {
         Toast.makeText(LoginActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
     }
 
     public void startMapIntent() {
-        if (doWeHavePermission()) {
+        if (doWeHaveLocationPermission()) {
             Intent intent = new Intent(this, MapsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
-        }else
-        {
-            getPermissions();
+        } else {
+            getLocationPermission();
         }
     }
 
@@ -227,35 +236,54 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         i.setData(Uri.parse(url));
         startActivity(i);
     }
+
     //if this value is true then lets hide the login and show the progress bar
     public void showProgressbar(boolean status) {
-        if (status)
-        {
+        if (status) {
             progressBar.setVisibility(View.VISIBLE);
             Container.setVisibility(View.GONE);
-        }else
-        {
+        } else {
             progressBar.setVisibility(View.GONE);
             Container.setVisibility(View.VISIBLE);
         }
     }
+
     //Permission Stuff
-    public boolean doWeHavePermission() {
+    public boolean doWeHaveLocationPermission() {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    public void getPermissions() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE}, 1400);
+    public boolean doWeHaveReadWritePermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public void getReadWritePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Snackbar.make(main,getString(R.string.Permission_Required_Auto_Updater),Snackbar.LENGTH_LONG).setAction("Ok", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE}, 1300);
+                }
+            }).show();
+        } else {
+            showToast(R.string.Get_Permission_Auto_Updater);
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE}, 1300);
         }
     }
+
+    public void getLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,}, 1400);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -263,15 +291,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showToast(R.string.PERMISSION_OK);
+                }else {
+                    // Permission request was denied.
+                    Snackbar.make(main, getString(R.string.location_denied),
+                            Snackbar.LENGTH_SHORT)
+                            .show();
                 }
             }
+            break;
+            case 1300:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    showToast(R.string.PERMISSION_OK);
+                    new AppUpdateLoader().start();
+                }else {
+                    // Permission request was denied.
+                    Snackbar.make(main, getString(R.string.auto_update_denied),
+                            Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+                break;
         }
     }
-    public void GoogleLogin(){
+
+    public void GoogleLogin() {
         showToast(R.string.TRYING_GOOGLE_LOGIN);
-        Intent intent = new Intent(this,GoogleLoginActivity.class);
+        Intent intent = new Intent(this, GoogleLoginActivity.class);
         startActivityForResult(intent, 1300);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -283,21 +331,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (code != null) {
             AuthGOOGLELoader authGOOGLELoader = new AuthGOOGLELoader(code);
             authGOOGLELoader.start();
-        }else
-        {
+        } else {
             showToast(R.string.AUTH_FAILED);
         }
     }
+
     @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
     }
+
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+
     @Override
     protected void onDestroy() {
         realm.close();
