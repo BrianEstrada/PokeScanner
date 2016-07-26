@@ -15,13 +15,10 @@
   -->
 
 <resources>
-    <string name="app_name" translatable="false">Poke Scanner</string>
-    <string name="shared_key" translatable="false">POKESCANNER</string>
     <string name="title_activity_maps">Carte</string>
     <string name="scan">Scan</string>
     <string name="ptclogin">Connexion PTC</string>
     <string name="googlelogin">Connexion Google</string>
-    <string name="poke_scanner" translatable="false">Poke Scanner</string>
     <string name="blacklist">Liste noire</string>
     <string name="save">Sauvegarder</string>
     <string name="search_radius">Rayon de recherche</string>
@@ -59,7 +56,6 @@
     <string name="red_team">Equipe Rouge</string>
     <string name="neutral_gyms">Arène neutre</string>
     <string name="guard_pokemon_cp">Guard pokemon CP</string>
-    <string name="_0" translatable="false">0</string>
 
 
 
@@ -107,7 +103,7 @@
     <string name="show_pokestops">Afficher les Pokestops</string>
     <string name="show_pokestop_desc">Activer/Désactiver les Pokestops sur la carte</string>
     <string name="lock_gps">Scan via GPS</string>
-    <string name="lock_gps_desc">Scan en fonction de votre localisation plutot qu'en fonction du point du vue</string>
+    <string name="lock_gps_desc">Scan en fonction de votre localisation plutot qu\'en fonction du point du vue</string>
 
     <string name="gyms_cleared">Arènes effacées</string>
     <string name="pokestops_cleared">Pokestops effacés</string>
