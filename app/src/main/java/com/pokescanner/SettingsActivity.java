@@ -1,6 +1,5 @@
 package com.pokescanner;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,7 +25,7 @@ import com.pokescanner.utils.UiUtils;
 import io.realm.Realm;
 
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-    SharedPreferences sharedPreferences;
+    SharedPreferences preferences;
     Preference scan_dialog,gym_filter,pokemon_filter;
     Preference clear_pokemon,clear_gyms,clear_pokestops;
     Preference logout;
@@ -37,13 +36,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
         Settings settings = SettingsUtil.getSettings(this);
 
         preferences.edit()
                 .putBoolean(SettingsUtil.KEY_BOUNDING_BOX,settings.isBoundingBoxEnabled())
-                .putBoolean(SettingsUtil.SCAN_PREVIEW,settings.isBoundingPreviewEnabled())
+                .putString(SettingsUtil.SCAN_VALUE,String.valueOf(settings.getScanValue()))
                 .putBoolean(SettingsUtil.SHOW_ONLY_LURED,settings.isShowOnlyLured())
                 .putBoolean(SettingsUtil.SHOW_GYMS,settings.isGymsEnabled())
                 .putBoolean(SettingsUtil.SHOW_POKESTOPS,settings.isPokestopsEnabled())
@@ -145,7 +144,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         System.out.println(sharedPreferences.getAll().toString());
         SettingsUtil.saveSettings(this,new Settings(
                 sharedPreferences.getBoolean(SettingsUtil.KEY_BOUNDING_BOX, false),
-                sharedPreferences.getBoolean(SettingsUtil.SCAN_PREVIEW,false),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_LOCK_GPS, false),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SCAN_VALUE,"4")),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SERVER_REFRESH_RATE, "1")),
@@ -160,8 +158,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @SuppressWarnings("ConstantConditions")
     public void searchRadiusDialog() {
-        sharedPreferences = getSharedPreferences(getString(R.string.shared_key), Context.MODE_PRIVATE);
-        scanValue = sharedPreferences.getInt(SettingsUtil.SCAN_VALUE,4);
+        scanValue = Integer.valueOf(preferences.getString(SettingsUtil.SCAN_VALUE,"4"));
 
         final AppCompatDialog dialog = new AppCompatDialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -203,8 +200,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 } else {
                     scanValue = saveValue;
                 }
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(SettingsUtil.SCAN_VALUE,saveValue);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString(SettingsUtil.SCAN_VALUE,String.valueOf(scanValue));
                 editor.apply();
                 dialog.dismiss();
             }

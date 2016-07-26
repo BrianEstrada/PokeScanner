@@ -159,7 +159,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Subscribe (threadMode = ThreadMode.MAIN)
     public void onAuthLoadedEvent(final AuthLoadedEvent event){
-        showProgressbar(false);
         switch(event.getStatus()) {
             case AuthLoadedEvent.OK:
                 realm.executeTransaction(new Realm.Transaction() {
@@ -182,9 +181,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
                 break;
             case AuthLoadedEvent.AUTH_FAILED:
+                showProgressbar(false);
                 showToast(R.string.AUTH_FAILED);
                 break;
             case AuthLoadedEvent.SERVER_FAILED:
+                showProgressbar(false);
                 showToast(R.string.SERVER_FAILED);
                 break;
         }
