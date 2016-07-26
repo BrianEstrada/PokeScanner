@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="GOOGLEAPIKEY">AIzaSyA5Z2BxjMLbbUZlY323bJxaeWFck-VjO4k</string>
+    <string name="GOOGLEAPIKEY"></string>
     <string name="FABRICAPIKEY"></string>
 </resources>
