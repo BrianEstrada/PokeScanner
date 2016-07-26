@@ -258,8 +258,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mBoundingBox.remove();
                 }
                 int scanDist = Settings.get(this).getScanValue();
+                LatLng center = currentCameraPos.target;
+                if (SettingsUtil.getSettings(this).isLockGpsEnabled()) {
+                    center = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                }
                 mBoundingBox = mMap.addCircle(new CircleOptions()
-                        .center(currentCameraPos.target)
+                        .center(center)
                         .radius(scanDist * 150)
                         .strokeWidth(5)
                         .strokeColor(Color.parseColor("#80d22d2d")));
