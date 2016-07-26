@@ -24,6 +24,8 @@ A Scanning tool dedicated to helping you locate pokemon in your area.
 - [leTokki](https://github.com/leTokki)
 - [ljk1291](https://github.com/ljk1291)
 - [fizzxed](https://github.com/fizzxed)
+- [EZTEQ](https://github.com/EZTEQ)
+- [rhari991](https://github.com/rhari991)
 
 
 # Contributions
