@@ -29,7 +29,7 @@ A Scanning tool dedicated to helping you locate pokemon in your area.
 #Translators
 - Thanya31 (Spanish)
 - Chemi (Hebrew)
-- Sébastien(French)
+- Sébastien Bénazet(French)
 - MrYadro (Russian)
 - EZTEQ (German)
 - tajchert (Polish)
