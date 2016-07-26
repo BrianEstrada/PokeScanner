@@ -37,7 +37,7 @@ public class SettingsUtil {
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
             sharedPrefs.getInt(MAP_REFRESH_RATE, 2),
             sharedPrefs.getString(LAST_USERNAME, ""),
-            sharedPrefs.getBoolean(SHOW_ONLY_LURED, true),
+            sharedPrefs.getBoolean(SHOW_ONLY_LURED, false),
             sharedPrefs.getBoolean(SHOW_GYMS, true),
             sharedPrefs.getBoolean(SHOW_POKESTOPS, true)
         );

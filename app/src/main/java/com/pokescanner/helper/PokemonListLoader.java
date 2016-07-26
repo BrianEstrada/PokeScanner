@@ -78,6 +78,13 @@ public class PokemonListLoader {
         }
     }
 
+    public ArrayList<FilterItem> getFilteredList() {
+        return new ArrayList<>(realm.copyFromRealm(
+                realm.where(FilterItem.class)
+                        .equalTo("filtered",true)
+                        .findAll()
+                        .sort("Number")));
+    }
     public void savePokeList(final ArrayList<FilterItem> pokelist) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override

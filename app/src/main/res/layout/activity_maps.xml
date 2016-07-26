@@ -69,12 +69,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnSettings"
         android:src="@drawable/ic_settings_black_24dp"
-        android:background="@android:color/transparent"
         android:contentDescription="@string/settingsbutton"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:backgroundTintMode="multiply"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_margin="25dp" />
+        android:layout_margin="16dp"
+        android:background="@android:color/transparent" />
 
 </RelativeLayout>

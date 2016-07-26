@@ -15,6 +15,7 @@ import com.pokescanner.objects.FilterItem;
 import com.pokescanner.recycler.FilterRecyclerAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import io.realm.Case;
 import io.realm.Realm;
@@ -58,6 +59,7 @@ public class FilterActivity extends AppCompatActivity implements TextWatcher {
             public void execute(Realm realm) {
                 filterItems.clear();
                 filterItems.addAll(realm.copyFromRealm(realm.where(FilterItem.class).findAll().sort("Number")));
+                System.out.println(Arrays.asList(filterItems).toString());
             }
         });
     }

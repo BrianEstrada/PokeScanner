@@ -103,11 +103,16 @@ public class Pokemons  extends RealmObject{
         return out;
     }
     public String getExpireTime() {
-        Interval interval;
-        interval = new Interval(new Instant(), getDate());
-        //turn our interval into MM:SS
-        DateTime dt = new DateTime(interval.toDurationMillis());
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
-        return fmt.print(dt);
+        if (getDate().isAfter(new Instant())) {
+            Interval interval;
+            interval = new Interval(new Instant(), getDate());
+            //turn our interval into MM:SS
+            DateTime dt = new DateTime(interval.toDurationMillis());
+            DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
+            return fmt.print(dt);
+        }else
+        {
+            return "Expired";
+        }
     }
 }
