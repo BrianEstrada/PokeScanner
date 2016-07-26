@@ -38,7 +38,7 @@ public class AppUpdateLoader extends Thread {
             SemVer remoteVersion = SemVer.parse(update.getVersion());
 
             //Fuck java for not supporting operator overloading
-            if (currentVersion.compareTo(remoteVersion) != 0) {
+            if (currentVersion.compareTo(remoteVersion) < 0) {
                 //current version is smaller than remote version
                 if (EventBus.getDefault().hasSubscriberForEvent(AppUpdateEvent.class)) {
                     EventBus.getDefault().post(new AppUpdateEvent(AppUpdateEvent.OK, update));
