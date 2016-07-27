@@ -17,10 +17,11 @@
         android:supportsRtl="true"
         android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme">
-
+        
         <service
             android:name=".service.PokeService"
             android:exported="false"/>
+
         <receiver
             android:name=".service.ServerPollReceiver"
             android:process=":remote" >
@@ -29,15 +30,24 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".SplashScreenActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustResize">
+
         <activity android:name=".LoginActivity"
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize">>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"

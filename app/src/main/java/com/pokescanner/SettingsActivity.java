@@ -187,6 +187,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 sharedPreferences.getBoolean(SettingsUtil.ENABLE_UPDATES,true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_BOUNDING_BOX, false),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_LOCK_GPS, false),
+                sharedPreferences.getBoolean(SettingsUtil.DRIVING_MODE, false),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SCAN_VALUE,"4")),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SERVER_REFRESH_RATE, "1")),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.POKEMON_ICON_SCALE, "2")),

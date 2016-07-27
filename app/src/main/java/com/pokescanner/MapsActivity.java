@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -35,6 +34,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -82,7 +85,8 @@ import static com.pokescanner.helper.Generation.getCorners;
 import static com.pokescanner.helper.Generation.makeHexScanMap;
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener,
+        OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     FloatingActionButton button;
     ProgressBar progressBar;
@@ -97,6 +101,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     User user;
     Realm realm;
 
+    private GoogleApiClient mGoogleApiClient;
     List<LatLng> scanMap = new ArrayList<>();
 
     private Map<Pokemons, Marker> pokemonsMarkerMap = new HashMap<Pokemons, Marker>();
@@ -158,6 +163,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(settingsIntent);
             }
         });
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 
     public void PokeScan() {
@@ -172,7 +185,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             showProgressbar(true);
             progressBar.setProgress(0);
             LatLng pos = mMap.getCameraPosition().target;
-            if (SettingsUtil.getSettings(this).isLockGpsEnabled() && centerCamera()) {
+            if(mGoogleApiClient.isConnected())
+                currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (SettingsUtil.getSettings(this).isLockGpsEnabled() && moveCameraToCurrentPosition()) {
                 pos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             }
             scanMap = makeHexScanMap(pos, scanValue, 1, new ArrayList<LatLng>());
@@ -243,37 +258,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                     if(markerKey != null)
                         MarkerDetails.showMarkerDetailsDialog(MapsActivity.this, markerKey, currentLocation);
-                    return false;
+                    marker.showInfoWindow();
+                    return true;
                 }
             });
-            //Center camera function
-            centerCamera();
+
+            moveCameraToCurrentPosition();
             startRefresher();
         }
     }
 
     @SuppressWarnings({"MissingPermission"})
-    public boolean centerCamera() {
+    public boolean moveCameraToCurrentPosition() {
         if (PermissionUtils.doWeHaveGPSandLOC(this)) {
-            Criteria criteria = new Criteria();
-            String provider = locationManager.getBestProvider(criteria, true);
-            currentLocation = locationManager.getLastKnownLocation(provider);
-
+            if(mGoogleApiClient.isConnected())
+                currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (currentLocation != null) {
                 LatLng target = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                CameraPosition position = this.mMap.getCameraPosition();
 
                 CameraPosition.Builder builder = new CameraPosition.Builder();
                 builder.zoom(15);
                 builder.target(target);
 
-                this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
-                return true;
+                if(mMap != null)
+                {
+                    this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
+                    return true;
+                }
+                else
+                    return false;
             }
-            showToast(R.string.CAMERA_CENTER_FAILED);
-            return false;
         }
-        showToast(R.string.CAMERA_CENTER_FAILED);
         return false;
     }
 
@@ -287,6 +302,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             button.setImageDrawable(ContextCompat.getDrawable(MapsActivity.this, R.drawable.ic_track_changes_white_24dp));
             SCANNING_STATUS = false;
         }
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        if (PermissionUtils.doWeHaveGPSandLOC(this)) {
+            //If called from the login activity
+            if(getIntent().hasExtra("callerActivity"))
+                moveCameraToCurrentPosition();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+
     }
 
     public void logOut() {
@@ -318,6 +347,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
             createMapObjects();
+
+            //If in driving mode, move camera to current location
+            if(SettingsUtil.getSettings(MapsActivity.this).isDrivingModeEnabled())
+                moveCameraToCurrentPosition();
+
             //Load our Pokemon Array
             ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
             //Okay so we're going to fix the annoying issue where the markers were being constantly redrawn
@@ -564,6 +598,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onStart() {
+        mGoogleApiClient.connect();
         super.onStart();
         EventBus.getDefault().register(this);
     }
@@ -571,6 +606,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        mGoogleApiClient.disconnect();
         super.onStop();
     }
 
@@ -590,5 +626,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         currentCameraPos = cameraPosition;
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+
     }
 }

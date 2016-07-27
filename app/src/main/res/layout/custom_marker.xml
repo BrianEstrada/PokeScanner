@@ -17,4 +17,5 @@
         android:layout_height="fill_parent"
         android:id="@+id/icon"
         android:src="@drawable/p1" />
+
 </LinearLayout>
