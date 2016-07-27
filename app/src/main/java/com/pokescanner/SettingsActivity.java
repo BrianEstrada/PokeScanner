@@ -20,7 +20,7 @@ import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
-import com.pokescanner.updater.showAppUpdateDialog;
+import com.pokescanner.updater.AppUpdateDialog;
 import com.pokescanner.updater.AppUpdateLoader;
 import com.pokescanner.utils.PermissionUtils;
 import com.pokescanner.utils.SettingsUtil;
@@ -170,7 +170,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         switch (event.getStatus()) {
             case AppUpdateEvent.OK:
                 if (PermissionUtils.doWeHaveReadWritePermission(this)) {
-                    new showAppUpdateDialog(SettingsActivity.this, event.getAppUpdate());
+                    new AppUpdateDialog(SettingsActivity.this, event.getAppUpdate());
                 }
                 break;
             case AppUpdateEvent.FAILED:

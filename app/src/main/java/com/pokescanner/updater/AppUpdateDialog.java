@@ -15,8 +15,8 @@ import com.pokescanner.SplashScreenActivity;
 
 import java.io.File;
 
-public class showAppUpdateDialog {
-    public showAppUpdateDialog(final Context context, final AppUpdate update) {
+public class AppUpdateDialog {
+    public AppUpdateDialog(final Context context, final AppUpdate update) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context)
                 .setTitle(R.string.update_available_title)
                 .setMessage(context.getString(R.string.app_name) + " " + update.getVersion() + " " + context.getString(R.string.update_available_long) + "\n\n" + context.getString(R.string.changes) + "\n\n" + update.getChangelog())

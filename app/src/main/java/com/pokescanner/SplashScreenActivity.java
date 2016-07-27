@@ -13,16 +13,11 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +28,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.updater.AppUpdateLoader;
-import com.pokescanner.updater.showAppUpdateDialog;
+import com.pokescanner.updater.AppUpdateDialog;
 import com.pokescanner.utils.PermissionUtils;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
@@ -199,7 +194,7 @@ public class SplashScreenActivity extends AppCompatActivity
         {
             case AppUpdateEvent.OK:
                 if (PermissionUtils.doWeHaveReadWritePermission(this))
-                    new showAppUpdateDialog(mContext, event.getAppUpdate());
+                    new AppUpdateDialog(mContext, event.getAppUpdate());
                 else
                     getReadWritePermission();
                 break;
