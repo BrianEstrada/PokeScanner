@@ -64,10 +64,6 @@
             android:screenOrientation="portrait"/>
 
         <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="fb79ebdaab674d309573e536fb1e7c6a69beccfc" />
-
-        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLEAPIKEY" />
 
