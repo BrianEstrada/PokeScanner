@@ -4,48 +4,83 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Typeface;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.pokescanner.R;
+import com.pokescanner.helper.Settings;
+
+import org.joda.time.DateTime;
+import org.joda.time.Instant;
+import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 /**
  * Created by admin on 23-07-2016.
  */
 public class DrawableUtils
 {
-    public static Bitmap writeTextOnDrawable(int drawableId, String text, int scale, Context context) {
-        Bitmap bm = BitmapFactory.decodeResource(context.getResources(), drawableId)
-                .copy(Bitmap.Config.ARGB_8888, true);
-        bm = Bitmap.createScaledBitmap(bm,bm.getWidth()/scale,bm.getHeight()/scale,false);
+    public static String getExpireTime(long expireTime) {
+        //Create a date from the expire time (Long value)
+        DateTime date = new DateTime(expireTime);
+        //If our date time is after now then it's expired and we'll return expired (So we don't get an exception
+        if (date.isAfter(new Instant())) {
+            Interval interval;
+            interval = new Interval(new Instant(), date);
+            //turn our interval into MM:SS
+            DateTime dt = new DateTime(interval.toDurationMillis());
+            DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
+            return fmt.print(dt);
+        }else
+        {
+            return "Expired";
+        }
 
-        Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
+    }
+    public static  Bitmap getBitmap(Context context, String URI) {
+        int unitScale = Settings.get(context).getScale();
+        int resourceID = context.getResources().getIdentifier(URI, "drawable", context.getPackageName());
+        return DrawableUtils.getBitmapFromView(resourceID, "", context);
+    }
 
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.BLACK);
-        paint.setTypeface(tf);
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(convertToPixels(context, 11));
+    public static int getResourceID(int pokemonid,Context context) {
+        String uri = "p" + pokemonid;
+        int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
+        return resourceID;
+    }
 
-        Rect textRect = new Rect();
-        paint.getTextBounds(text, 0, text.length(), textRect);
+    public static Bitmap getBitmapFromView(int drawableId, String text, Context context) {
+        int scale = Settings.get(context).getScale();
 
-        Canvas canvas = new Canvas(bm);
+        Bitmap bm = BitmapFactory.decodeResource(context.getResources(), drawableId).copy(Bitmap.Config.ARGB_8888, true);
 
-        //If the text is bigger than the canvas , reduce the font size
-        if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
-            paint.setTextSize(convertToPixels(context, 7));        //Scaling needs to be used for different dpi's
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View pokeView = inflater.inflate(R.layout.custom_marker, null);
 
-        //Calculate the positions
-        int xPos = (canvas.getWidth() / 2) - 2;     //-2 is for regulating the x position offset
+        TextView timer = (TextView) pokeView.findViewById(R.id.timer);
+        ImageView icon = (ImageView) pokeView.findViewById(R.id.icon);
 
-        //"- ((paint.descent() + paint.ascent()) / 2)" is the distance from the baseline to the center.
-        int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;
+        timer.setText(text);
+        icon.setImageBitmap(bm);
 
-        canvas.drawText(text, xPos, yPos-convertToPixels(context,16), paint);
+        if (timer.length() == 0)
+        {
+            timer.setVisibility(View.GONE);
+        }
 
-        return  bm;
+        pokeView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        pokeView.layout(0, 0, pokeView.getMeasuredWidth(), pokeView.getMeasuredHeight());
+
+        Bitmap bitmap = Bitmap.createBitmap(pokeView.getMeasuredWidth(), pokeView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bitmap);
+        pokeView.layout(0, 0, pokeView.getMeasuredWidth(), pokeView.getMeasuredHeight());
+        pokeView.draw(c);
+        bitmap = Bitmap.createScaledBitmap(bitmap,bitmap.getWidth()/scale,bitmap.getHeight()/scale,false);
+        return bitmap;
     }
 
     public static int convertToPixels(Context context, int nDP) {

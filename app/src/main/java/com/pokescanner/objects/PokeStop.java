@@ -110,7 +110,7 @@ public class PokeStop extends RealmObject
         if(hasLureInfo && getExpiryTime().isAfter(new Instant()))
              uri = "stop_lure";
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
-        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, "", 2, context);
+        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, "", context);
         return out;
     }
 }

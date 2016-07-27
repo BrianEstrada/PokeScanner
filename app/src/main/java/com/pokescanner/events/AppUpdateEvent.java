@@ -8,6 +8,8 @@ import lombok.Getter;
 public class AppUpdateEvent {
     public static final int OK = 1;
     public static final int FAILED = 2;
+    public static final int UPTODATE = 3;
+
 
     AppUpdate appUpdate;
     int status;

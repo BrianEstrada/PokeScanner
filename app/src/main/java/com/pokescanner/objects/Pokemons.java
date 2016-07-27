@@ -23,14 +23,12 @@ import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pokescanner.utils.DrawableUtils;
 
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import POGOProtos.Map.Pokemon.MapPokemonOuterClass;
 import io.realm.RealmObject;
@@ -67,52 +65,48 @@ public class Pokemons  extends RealmObject{
             setLongitude(pokemonIn.getLongitude());
     }
 
-    public DateTime getDate() {
-        return new DateTime(getExpires());
+    public int getResourceID(Context context) {
+        return DrawableUtils.getResourceID(getNumber(),context);
     }
-    public MarkerOptions getMarker(Context context,int scale) {
-        String uri = "p" + getNumber();
-        int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
-
-        //Find our interval
-        String timeOut = "";
-        if (getDate().isAfter(new Instant())) {
-            timeOut = getExpireTime();
+    public boolean isExpired() {
+        //Create a date
+        DateTime expires = new DateTime(getExpires());
+        //If this date is after the current time then it has not expired!
+        if (expires.isAfter(new Instant())) {
+            return true;
+        }else {
+            return false;
         }
+    }
+
+    public MarkerOptions getMarker(Context context) {
+        int resourceID = getResourceID(context);
+        //Find our interval
+        String timeOut = DrawableUtils.getExpireTime(getExpires());
         //set our location
         LatLng position = new LatLng(getLatitude(), getLongitude());
 
-        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID,timeOut,scale,context);
-
-        String name = getName();
-        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+        Bitmap out = DrawableUtils.getBitmapFromView(resourceID,timeOut,context);
 
         MarkerOptions pokeIcon = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(out))
-                .position(position)
-                .title(name)
-                .snippet(timeOut);
-
+                .position(position);
         return pokeIcon;
     }
 
-    public Bitmap getBitmap(Context context,int scale){
-        String uri = "p" + getNumber();
-        int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
-        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID,getExpireTime(),scale,context);
-        return out;
+    public String getFormalName() {
+        String name = getName();
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
-    public String getExpireTime() {
-        if (getDate().isAfter(new Instant())) {
-            Interval interval;
-            interval = new Interval(new Instant(), getDate());
-            //turn our interval into MM:SS
-            DateTime dt = new DateTime(interval.toDurationMillis());
-            DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
-            return fmt.print(dt);
-        }else
-        {
-            return "Expired";
-        }
+
+    public Marker updateMarker(Marker marker,Context context) {
+
+        String expires = DrawableUtils.getExpireTime(getExpires());
+
+        Bitmap newbit = DrawableUtils.getBitmapFromView(getResourceID(context),expires,context);
+
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(newbit));
+
+        return marker;
     }
 }

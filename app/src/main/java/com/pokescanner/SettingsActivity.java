@@ -34,7 +34,7 @@ import io.realm.Realm;
 
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     SharedPreferences preferences;
-    Preference scan_dialog,gym_filter,pokemon_filter;
+    Preference scan_dialog,gym_filter,pokemon_filter,expiration_filter;
     Preference clear_pokemon,clear_gyms,clear_pokestops;
     Preference logout,update;
     Realm realm;
@@ -78,6 +78,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         gym_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 GymFilters.showGymFiltersDialog(SettingsActivity.this);
+                return true;
+            }
+        });
+
+        expiration_filter = (Preference) getPreferenceManager().findPreference("expiration_filter");
+        expiration_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                ExpirationFilters.showExpirationFiltersDialog(SettingsActivity.this);
                 return true;
             }
         });

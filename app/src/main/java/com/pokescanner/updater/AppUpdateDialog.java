@@ -70,7 +70,7 @@ public class AppUpdateDialog {
             BroadcastReceiver onComplete = new BroadcastReceiver() {
                 public void onReceive(Context ctxt, Intent intent) {
                     Intent install = new Intent(Intent.ACTION_VIEW);
-                    install.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     install.setDataAndType(uri, manager.getMimeTypeForDownloadedFile(downloadId));
                     ctxt.startActivity(install);
                     ctxt.unregisterReceiver(this);
@@ -78,9 +78,8 @@ public class AppUpdateDialog {
             };
             //register receiver for when .apk download is complete
             context.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        } catch (RuntimeException e)
-        {
-
+        } catch (Exception e) {
+            System.out.println("We have an error houston");
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.pokescanner.updater;
 
-import android.util.Log;
-
 import com.pokescanner.BuildConfig;
 import com.pokescanner.events.AppUpdateEvent;
 
@@ -42,6 +40,11 @@ public class AppUpdateLoader extends Thread {
                 //current version is smaller than remote version
                 if (EventBus.getDefault().hasSubscriberForEvent(AppUpdateEvent.class)) {
                     EventBus.getDefault().post(new AppUpdateEvent(AppUpdateEvent.OK, update));
+                }
+            }else
+            {
+                if (EventBus.getDefault().hasSubscriberForEvent(AppUpdateEvent.class)) {
+                    EventBus.getDefault().post(new AppUpdateEvent(AppUpdateEvent.UPTODATE, update));
                 }
             }
 

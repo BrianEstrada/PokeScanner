@@ -17,7 +17,6 @@
 
 package com.pokescanner;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,16 +24,11 @@ import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -45,7 +39,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -58,10 +51,8 @@ import com.pokescanner.events.PublishProgressEvent;
 import com.pokescanner.events.RestartRefreshEvent;
 import com.pokescanner.helper.CustomMapFragment;
 import com.pokescanner.helper.GymFilter;
-import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.loaders.MapObjectsLoader;
-import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
@@ -69,13 +60,12 @@ import com.pokescanner.objects.User;
 import com.pokescanner.utils.MarkerDetails;
 import com.pokescanner.utils.PermissionUtils;
 import com.pokescanner.utils.SettingsUtil;
+import com.pokescanner.utils.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.joda.time.Instant;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +88,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ProgressBar progressBar;
     private GoogleMap mMap;
     ImageButton btnSettings;
-    Toolbar toolbar;
     RelativeLayout main;
 
     LocationManager locationManager;
@@ -108,17 +97,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     User user;
     Realm realm;
 
-    LatLng directionsPosition;
-
     List<LatLng> scanMap = new ArrayList<>();
-    ArrayList<FilterItem> filterItems = new ArrayList<>();
 
     private Map<Pokemons, Marker> pokemonsMarkerMap = new HashMap<Pokemons, Marker>();
     private Map<Gym, Marker> gymMarkerMap = new HashMap<Gym, Marker>();
     private Map<PokeStop, Marker> pokestopMarkerMap = new HashMap<PokeStop, Marker>();
     Circle mBoundingBox = null;
 
-    PokemonListLoader pokemonListLoader;
     private MapObjectsLoader mapObjectsLoader;
 
     int pos = 1;
@@ -151,18 +136,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //Start our location manager so we can center our map
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        //This class is used to load and save our filters
-        pokemonListLoader = new PokemonListLoader(this);
         //load our main layout
         main = (RelativeLayout) findViewById(R.id.main);
-
-        try {
-            //let's try and load our filters
-            filterItems.addAll(pokemonListLoader.getPokelist());
-        } catch (IOException e) {
-            showToast(R.string.ERROR_FILTERS);
-            e.printStackTrace();
-        }
 
         button = (FloatingActionButton) findViewById(R.id.btnSearch);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -194,16 +169,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             int scanValue = Settings.get(this).getScanValue();
             //Our refresh rate to Milliseconds
             int millis = SettingsUtil.getSettings(this).getServerRefresh() * 1000;
-
             showProgressbar(true);
             progressBar.setProgress(0);
-
             LatLng pos = mMap.getCameraPosition().target;
-
             if (SettingsUtil.getSettings(this).isLockGpsEnabled() && centerCamera()) {
                 pos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             }
-
             scanMap = makeHexScanMap(pos, scanValue, 1, new ArrayList<LatLng>());
             if (scanMap != null) {
                 mapObjectsLoader = new MapObjectsLoader(user, scanMap, millis, this);
@@ -227,48 +198,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void showToast(int resString) {
         Toast.makeText(MapsActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
-    }
-
-    public void createBoundingBoxPreview() {
-
-    }
-
-    public void createBoundingBox() {
-        if (SCANNING_STATUS) {
-            if (mBoundingBox != null)
-                mBoundingBox.remove();
-
-            LatLng loc = scanMap.get(0);
-
-            //To create a circle we need to get the corners
-            List<LatLng> corners = getCorners(scanMap);
-            //Once we have the corners lets create two locations
-            Location location = new Location("");
-            //set the latitude/longitude
-            location.setLatitude(corners.get(0).latitude);
-            location.setLongitude(corners.get(0).longitude);
-
-            Location location1 = new Location("");
-            //set the laditude/longitude
-            location1.setLatitude(loc.latitude);
-            location1.setLongitude(loc.longitude);
-
-            float distance = location.distanceTo(location1);
-
-            mBoundingBox = mMap.addCircle(new CircleOptions().center(loc).radius(distance));
-        } else {
-            if (currentCameraPos != null) {
-                if (mBoundingBox != null) {
-                    mBoundingBox.remove();
-                }
-                int scanDist = Settings.get(this).getScanValue();
-                mBoundingBox = mMap.addCircle(new CircleOptions()
-                        .center(currentCameraPos.target)
-                        .radius(scanDist * 150)
-                        .strokeWidth(5)
-                        .strokeColor(Color.parseColor("#80d22d2d")));
-            }
-        }
     }
 
     @Override
@@ -360,11 +289,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void reloadFilters() {
-        filterItems.clear();
-        filterItems.addAll(pokemonListLoader.getFilteredList());
-    }
-
     public void logOut() {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -385,7 +309,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void refreshMap() {
         if (mMap != null) {
             LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
-
             //We use this to check when our map object loader is done loading anything
             //If is done loading then we set our progress bar off
             //It's a quick fix in the future we should implement a listener inside the thread.
@@ -394,15 +317,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     showProgressbar(false);
                 }
             }
-
             createMapObjects();
-
-            //load our array
+            //Load our Pokemon Array
             ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
-
-            //get our icon scale from our settings
-            int scale = SettingsUtil.getSettings(this).getScale();
-
             //Okay so we're going to fix the annoying issue where the markers were being constantly redrawn
             for (int i = 0; i < pokemons.size(); i++) {
                 //Get our pokemon from the list
@@ -410,8 +327,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //Is our pokemon contained within the bounds of the camera?
                 if (curScreen.contains(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))) {
                     //If yes then has he expired?
-                    if (pokemon.getDate().isAfter(new Instant())) {
-                        if (filterItems.contains(new FilterItem(pokemon.getNumber()))) {
+                    if (pokemon.isExpired()) {
+                        if (UiUtils.isPokemonFiltered(pokemon)) {
                             if (pokemonsMarkerMap.containsKey(pokemon)) {
                                 Marker marker = pokemonsMarkerMap.get(pokemon);
                                 if (marker != null) {
@@ -419,24 +336,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     pokemonsMarkerMap.remove(pokemon);
                                 }
                             }
-                            System.out.println("Filtered");
                         } else {
                             //Okay finally is he contained within our hashmap?
                             if (pokemonsMarkerMap.containsKey(pokemon)) {
                                 //Well if he is then lets pull out our marker.
                                 Marker marker = pokemonsMarkerMap.get(pokemon);
-                                //Update our icon
-                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(pokemon.getBitmap(this, scale)));
-                                //Update the snippet
-                                marker.setSnippet(pokemon.getExpireTime());
-                                //Was our marker window open when we updated?
-                                if (marker.isInfoWindowShown()) {
-                                    //Alright lets redraw it!
-                                    marker.showInfoWindow();
-                                }
+                                //Update the marker
+                                marker = pokemon.updateMarker(marker,this);
                             } else {
                                 //If our pokemon wasn't in our hashmap lets add him
-                                pokemonsMarkerMap.put(pokemon, mMap.addMarker(pokemon.getMarker(this, scale)));
+                                pokemonsMarkerMap.put(pokemon, mMap.addMarker(pokemon.getMarker(this)));
                             }
                         }
                     } else {
@@ -460,7 +369,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
-
     public void refreshGymsAndPokestops() {
         //The the map bounds
         if (mMap != null) {
@@ -507,7 +415,43 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+    public void createBoundingBox() {
+        if (SCANNING_STATUS) {
+            if (mBoundingBox != null)
+                mBoundingBox.remove();
 
+            LatLng loc = scanMap.get(0);
+
+            //To create a circle we need to get the corners
+            List<LatLng> corners = getCorners(scanMap);
+            //Once we have the corners lets create two locations
+            Location location = new Location("");
+            //set the latitude/longitude
+            location.setLatitude(corners.get(0).latitude);
+            location.setLongitude(corners.get(0).longitude);
+
+            Location location1 = new Location("");
+            //set the laditude/longitude
+            location1.setLatitude(loc.latitude);
+            location1.setLongitude(loc.longitude);
+
+            float distance = location.distanceTo(location1);
+
+            mBoundingBox = mMap.addCircle(new CircleOptions().center(loc).radius(distance));
+        } else {
+            if (currentCameraPos != null) {
+                if (mBoundingBox != null) {
+                    mBoundingBox.remove();
+                }
+                int scanDist = Settings.get(this).getScanValue();
+                mBoundingBox = mMap.addCircle(new CircleOptions()
+                        .center(currentCameraPos.target)
+                        .radius(scanDist * 150)
+                        .strokeWidth(5)
+                        .strokeColor(Color.parseColor("#80d22d2d")));
+            }
+        }
+    }
     public boolean shouldGymBeRemoved(Gym gym) {
         GymFilter currentGymFilter = GymFilter.getGymFilter(MapsActivity.this);
         int guardPokemonCp = gym.getGuardPokemonCp();
@@ -536,7 +480,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return false;
     }
-
     public void createMapObjects() {
         if (SettingsUtil.getSettings(this).isBoundingBoxEnabled()) {
             createBoundingBox();
@@ -547,7 +490,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
-
     public void startRefresher() {
         if (pokeonRefresher != null)
             pokeonRefresher.unsubscribe();
@@ -616,7 +558,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         forceRefreshEvent(new ForceRefreshEvent());
         onRestartRefreshEvent(new RestartRefreshEvent());
         realm = Realm.getDefaultInstance();
-        reloadFilters();
     }
 
     @Override
@@ -647,25 +588,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         currentCameraPos = cameraPosition;
-    }
-
-    public void popupMenu() {
-        PopupMenu popup = new PopupMenu(MapsActivity.this, btnSettings);
-        popup.getMenuInflater().inflate(R.menu.main_menu, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_settings:
-                        Intent settingsIntent = new Intent(MapsActivity.this, SettingsActivity.class);
-                        startActivity(settingsIntent);
-                        break;
-                    case R.id.action_logout:
-                        logOut();
-                        break;
-                }
-                return true;
-            }
-        });
-        popup.show();
     }
 }
