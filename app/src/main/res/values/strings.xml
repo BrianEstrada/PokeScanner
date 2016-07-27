@@ -116,6 +116,8 @@
     <string name="show_pokestop_desc">Enables/Disables Pokestops on the map</string>
     <string name="lock_gps">Scan Based on GPS</string>
     <string name="lock_gps_desc">Instead of scanning in the center of view (wherever you\'re looking) it will scan your location</string>
+    <string name="driving_mode">Driving mode</string>
+    <string name="driving_mode_desc">Keeps the map centered at your current location</string>
 
     <string name="gyms_cleared">Gyms Cleared</string>
     <string name="pokestops_cleared">Pokestops Cleared</string>

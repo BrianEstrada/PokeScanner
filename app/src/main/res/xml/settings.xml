@@ -83,6 +83,13 @@
             android:defaultValue="false"
             android:layout_height="match_parent"
             android:layout_width="wrap_content" />
+        <SwitchPreference
+            android:key="drivingModeEnabled"
+            android:title="@string/driving_mode"
+            android:summary="@string/driving_mode_desc"
+            android:defaultValue="false"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
     </PreferenceCategory>
 
     <PreferenceCategory
