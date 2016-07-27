@@ -11,11 +11,12 @@ import android.net.Uri;
 
 import com.pokescanner.LoginActivity;
 import com.pokescanner.R;
+import com.pokescanner.SplashScreenActivity;
 
 import java.io.File;
 
-public class AppUpdateDialog {
-    public AppUpdateDialog(final Context context, final AppUpdate update) {
+public class showAppUpdateDialog {
+    public showAppUpdateDialog(final Context context, final AppUpdate update) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context)
                 .setTitle(R.string.update_available_title)
                 .setMessage(context.getString(R.string.app_name) + " " + update.getVersion() + " " + context.getString(R.string.update_available_long) + "\n\n" + context.getString(R.string.changes) + "\n\n" + update.getChangelog())
@@ -29,12 +30,8 @@ public class AppUpdateDialog {
                 .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                            if (context instanceof LoginActivity) {
-                                ((LoginActivity) context).checkIfUserIsLoggedIn();
-                            }else
-                            {
-                                //Do nothing?
-                            }
+                            if (context instanceof SplashScreenActivity)
+                                ((SplashScreenActivity) context).goToLoginScreen();
                     }
                 })
                 .setCancelable(false);

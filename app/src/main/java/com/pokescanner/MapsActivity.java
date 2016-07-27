@@ -243,7 +243,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                     if(markerKey != null)
                         MarkerDetails.showMarkerDetailsDialog(MapsActivity.this, markerKey, currentLocation);
-                    return false;
+                    marker.showInfoWindow();
+                    return true;
                 }
             });
             //Center camera function
