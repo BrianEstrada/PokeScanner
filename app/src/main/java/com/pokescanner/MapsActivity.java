@@ -56,6 +56,7 @@ import com.pokescanner.events.PublishProgressEvent;
 import com.pokescanner.events.RestartRefreshEvent;
 import com.pokescanner.helper.CustomMapFragment;
 import com.pokescanner.helper.GymFilter;
+import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.loaders.MapObjectsLoader;
 import com.pokescanner.objects.Gym;
@@ -72,6 +73,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -164,6 +166,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(settingsIntent);
             }
         });
+
+        try {
+            PokemonListLoader.populatePokemonList(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void PokeScan() {

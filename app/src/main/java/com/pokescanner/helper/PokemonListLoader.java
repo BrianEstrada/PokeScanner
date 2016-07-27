@@ -40,30 +40,11 @@ public class PokemonListLoader {
 
     public static ArrayList<FilterItem> getPokelist(Context context) throws IOException {
         Realm realm = Realm.getDefaultInstance();
-        if (realm.where(FilterItem.class).findAll().size() == 151) {
-            return new ArrayList<>(realm.copyFromRealm(
-                    realm.where(FilterItem.class)
-                            .findAll()
-                            .sort("Number")));
-        }else
-        {
-            InputStream is = context.getAssets().open("pokemons.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String bufferString = new String(buffer);
-            Gson gson = new Gson();
-            Type listType = new TypeToken<ArrayList<FilterItem>>() {}.getType();
-            final ArrayList<FilterItem> filterItems = gson.fromJson(bufferString, listType);
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.copyToRealmOrUpdate(filterItems);
-                }
-            });
-            return filterItems;
-        }
+        populatePokemonList(context);
+        return new ArrayList<>(realm.copyFromRealm(
+                realm.where(FilterItem.class)
+                        .findAll()
+                        .sort("Number")));
     }
 
     public static ArrayList<FilterItem> getFilteredList() {
@@ -85,6 +66,27 @@ public class PokemonListLoader {
             }
         });
         realm.close();
+    }
+
+    public static void populatePokemonList(Context context) throws IOException {
+        Realm realm = Realm.getDefaultInstance();
+        if (realm.where(FilterItem.class).findAll().size() != 151) {
+            InputStream is = context.getAssets().open("pokemons.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String bufferString = new String(buffer);
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<FilterItem>>() {}.getType();
+            final ArrayList<FilterItem> filterItems = gson.fromJson(bufferString, listType);
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.copyToRealmOrUpdate(filterItems);
+                }
+            });
+        }
     }
 
 }
