@@ -118,6 +118,8 @@
     <string name="lock_gps_desc">Instead of scanning in the center of view (wherever you\'re looking) it will scan your location</string>
     <string name="old_marker">Use Old Map Markers</string>
     <string name="old_marker_desc"></string>
+    <string name="driving_mode">Driving mode</string>
+    <string name="driving_mode_desc">Keeps the map centered at your current location</string>
 
     <string name="gyms_cleared">Gyms Cleared</string>
     <string name="pokestops_cleared">Pokestops Cleared</string>
@@ -157,4 +159,12 @@
     <string name="Check_For_Update_desc">Checks for an update manually</string>
 
     <string name="ERROR_NO_DIRECTION_SELECTED">No marker selected for directions!</string>
+
+    <string name="faster">Faster</string>
+    <string name="fast">Fast</string>
+    <string name="normal">Normal</string>
+    <string name="slow">Slow</string>
+    <string name="slowest">Slowest</string>
+    <string name="large">Large</string>
+    <string name="small">Small</string>
 </resources>

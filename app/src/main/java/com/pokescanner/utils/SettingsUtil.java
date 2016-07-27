@@ -16,6 +16,7 @@ public class SettingsUtil {
     public static final String SHOW_POKESTOPS = "showPokestops";
     public static final String KEY_LOCK_GPS = "lockGpsEnabled";
     public static final String KEY_OLD_MARKER = "useOldMapMarker";
+    public static final String DRIVING_MODE = "drivingModeEnabled";
 
     public static final String SERVER_REFRESH_RATE = "serverRefreshRate";
     public static final String MAP_REFRESH_RATE = "mapRefreshRate";
@@ -33,6 +34,7 @@ public class SettingsUtil {
             sharedPrefs.getBoolean(ENABLE_UPDATES,true),
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
             sharedPrefs.getBoolean(KEY_LOCK_GPS, false),
+            sharedPrefs.getBoolean(DRIVING_MODE, false),
             sharedPrefs.getInt(SCAN_VALUE, 4),
             sharedPrefs.getInt(SERVER_REFRESH_RATE, 1),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
@@ -51,6 +53,7 @@ public class SettingsUtil {
             .putBoolean(ENABLE_UPDATES,settings.isUpdatesEnabled())
             .putBoolean(KEY_BOUNDING_BOX, settings.isBoundingBoxEnabled())
             .putBoolean(KEY_LOCK_GPS, settings.isLockGpsEnabled())
+            .putBoolean(DRIVING_MODE, settings.isDrivingModeEnabled())
             .putInt(SCAN_VALUE,settings.getScanValue())
             .putInt(SERVER_REFRESH_RATE, settings.getServerRefresh())
             .putInt(MAP_REFRESH_RATE, settings.getMapRefresh())

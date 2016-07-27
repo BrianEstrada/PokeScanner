@@ -18,6 +18,7 @@ public class Settings {
     boolean updatesEnabled;
     boolean boundingBoxEnabled;
     boolean lockGpsEnabled;
+    boolean drivingModeEnabled;
     int scanValue;
     int serverRefresh;
     int scale;
