@@ -45,6 +45,8 @@ We are currently looking for translators to help us translate the app to other l
 - EZTEQ (German)
 - tajchert (Polish)
 - guidodavid (Italian)
+- jorgersn (Portuguese)
+- udarian (Indonesian)
 
 
 ## Bugs and Feedback
