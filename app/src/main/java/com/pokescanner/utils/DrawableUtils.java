@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -62,6 +64,13 @@ public class DrawableUtils
 
         TextView timer = (TextView) pokeView.findViewById(R.id.timer);
         ImageView icon = (ImageView) pokeView.findViewById(R.id.icon);
+
+        if(Settings.get(context).isUseOldMapMarker()){
+            timer.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+            timer.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+            timer.setTypeface(Typeface.create("Helvetica", Typeface.BOLD));
+            timer.setTextSize(convertToPixels(context, 7));
+        }
 
         timer.setText(text);
         icon.setImageBitmap(bm);

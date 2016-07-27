@@ -21,18 +21,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -211,11 +216,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Let's find our location and set it!
             mMap.getUiSettings().setMapToolbarEnabled(false);
             mMap.getUiSettings().setCompassEnabled(true);
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
-            {
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
-                public boolean onMarkerClick(Marker marker)
-                {
+                public boolean onMarkerClick(Marker marker) {
                     Object markerKey = null;
                     for (Map.Entry<Pokemons, Marker> pokemonsMarkerEntry : pokemonsMarkerMap.entrySet()) {
                         if (pokemonsMarkerEntry.getValue().equals(marker)) {
@@ -223,8 +226,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             break;
                         }
                     }
-                    if(markerKey == null)
-                    {
+                    if (markerKey == null) {
                         for (Map.Entry<Gym, Marker> gymMarkerEntry : gymMarkerMap.entrySet()) {
                             if (gymMarkerEntry.getValue().equals(marker)) {
                                 markerKey = gymMarkerEntry.getKey();
@@ -232,8 +234,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             }
                         }
                     }
-                    if(markerKey == null)
-                    {
+                    if (markerKey == null) {
                         for (Map.Entry<PokeStop, Marker> pokeStopMarkerEntry : pokestopMarkerMap.entrySet()) {
                             if (pokeStopMarkerEntry.getValue().equals(marker)) {
                                 markerKey = pokeStopMarkerEntry.getKey();
@@ -241,8 +242,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             }
                         }
                     }
-                    if(markerKey != null)
-                        MarkerDetails.showMarkerDetailsDialog(MapsActivity.this, markerKey, currentLocation);
+                    if (markerKey != null) {
+                        if (!Settings.get(MapsActivity.this).isUseOldMapMarker()) {
+                            removeAdapterAndListener();
+                            MarkerDetails.showMarkerDetailsDialog(MapsActivity.this, markerKey, currentLocation);
+                        } else {
+                            setAdapterAndListener();
+                            marker.showInfoWindow();
+                        }
+                    }
                     return false;
                 }
             });
@@ -329,8 +337,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //If yes then has he expired?
                     //This isnt worded right it should say isNotExpired (Will fix later)
                     if (pokemon.isExpired()) {
-                        if (UiUtils.isPokemonFiltered(pokemon)||
-                                UiUtils.isPokemonExpiredFiltered(pokemon,this)) {
+                        if (UiUtils.isPokemonFiltered(pokemon) ||
+                                UiUtils.isPokemonExpiredFiltered(pokemon, this)) {
                             if (pokemonsMarkerMap.containsKey(pokemon)) {
                                 Marker marker = pokemonsMarkerMap.get(pokemon);
                                 if (marker != null) {
@@ -338,13 +346,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     pokemonsMarkerMap.remove(pokemon);
                                 }
                             }
-                        }else{
+                        } else {
                             //Okay finally is he contained within our hashmap?
                             if (pokemonsMarkerMap.containsKey(pokemon)) {
                                 //Well if he is then lets pull out our marker.
                                 Marker marker = pokemonsMarkerMap.get(pokemon);
                                 //Update the marker
-                                marker = pokemon.updateMarker(marker,this);
+                                marker = pokemon.updateMarker(marker, this);
                             } else {
                                 //If our pokemon wasn't in our hashmap lets add him
                                 pokemonsMarkerMap.put(pokemon, mMap.addMarker(pokemon.getMarker(this)));
@@ -383,7 +391,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 pokestopMarker.getValue().remove();
 
             //Clear the hashmaps
-            gymMarkerMap.clear();;
+            gymMarkerMap.clear();
             pokestopMarkerMap.clear();
 
             //Once we refresh our markers lets go ahead and load our pokemans
@@ -590,5 +598,59 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         currentCameraPos = cameraPosition;
+    }
+
+    private void setAdapterAndListener() {
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(final Marker marker) {
+                LinearLayout info = new LinearLayout(MapsActivity.this);
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(MapsActivity.this);
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(MapsActivity.this);
+                snippet.setTextColor(Color.GRAY);
+                snippet.setGravity(Gravity.CENTER);
+                snippet.setText(marker.getSnippet());
+
+                TextView navigate = new TextView(MapsActivity.this);
+                navigate.setTextColor(Color.GRAY);
+                navigate.setGravity(Gravity.CENTER);
+                navigate.setText(getText(R.string.click_open_in_gmaps));
+
+                info.addView(title);
+                info.addView(snippet);
+                info.addView(navigate);
+
+                return info;
+            }
+        });
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + marker.getPosition().latitude + "," + marker.getPosition().longitude + "(" + marker.getTitle() + ")");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(MapsActivity.this.getPackageManager()) != null) {
+                    MapsActivity.this.startActivity(mapIntent);
+                }
+            }
+        });
+    }
+
+    private void removeAdapterAndListener() {
+        mMap.setInfoWindowAdapter(null);
+        mMap.setOnInfoWindowClickListener(null);
     }
 }

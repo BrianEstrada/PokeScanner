@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.pokescanner.helper.Settings;
 import com.pokescanner.utils.DrawableUtils;
 
 import org.joda.time.DateTime;
@@ -78,9 +79,11 @@ public class PokeStop extends RealmObject
 
         MarkerOptions pokestopMarker = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(getBitmap(context)))
-                .position(position)
-                .title("Pokestop")
-                .snippet(snippetMessage);
+                .position(position);
+        if(Settings.get(context).isUseOldMapMarker()){
+            pokestopMarker.title("Pokestop");
+            pokestopMarker.snippet(snippetMessage);
+        }
         return pokestopMarker;
     }
 

@@ -116,6 +116,8 @@
     <string name="show_pokestop_desc">Enables/Disables Pokestops on the map</string>
     <string name="lock_gps">Scan Based on GPS</string>
     <string name="lock_gps_desc">Instead of scanning in the center of view (wherever you\'re looking) it will scan your location</string>
+    <string name="old_marker">Use Old Map Markers</string>
+    <string name="old_marker_desc"></string>
 
     <string name="gyms_cleared">Gyms Cleared</string>
     <string name="pokestops_cleared">Pokestops Cleared</string>
@@ -138,6 +140,7 @@
     <string name="lured_pokemon">Lured pokemon</string>
     <string name="open_in_gmaps">Open in Google Maps</string>
     <string name="get_directions">In-App directions</string>
+    <string name="click_open_in_gmaps">Click Here to open in Google Maps</string>
 
     <string name="ERROR_GENERATING_GRID">Error Generating Grid, Try again.</string>
     <string name="CAMERA_CENTER_FAILED">Failed to center camera.</string>

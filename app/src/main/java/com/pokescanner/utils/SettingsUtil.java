@@ -15,6 +15,7 @@ public class SettingsUtil {
     public static final String SHOW_GYMS = "showGyms";
     public static final String SHOW_POKESTOPS = "showPokestops";
     public static final String KEY_LOCK_GPS = "lockGpsEnabled";
+    public static final String KEY_OLD_MARKER = "useOldMapMarker";
 
     public static final String SERVER_REFRESH_RATE = "serverRefreshRate";
     public static final String MAP_REFRESH_RATE = "mapRefreshRate";
@@ -39,7 +40,8 @@ public class SettingsUtil {
             sharedPrefs.getString(LAST_USERNAME, ""),
             sharedPrefs.getBoolean(SHOW_ONLY_LURED, false),
             sharedPrefs.getBoolean(SHOW_GYMS, true),
-            sharedPrefs.getBoolean(SHOW_POKESTOPS, true)
+            sharedPrefs.getBoolean(SHOW_POKESTOPS, true),
+            sharedPrefs.getBoolean(KEY_OLD_MARKER, false)
         );
     }
 
@@ -57,6 +59,7 @@ public class SettingsUtil {
             .putBoolean(SHOW_ONLY_LURED, settings.isShowOnlyLured())
             .putBoolean(SHOW_GYMS, settings.isGymsEnabled())
             .putBoolean(SHOW_POKESTOPS, settings.isPokestopsEnabled())
+            .putBoolean(KEY_OLD_MARKER, settings.isUseOldMapMarker())
             .apply();
     }
 }

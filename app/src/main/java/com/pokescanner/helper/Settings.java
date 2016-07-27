@@ -26,6 +26,7 @@ public class Settings {
     boolean showOnlyLured;
     boolean gymsEnabled;
     boolean pokestopsEnabled;
+    boolean useOldMapMarker;
 
     public void save(Context context) {
         SettingsUtil.saveSettings(context, this);
