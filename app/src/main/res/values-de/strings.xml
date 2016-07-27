@@ -18,21 +18,20 @@
 <resources>
   <string name="title_activity_maps">Karte</string>
   <string name="scan">Scannen</string>
-  <string name="ptclogin">PTC-Login</string>
-  <string name="googlelogin">Google-Login</string>
+  <string name="ptclogin">PTC Login</string>
+  <string name="googlelogin">Google Login</string>
   <string name="blacklist">Ausschlüsse</string>
   <string name="save">Speichern</string>
   <string name="search_radius">Suchradius</string>
   <string name="search_radius_desc">Erlaubt es, den Suchradius des Poke Scanner zu ändern (Achtung: Je größer der Suchradius, desto mehr wird das Gerät ausgelastet!)</string>
-  <string name="higher_number_slower_search">1 Einheit = 200 Meter</string>
+  <string name="higher_number_slower_search">1 Einheit ≈ 200 Meter</string>
   <string name="cancel">Abbrechen</string>
   <string name="filter">Filter</string>
   <string name="none">Kein</string>
   <string name="select_all">Alles auswählen</string>
   <string name="pokemon_name">Pokemon-Name</string>
   <string name="AUTH_FAILED">Falsche Login-Daten</string>
-  <string name="SERVER_FAILED">Die Server antworten nicht
-(Bitte http://www.ispokemongodownornot.com prüfen!)</string>
+  <string name="SERVER_FAILED">Die Server antworten nicht</string>
   <string name="ERROR_FILTERS">Fehler beim Laden der Filter</string>
   <string name="LOGIN_OK">Login erfolgreich!</string>
   <string name="PERMISSION_OK">Vielen Dank für die Zugriffsrechte!</string>
@@ -54,6 +53,9 @@
   <string name="red_team">Rotes Team</string>
   <string name="neutral_gyms">Unbesetzte Arenen</string>
   <string name="guard_pokemon_cp">WP des bewachenden Pokemon</string>
+  <string name="expiration_time">\"Verschwindet in\"-Anzeige ausblenden</string>
+  <string name="expiration_min">Min:</string>
+  <string name="expiration_max">Max:</string>
   <string name="settings">Einstellungen</string>
   <string name="logout">Ausloggen</string>
   <string name="check_hidden">Häkchen = Ausgeblendet</string>
@@ -68,12 +70,14 @@
   <string name="category_map_options">Karten-Einstellungen</string>
   <string name="category_extendedMap_options">Erweitere Kartenoptionen</string>
   <string name="category_filters">Filter-Einstellungen</string>
-  <string name="category_clear">Ausblende-Einstellungen</string>
+  <string name="category_clear">Säuberungs-Einstellungen</string>
   <string name="category_update">Update-Einstellungen</string>
   <string name="enable_update">Aktiviere automatische Updates</string>
   <string name="enable_update_desc">Überprüft bei jedem Start, ob ein neues Update vorliegt (Standardmäßig aktiviert).</string>
   <string name="show_range">Zeige Reichweite</string>
   <string name="show_range_desc">Zeigt einen schwarzen Kreis rund um den Scan-Bereich an.</string>
+  <string name="show_expiration_filter">Ablaufzeiten-Filter</string>
+  <string name="show_expiration_filter_desc">Erlaubt es, die minimale und maximale Ablaufzeit festzulegen</string>
   <string name="show_pokemon_filter">Pokemon-Filter</string>
   <string name="show_pokemon_filter_desc">Erlaubt es, auszuwählen, welche Pokemon auf der Karte angezeigt werden</string>
   <string name="show_gym_filter">Arenen-Filter</string>
@@ -86,7 +90,7 @@
   <string name="clear_gyms_desc">Blendet die aktuellen Arenen aus</string>
   <string name="icon_scale">Symbolskalierung</string>
   <string name="icon_scale_desc">Verändet die Skalierung der Symbole</string>
-  <string name="only_lured">Zeige nur Pokestops mit Lockmodul an</string>
+  <string name="only_lured">Nur Pokestops mit Lockmodul</string>
   <string name="only_lured_desc">Zeigt nur Pokestops mit aktiven Lockmodulen an</string>
   <string name="show_gyms">Zeige Arenen</string>
   <string name="show_gyms_desc">Aktiviert/Deaktiviert die Arenenanzeige auf der Karte</string>
@@ -94,27 +98,27 @@
   <string name="show_pokestop_desc">Aktiviert/Deaktiviert die Anzeige von Pokestops auf der Karte</string>
   <string name="lock_gps">Scan am GPS-Standort ausrichten</string>
   <string name="lock_gps_desc">Anstatt den gerade angezeigten Bereich zu scannen, erfolgt der Scan am GPS-Standort</string>
-  <string name="gyms_cleared">Arenen ausgeblendet</string>
-  <string name="pokestops_cleared">Pokestops ausgeblendet</string>
-  <string name="pokemon_cleared">Pokemon ausgeblendet</string>
+  <string name="gyms_cleared">Arenen gesäubert</string>
+  <string name="pokestops_cleared">Pokestops gesäubert</string>
+  <string name="pokemon_cleared">Pokemon gesäubert</string>
   <string name="icon">Symbol</string>
   <string name="settingsbutton">Einstellungssymbol</string>
   <string name="version_check_failed">Überprüfung der Version fehlgeschlagen.</string>
-  <string name="updating_pokescanner">Poke Scanner wird geupdated</string>
+  <string name="updating_pokescanner">Poke Scanner wird aktualisiert</string>
   <string name="update">Update</string>
   <string name="update_available_title">Update verfügbar</string>
   <string name="update_check_failed">Überprüfung auf Updates fehlgeschlagen.</string>
   <string name="changes">Änderungen (Changelog):</string>
   <string name="update_available_long">verfügbar.</string>
-  <string name="guard_pokemon">Guard pokemon : </string>
-  <string name="gym_points">Gym points : </string>
-  <string name="expires_in">Expires in : </string>
-  <string name="lure_expires_in">Lure expires in : </string>
-  <string name="lured_pokemon">Lured pokemon</string>
-  <string name="open_in_gmaps">Open in Google Maps</string>
-  <string name="get_directions">In-App directions</string>
+  <string name="guard_pokemon">Beschützer Pokemon: </string>
+  <string name="gym_points">Arena Punkte: </string>
+  <string name="expires_in">Verschwindet in: </string>
+  <string name="lure_expires_in">Lockmodul endet in: </string>
+  <string name="lured_pokemon">Angelocktes Pokemon</string>
+  <string name="open_in_gmaps">In Google Maps öffnen</string>
+  <string name="get_directions">In-App Wegbeschreibung</string>
   <string name="ERROR_GENERATING_GRID">Fehler bei der Rastergenerierung. Bitte erneut versuchen.</string>
-  <string name="CAMERA_CENTER_FAILED">Fehler beim zentrieren der Kamera.</string>
+  <string name="CAMERA_CENTER_FAILED">Fehler beim Zentrieren der Kamera.</string>
   <string name="LOGOUT_ERROR">Der Server antwortet nicht. Ausloggen...</string>
   <string name="check_server_status">Serverstatus überprüfen</string>
   <string name="Permission_Required_Auto_Updater">Der Auto-Updater benötigt Zugriffsrechte für das Update!</string>
@@ -123,5 +127,5 @@
   <string name="location_denied">Diese App funktioniert nicht ohne GPS!</string>
   <string name="Check_For_Update">Suche nach Updates</string>
   <string name="Check_For_Update_desc">Suche manuell nach einem Update</string>
-  <string name="ERROR_NO_DIRECTION_SELECTED">Keine Markierung für die Richtungen ausgewählt!</string>
+  <string name="ERROR_NO_DIRECTION_SELECTED">Keine Markierung für die Wegbeschreibung ausgewählt!</string>
 </resources>
