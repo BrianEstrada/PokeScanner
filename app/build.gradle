@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
@@ -14,21 +23,17 @@ android {
 
     defaultConfig {
         applicationId "com.pokescanner"
+        targetSdkVersion 23
         minSdkVersion 19
-        targetSdkVersion 24
-        versionCode 11
-        versionName "1.5.1"
+        versionCode 22
+        versionName "1.7.0"
         multiDexEnabled true
     }
     buildTypes {
-        debug {
-            resValue "string", "google_maps_api_key", "AIzaSyAuejt-XF3VYk1X4NN9aje_EKqv1pb9Jcg"
-        }
         release {
             lintOptions {
                 disable 'MissingTranslation'
-            }
-            resValue "string", "google_maps_api_key", "AIzaSyAuejt-XF3VYk1X4NN9aje_EKqv1pb9Jcg"
+        }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -61,6 +66,9 @@ dependencies {
 
     compile 'com.google.maps.android:android-maps-utils:0.4+'
     compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
+
+    compile 'com.jakewharton:butterknife:8.2.1'
+    apt 'com.jakewharton:butterknife-compiler:8.2.1'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;

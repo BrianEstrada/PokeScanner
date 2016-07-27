@@ -2,7 +2,7 @@ package com.pokescanner.helper;
 
 import android.content.Context;
 
-import com.pokescanner.SettingsController;
+import com.pokescanner.utils.SettingsUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,8 +15,10 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Settings {
+    boolean updatesEnabled;
     boolean boundingBoxEnabled;
     boolean lockGpsEnabled;
+    int scanValue;
     int serverRefresh;
     int scale;
     int mapRefresh;
@@ -25,12 +27,13 @@ public class Settings {
     boolean gymsEnabled;
     boolean pokestopsEnabled;
     boolean showLuredPokemon;
+    boolean shuffleIcons;
 
     public void save(Context context) {
-        SettingsController.saveSettings(context, this);
+        SettingsUtil.saveSettings(context, this);
     }
 
     public static Settings get(Context context) {
-        return SettingsController.getSettings(context);
+        return SettingsUtil.getSettings(context);
     }
 }

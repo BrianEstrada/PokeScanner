@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -15,22 +17,19 @@
         android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme">
 
-        <service
-            android:name=".service.ScanService"
-            android:exported="false"/>
-
         <activity android:name=".LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize">>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_api_key" />
+            android:value="@string/GOOGLEAPIKEY" />
         <activity
             android:name=".GoogleLoginActivity"
             android:configChanges="orientation"
@@ -46,9 +45,15 @@
             android:label="@string/title_activity_maps"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="fb79ebdaab674d309573e536fb1e7c6a69beccfc" />
+
         <meta-data android:name="com.samsung.android.sdk.multiwindow.enable"
             android:value="true"/>
     </application>

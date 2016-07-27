@@ -3,33 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.MainActivity">
     <item
-        android:id="@+id/action_search_radius"
-        android:orderInCategory="100"
-        android:title="@string/search_radius"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_filter_pokemon"
-        android:orderInCategory="100"
-        android:title="@string/filter_pokemon"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_filter_gyms"
-        android:orderInCategory="100"
-        android:title="@string/filter_gyms"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/settings"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
         android:title="@string/logout"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_donate"
-        android:orderInCategory="100"
-        android:title="@string/donate"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>

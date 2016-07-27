@@ -42,6 +42,7 @@ import com.pokegoapi.auth.GoogleLogin;
 import com.pokegoapi.auth.PTCLogin;
 import com.pokegoapi.exceptions.LoginFailedException;
 import com.pokegoapi.exceptions.RemoteServerException;
+import com.pokescanner.events.ForceLogoutEvent;
 import com.pokescanner.events.PublishProgressEvent;
 import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
@@ -147,6 +148,7 @@ public class MapObjectsLoader extends Thread{
             e.printStackTrace();
         } catch (LoginFailedException e) {
             e.printStackTrace();
+            EventBus.getDefault().post(new ForceLogoutEvent());
         }
     }
 

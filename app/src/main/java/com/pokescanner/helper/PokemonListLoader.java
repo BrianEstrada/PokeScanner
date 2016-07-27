@@ -21,12 +21,9 @@
 package com.pokescanner.helper;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.pokescanner.R;
 import com.pokescanner.objects.FilterItem;
 
 import java.io.IOException;
@@ -40,18 +37,9 @@ import io.realm.Realm;
  * Created by Brian on 7/21/2016.
  */
 public class PokemonListLoader {
-    Context context;
-    SharedPreferences sharedPref;
-    Realm realm;
-    final String TAG = "POKELOADER";
 
-    public PokemonListLoader(Context context) {
-        realm = Realm.getDefaultInstance();
-        this.context = context;
-        this.sharedPref = context.getSharedPreferences(context.getString(R.string.shared_key), Context.MODE_PRIVATE);
-    }
-
-    public ArrayList<FilterItem> getPokelist() throws IOException {
+    public static ArrayList<FilterItem> getPokelist(Context context) throws IOException {
+        Realm realm = Realm.getDefaultInstance();
         if (realm.where(FilterItem.class).findAll().size() == 151) {
             return new ArrayList<>(realm.copyFromRealm(
                     realm.where(FilterItem.class)
@@ -78,14 +66,25 @@ public class PokemonListLoader {
         }
     }
 
-    public void savePokeList(final ArrayList<FilterItem> pokelist) {
+    public static ArrayList<FilterItem> getFilteredList() {
+        Realm realm = Realm.getDefaultInstance();
+        ArrayList returnArray =  new ArrayList<>(realm.copyFromRealm(
+                realm.where(FilterItem.class)
+                .equalTo("filtered",true)
+                .findAll()
+                .sort("Number")));
+        realm.close();
+        return returnArray;
+    }
+    public static void savePokeList(final ArrayList<FilterItem> pokelist) {
+        Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Log.d(TAG,"SAVING");
                 realm.copyToRealmOrUpdate(pokelist);
             }
         });
+        realm.close();
     }
 
 }

@@ -19,7 +19,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MapsActivity" >
+    tools:context=".MapsActivity"
+    android:id="@+id/main">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -27,21 +28,17 @@
         android:name="com.pokescanner.helper.CustomMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.pokescanner.MapsActivity" />
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        tools:context="com.pokescanner.MapsActivity"
         android:layout_alignParentTop="true"
-        android:background="#00ffffff"/>
+        android:layout_alignParentStart="true" />
 
     <RelativeLayout
         android:layout_width="88dp"
         android:layout_height="88dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:clickable="true">
+        android:clickable="true"
+        android:layout_alignParentLeft="true">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btnSearch"
@@ -62,8 +59,20 @@
             android:layout_centerInParent="true"
             android:max="100"
             android:progress="0"
-            android:progressDrawable="@drawable/circular_progress" />
+            android:progressDrawable="@drawable/circular_progress"
+            android:indeterminate="false" />
 
     </RelativeLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnSettings"
+        android:src="@drawable/ic_settings_red_500_36dp"
+        android:contentDescription="@string/settingsbutton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:background="@android:color/transparent" />
 
 </RelativeLayout>

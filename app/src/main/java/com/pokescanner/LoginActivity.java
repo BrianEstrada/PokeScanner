@@ -15,19 +15,21 @@
  */
 
 
-
 package com.pokescanner;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -35,33 +37,40 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.events.AuthLoadedEvent;
 import com.pokescanner.helper.Settings;
-import com.pokescanner.helper.UiUtils;
 import com.pokescanner.loaders.AuthGOOGLELoader;
 import com.pokescanner.loaders.AuthPTCLoader;
 import com.pokescanner.objects.User;
+import com.pokescanner.updater.AppUpdateDialog;
+import com.pokescanner.updater.AppUpdateLoader;
+import com.pokescanner.utils.PermissionUtils;
+import com.pokescanner.utils.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    EditText etUsername;
-    EditText etPassword;
-    TextView tvTitle;
+public class LoginActivity extends AppCompatActivity {
+    @BindView(R.id.etUsername) EditText etUsername;
+    @BindView(R.id.etPassword) EditText etPassword;
+    @BindView(R.id.tvCheckServer) TextView tvCheckServer;
+    @BindView(R.id.tvVersionNumber) TextView tvVersionNumber;
 
-    LinearLayout Container;
-    ProgressBar progressBar;
+    @BindView(R.id.main) LinearLayout main;
+    @BindView(R.id.Container) LinearLayout Container;
+    @BindView(R.id.progressBar) ProgressBar progressBar;
 
-    String username,password;
-    Button btnLogin;
-    Button btnGoogleLogin;
+    String username, password;
 
     Realm realm;
     int LOGIN_METHOD = -1;
@@ -74,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Fabric.with(this, new Crashlytics());
         }
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
                 .name(Realm.DEFAULT_REALM_NAME)
@@ -83,47 +93,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         realm = Realm.getDefaultInstance();
 
-        //get our views
-        btnGoogleLogin = (Button) findViewById(R.id.btnGoogleLogin);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
-        etUsername = (EditText) findViewById(R.id.etUsername);
-        etPassword = (EditText) findViewById(R.id.etPassword);
-        tvTitle = (TextView) findViewById(R.id.tvTitle);
-
-        Container = (LinearLayout) findViewById(R.id.Container);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-        etUsername.setText(Settings.get(this).getLastUsername());
-
-        Button btnLogin = (Button) findViewById(R.id.btnLogin);
-        btnLogin.setOnClickListener(this);
+        //Add version number to login
+        loadVersionCode();
 
         //finally we are going to ask for permission to the GPS
-        getPermissions();
+        getLocationPermission();
 
-        btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                GoogleLogin();
-            }
-        });
-
-        if  (realm.where(User.class).findAll().size() != 0)
-        {
-            User user = realm.where(User.class).findFirst();
-            if(user.getAuthType() == User.PTC)
-            {
-                etUsername.setText(user.getUsername());
-                etPassword.setText(user.getPassword());
-                btnLogin.performClick();
-            }
-            else
-                onAuthLoadedEvent(new AuthLoadedEvent(AuthLoadedEvent.OK, user.getToken()));
+        //Is Auto Update enabled?
+        if (Settings.get(this).isUpdatesEnabled()) {
+            //Lets go check for an update
+            new AppUpdateLoader().start();
+        }else {
+            //If not lets find out if we have a login
+            checkIfUserIsLoggedIn();
         }
     }
 
-    @Override
-    public void onClick(View view) {
+    public void checkIfUserIsLoggedIn() {
+        if (realm.where(User.class).findAll().size() != 0) {
+            User user = realm.where(User.class).findFirst();
+            if (user.getAuthType() == User.PTC) {
+                etUsername.setText(user.getUsername());
+                etPassword.setText(user.getPassword());
+                btnPTCLogin();
+            } else {
+                LOGIN_METHOD = User.GOOGLE;
+                onAuthLoadedEvent(new AuthLoadedEvent(AuthLoadedEvent.OK, user.getToken()));
+            }
+        }
+    }
+
+    @OnClick(R.id.btnLogin)
+    public void btnPTCLogin() {
         //get our username and password value
         username = etUsername.getText().toString();
         password = etPassword.getText().toString();
@@ -134,19 +135,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         showToast(R.string.TRYING_PTC_LOGIN);
         LOGIN_METHOD = User.PTC;
-        AuthPTCLoader authloader = new AuthPTCLoader(username,password);
+        AuthPTCLoader authloader = new AuthPTCLoader(username, password);
         authloader.start();
     }
 
-    @Subscribe (threadMode = ThreadMode.MAIN)
-    public void onAuthLoadedEvent(final AuthLoadedEvent event){
-        showProgressbar(false);
-        switch(event.getStatus()) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAuthLoadedEvent(final AuthLoadedEvent event) {
+        switch (event.getStatus()) {
             case AuthLoadedEvent.OK:
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
-                        LOGIN_METHOD = User.GOOGLE;
                         User user = new User(1,
                                 username,
                                 password,
@@ -158,19 +157,41 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         LoginActivity context = LoginActivity.this;
                         Settings.get(context).toBuilder()
-                            .lastUsername(user.getUsername())
-                            .build().save(context);
+                                .lastUsername(user.getUsername())
+                                .build().save(context);
                     }
                 });
                 break;
             case AuthLoadedEvent.AUTH_FAILED:
+                showProgressbar(false);
                 showToast(R.string.AUTH_FAILED);
                 break;
             case AuthLoadedEvent.SERVER_FAILED:
+                showProgressbar(false);
                 showToast(R.string.SERVER_FAILED);
                 break;
         }
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAppUpdateEvent(AppUpdateEvent event) {
+        switch (event.getStatus()) {
+            case AppUpdateEvent.OK:
+                if (PermissionUtils.doWeHaveReadWritePermission(this)) {
+                    new AppUpdateDialog(LoginActivity.this, event.getAppUpdate());
+                }else
+                {
+                    getReadWritePermission();
+                }
+                break;
+            case AppUpdateEvent.FAILED:
+                showToast(R.string.update_check_failed);
+                break;
+            case AppUpdateEvent.UPTODATE:
+                checkIfUserIsLoggedIn();
+                break;
+        }
     }
 
     public void showToast(int resString) {
@@ -178,41 +199,80 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void startMapIntent() {
-        if (doWeHavePermission()) {
+        if (PermissionUtils.doWeHaveLocationPermission(this)) {
             Intent intent = new Intent(this, MapsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
-        }else
-        {
-            getPermissions();
+        } else {
+            getLocationPermission();
         }
+    }
+
+    @OnClick(R.id.tvCheckServer)
+    public void showServerStatus() {
+        String url = "http://ispokemongodownornot.com/";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
+
+    @OnClick(R.id.btnGoogleLogin)
+    public void GoogleLogin(View view) {
+        showToast(R.string.TRYING_GOOGLE_LOGIN);
+        LOGIN_METHOD = User.GOOGLE;
+        Intent intent = new Intent(this, GoogleLoginActivity.class);
+        startActivityForResult(intent, 1300);
     }
 
     //if this value is true then lets hide the login and show the progress bar
     public void showProgressbar(boolean status) {
-        if (status)
-        {
+        if (status) {
             progressBar.setVisibility(View.VISIBLE);
             Container.setVisibility(View.GONE);
-        }else
-        {
+        } else {
             progressBar.setVisibility(View.GONE);
             Container.setVisibility(View.VISIBLE);
         }
     }
-    //Permission Stuff
-    public boolean doWeHavePermission() {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+    public void getReadWritePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Snackbar.make(main,getString(R.string.Permission_Required_Auto_Updater),Snackbar.LENGTH_LONG).setAction("Ok", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE}, 1300);
+                }
+            }).show();
+        } else {
+            showToast(R.string.Get_Permission_Auto_Updater);
+            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE}, 1300);
+        }
     }
-    public void getPermissions() {
+
+    public void getLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{
                     android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1400);
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,}, 1400);
         }
     }
+
+    private void loadVersionCode() {
+        try {
+            PackageInfo pInfo = null;
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            tvVersionNumber.setText("Version: "+ version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -220,15 +280,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showToast(R.string.PERMISSION_OK);
+                }else {
+                    // Permission request was denied.
+                    Snackbar.make(main, getString(R.string.location_denied),
+                            Snackbar.LENGTH_SHORT)
+                            .show();
                 }
             }
+            break;
+            case 1300:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    showToast(R.string.PERMISSION_OK);
+                    new AppUpdateLoader().start();
+                }else {
+                    // Permission request was denied.
+                    Snackbar.make(main, getString(R.string.auto_update_denied),
+                            Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+                break;
         }
-    }
-
-    public void GoogleLogin(){
-        showToast(R.string.TRYING_GOOGLE_LOGIN);
-        Intent intent = new Intent(this,GoogleLoginActivity.class);
-        startActivityForResult(intent, 1300);
     }
 
     @Override
@@ -242,8 +314,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (code != null) {
             AuthGOOGLELoader authGOOGLELoader = new AuthGOOGLELoader(code);
             authGOOGLELoader.start();
-        }else
-        {
+        } else {
             showToast(R.string.AUTH_FAILED);
         }
     }

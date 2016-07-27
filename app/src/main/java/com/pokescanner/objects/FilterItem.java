@@ -30,7 +30,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(exclude = {"Name","filtered"}, callSuper = false)
 public class FilterItem extends RealmObject{
     @PrimaryKey
     int Number;
@@ -38,4 +38,8 @@ public class FilterItem extends RealmObject{
     boolean filtered;
 
     public FilterItem() {}
+
+    public FilterItem(int number) {
+        setNumber(number);
+    }
 }

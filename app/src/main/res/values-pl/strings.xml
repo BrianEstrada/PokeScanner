@@ -1,39 +1,131 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="AUTH_FAILED">Niepoprawne dane logowania</string>
-  <string name="ERROR_FILTERS">Błąd ładowania filtrów</string>
-  <string name="LOGIN_OK">Udane logowanie</string>
-  <string name="PERMISSION_OK">Dziękuję za uprawnienie!</string>
-  <string name="SERVER_FAILED">Serwery nie odpowiadają</string>
-  <string name="TRYING_PTC_LOGIN">Próba logowania PTC.</string>
-  <string name="TRYING_GOOGLE_LOGIN">Logowanie przez konto Google jest (jeszcze) niedostępne.</string>
-  <string name="blacklist">Czarna lista</string>
-  <string name="cancel">Anuluj</string>
-  <string name="check_hidden">Zaznaczony = ukryty</string>
-  <string name="filter">Filtry</string>
-  <string name="hide">Ukryj</string>
-  <string name="higher_number_slower_search">1 jednostka ~= 200 metrów</string>
-  <string name="logout">Wyloguj</string>
-  <string name="map_refresh">Odśwież mapę</string>
-  <string name="menubutton">Przycisk Menu</string>
-  <string name="none">Brak</string>
-  <string name="off">Wyłączone</string>
-  <string name="on">Włączone</string>
-  <string name="password">Hasło</string>
-  <string name="pokemon_filters">Filtry Pokemon</string>
-  <string name="pokemon_name">Nazwy Pokemon</string>
-  <string name="save">Zapisz</string>
-  <string name="scan">Skanuj</string>
-  <string name="search_radius">Promień skanowania</string>
-  <string name="select_all">Wybierz wszystkie</string>
-  <string name="searchicon">Ikona skanowania</string>
-  <string name="server_refresh">Odświeżenie serwera</string>
-  <string name="settings">Ustawienia</string>
-  <string name="show_range">Pokaż zasięg</string>
-  <string name="timeEstimate">Estymowany czas skanowania</string>
-  <string name="title_activity_maps">Mapa</string>
-  <string name="username">Login</string>
-  <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">OSTRZEŻENIE:\nNie używaj swojego głównego PokeGo\nkonta do tej aplikacji!</string>
-  <string name="ptclogin">PTC Login</string>
-  <string name="googlelogin">Google Login</string>
+    <string name="title_activity_maps">Mapa</string>
+    <string name="scan">Skanuj</string>
+    <string name="ptclogin">Login PTC</string>
+    <string name="googlelogin">Login Google</string>
+    <string name="blacklist">Czarna lista</string>
+    <string name="save">Zapisz</string>
+    <string name="search_radius">Promień skanowania</string>
+    <string name="search_radius_desc">Pozwala Tobie na zmianę promienia szukania w Poke Scanner (Uwaga! Duża wartość spowolni twoje urządzenie)</string>
+    <string name="higher_number_slower_search">1 jednostka ≈ 200 metrów</string>
+    <string name="cancel">Anuluj</string>
+    <string name="filter">Filtr</string>
+    <string name="none">Brak</string>
+    <string name="select_all">Zaznacz wszystko</string>
+    <string name="pokemon_name">Nazwa Pokemona</string>
+
+    <string name="AUTH_FAILED">Niepoprawne dane logowania</string>
+    <string name="SERVER_FAILED">Serwery nie odpowiadają</string>
+    <string name="ERROR_FILTERS">Błąd ładowania filtrów</string>
+    <string name="LOGIN_OK">Logowanie udane</string>
+    <string name="PERMISSION_OK">Dziękuję za uprawnienie!</string>
+
+    <string name="TRYING_PTC_LOGIN">Próba logowania PTC.</string>
+    <string name="TRYING_GOOGLE_LOGIN">Próba logowania Google.</string>
+
+    <string name="on">Włączony</string>
+    <string name="off">Wyłączony</string>
+
+    <string name="username">Nazwa użytkownika</string>
+    <string name="password">Hasło</string>
+    <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">OSTRZEŻENIE:\nNie używaj swojego głównego konta\nPokeGo do tej aplikacji!</string>
+    <string name="filter_pokemon">Filtruj Pokemony</string>
+    <string name="filter_gyms">Filtruj Gymy</string>
+    <string name="timeEstimate">Szacowany Czas Skanowania: </string>
+    <string name="hide">Schowaj</string>
+    <string name="searchicon">SearchIcon</string>
+    <string name="menubutton">MenuButton</string>
+    <string name="yellow_team">Żółci</string>
+    <string name="blue_team">Niebiescy</string>
+    <string name="red_team">Czerwoni</string>
+    <string name="neutral_gyms">Neutralne Gymy</string>
+    <string name="guard_pokemon_cp">CP Pokemona chroniącego</string>
+
+
+    <string name="settings">Ustawienia</string>
+    <string name="logout">Wyloguj</string>
+    <string name="check_hidden">Zaznaczone = Schowane</string>
+
+    <string name="server_refresh">Odświeżanie serwera</string>
+    <string name="server_refresh_desc">Dostosuj tempo, w którym mapa się skanuje (Jeśli masz słabe połączenie, powinienieś być na wolnym ustawieniu)</string>
+    <string name="pokemon_filters">Filtry Pokemonów</string>
+    <string name="map_refresh">Odświeżanie mapy</string>
+    <string name="map_refresh_desc">Dostosuj tempo, w którym mapa się odświeża (Starsze urządzenia powinny być na najwolniejszym ustawieniu)</string>
+    <string name="donate">Wspomóż</string>
+
+    <string name="category_donate">Wspieraj kontynuację rozwoju!</string>
+    <string name="category_range_options">Opcje Zasięgu</string>
+    <string name="category_map_options">Opcje Mapy</string>
+    <string name="category_extendedMap_options">Zaawanasowane Opcje Mapy</string>
+    <string name="category_filters">Opcje Filtrów</string>
+    <string name="category_clear">Opcje Czyszczenia</string>
+    <string name="category_update">Opcje Aktualizacji</string>
+
+    <string name="enable_update">Uruchom autoaktualizacje</string>
+    <string name="enable_update_desc">Sprawdza zawsze przy uruchomieniu, czy jest dostępna aktualizacja (standardowo włączona)</string>
+
+    <string name="show_range">Pokaż zasięg</string>
+    <string name="show_range_desc">Tworzy czarny okrąg wokół skanowanego obszaru.</string>
+
+    <string name="show_pokemon_filter">Filtr Pokemonów</string>
+    <string name="show_pokemon_filter_desc">Pozwala Ci na wybór Pokemonów, które będą się pokazywać na mapie</string>
+    <string name="show_gym_filter">Filtr Gymów</string>
+    <string name="show_gym_filter_desc">Pozwala Ci na wybór Gymów, które będą się pokazywać na mapie</string>
+
+    <string name="clear_pokemon">Wyczyść Pokemony</string>
+    <string name="clear_pokemon_desc">Wyczyść aktualne Pokemony</string>
+    <string name="clear_pokestops">Wyczyść Pokestopy</string>
+    <string name="clear_pokestops_desc">Wyczyść aktualne Pokestopy</string>
+    <string name="clear_gyms">Wyczyść Gymy</string>
+    <string name="clear_gyms_desc">Wyczyść aktualne Gymy</string>
+
+
+    <string name="icon_scale">Skala Ikon</string>
+    <string name="icon_scale_desc">Dostosuj rozmiar ikon</string>
+    <string name="only_lured">Tylko Pokestopy z Lure\'m</string>
+    <string name="only_lured_desc">Pokaż tylko Pokestopy z aktywnym Lure\'m</string>
+    <string name="show_gyms">Pokaż Gymy</string>
+    <string name="show_gyms_desc">Włącza/Wyłącza Gymy na mapie</string>
+    <string name="show_pokestops">Pokaż Pokestopy</string>
+    <string name="show_pokestop_desc">Włącza/Wyłącza Pokestopy na mapie</string>
+    <string name="lock_gps">Skanuj na bazie GPS</string>
+	<string name="lock_gps_desc">Zamiast skanować na środku twojego ekranu (tam, gdzie patrzysz), skanowana będzie twoja lokalizacja</string>
+
+    <string name="gyms_cleared">Gymy wyczyszczone</string>
+    <string name="pokestops_cleared">Pokestopy wyczyszczone</string>
+    <string name="pokemon_cleared">Pokemony wyczyszczone</string>
+    <string name="icon">Ikona</string>
+
+    <string name="settingsbutton">SettingsButton</string>
+    <string name="version_check_failed">Sprawdzanie wersji nie powiodło się.</string>
+    <string name="updating_pokescanner">Aktualizuję Poke Scanner</string>
+    <string name="update">Aktualizuj</string>
+    <string name="update_available_title">Aktualizacja dostępna</string>
+    <string name="update_check_failed">Sprawdzanie aktualizacji nie powiodło się.</string>
+    <string name="changes">Zmiany:</string>
+    <string name="update_available_long">jest dostępna.</string>
+
+    <string name="guard_pokemon">Pokemon: </string>
+    <string name="gym_points">Punkty: </string>
+    <string name="expires_in">Wygasa za: </string>
+    <string name="lure_expires_in">Lure wygasa za: </string>
+    <string name="lured_pokemon">Pokemony przyciągnięte</string>
+    <string name="open_in_gmaps">Otwórz w Google Maps</string>
+    <string name="get_directions">Wskazówki w aplikacji</string>
+
+    <string name="ERROR_GENERATING_GRID">Błąd generowania siatki, spróbuj ponownie.</string>
+    <string name="CAMERA_CENTER_FAILED">Niepowodzenie przy środkowaniu widoku.</string>
+    <string name="LOGOUT_ERROR">Serwer nie odpowiada, wylogowywuję</string>
+    <string name="check_server_status">Sprawdź stan serwera</string>
+
+    <string name="Permission_Required_Auto_Updater">Uprawnienia jest wymagane do automatycznej aktualizacji!</string>
+    <string name="Get_Permission_Auto_Updater">Biorę uprawneinia!</string>
+
+    <string name="auto_update_denied">Uprawnienie zabronione! Wyłączam automatyczną aktualizację :(</string>
+    <string name="location_denied">Aplikacja nie będzie działać bez lokalizacji!</string>
+
+    <string name="Check_For_Update">Sprawdź aktualizacje</string>
+    <string name="Check_For_Update_desc">Sprawdź ręcznie dostępne aktualizacje</string>
+
+    <string name="ERROR_NO_DIRECTION_SELECTED">Żaden marker nie jest zaznaczony do wskazówek!</string>
 </resources>

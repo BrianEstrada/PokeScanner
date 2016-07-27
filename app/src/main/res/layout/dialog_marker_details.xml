@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvHeading"
+            android:padding="8dp"
+            android:gravity="center"
+            android:text="Marker heading"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/p1"
+            android:scaleType="fitXY"
+            android:id="@+id/ivIcon"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvAddress"
+            android:padding="8dp"
+            android:gravity="center"
+            android:text="Marker address"
+            android:textSize="17sp"
+            android:textColor="@color/black"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:id="@+id/guardPkmnLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/guard_pokemon"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:layout_marginRight="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvGuardPkmn"
+                android:gravity="center"
+                android:text="Guard pokemon name"
+                android:textSize="15sp"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:id="@+id/gymPointsLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/gym_points"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:layout_marginRight="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvGymPoints"
+                android:gravity="center"
+                android:text="XX"
+                android:textSize="15sp"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:id="@+id/pokeExpTimeLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/expires_in"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:layout_marginRight="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pokemonExpTimer"
+                android:gravity="center"
+                android:text="MM:SS"
+                android:textSize="15sp"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:id="@+id/lureExpTimeLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/lure_expires_in"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:layout_marginRight="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/lureExpTimer"
+                android:gravity="center"
+                android:text="MM:SS"
+                android:textSize="15sp"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:id="@+id/luredPkmnLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/lured_pokemon"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:layout_marginRight="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvLuredPkmn"
+                android:gravity="center"
+                android:text="Pokemon name"
+                android:textSize="15sp"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corners"
+            android:textColor="@color/white"
+            android:id="@+id/gmapsBtn"
+            android:text="@string/open_in_gmaps"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_corners"
+            android:id="@+id/directionsBtn"
+            android:text="@string/get_directions"
+            android:padding="16dp"
+            android:layout_marginBottom="8dp"/>
+
+    </LinearLayout>
+
+</ScrollView>

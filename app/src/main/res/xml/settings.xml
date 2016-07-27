@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/category_donate">
+    <Preference android:title="@string/donate">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://www.paypal.me/brianestrada" />
+    </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/category_update">
+        <Preference
+            android:title="@string/Check_For_Update"
+            android:summary="@string/Check_For_Update_desc"
+            android:key="update"/>
+    <SwitchPreference
+        android:key="updatesEnabled"
+        android:title="@string/enable_update"
+        android:summary="@string/enable_update_desc"
+        android:defaultValue="true"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/category_range_options">
+        <SwitchPreference
+            android:key="boundingBoxEnabled"
+            android:title="@string/show_range"
+            android:summary="@string/show_range_desc"
+            android:defaultValue="false"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+        <Preference
+            android:title="@string/search_radius"
+            android:summary="@string/search_radius_desc"
+            android:key="scan_dialog"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/category_filters">
+        <Preference
+            android:title="@string/show_expiration_filter"
+            android:summary="@string/show_expiration_filter_desc"
+            android:key="expiration_filter"/>
+        <Preference
+            android:title="@string/show_pokemon_filter"
+            android:summary="@string/show_pokemon_filter_desc"
+            android:key="pokemon_filter"/>
+        <Preference
+            android:title="@string/show_gym_filter"
+            android:summary="@string/show_gym_filter_desc"
+            android:key="gym_filter"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/category_map_options">
+        <SwitchPreference
+            android:key="shuffleIcons"
+            android:title="@string/shuffle_icons"
+            android:summary="@string/shuffle_icons_desc"
+            android:defaultValue="false"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+        <SwitchPreference
+            android:key="showOnlyLured"
+            android:title="@string/only_lured"
+            android:summary="@string/only_lured_desc"
+            android:defaultValue="true"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+        <SwitchPreference
+            android:key="showGyms"
+            android:title="@string/show_gyms"
+            android:summary="@string/show_gyms_desc"
+            android:defaultValue="true"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+        <SwitchPreference
+            android:key="showPokestops"
+            android:title="@string/show_pokestops"
+            android:summary="@string/show_pokestop_desc"
+            android:defaultValue="true"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+        <SwitchPreference
+            android:key="showLuredPokemon"
+            android:title="@string/show_luredpokemon"
+            android:summary="@string/show_luredpokemon_desc"
+            android:defaultValue="true"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+        <SwitchPreference
+            android:key="lockGpsEnabled"
+            android:title="@string/lock_gps"
+            android:summary="@string/lock_gps_desc"
+            android:defaultValue="false"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/category_extendedMap_options">
+        <ListPreference
+            android:key="serverRefreshRate"
+            android:title="@string/server_refresh"
+            android:summary="@string/server_refresh_desc"
+            android:dialogTitle="@string/server_refresh"
+            android:entries="@array/ServerRefreshRate"
+            android:entryValues="@array/ServerRefreshRateValues"
+            android:defaultValue="1" />
+        <ListPreference
+            android:key="mapRefreshRate"
+            android:title="@string/map_refresh"
+            android:summary="@string/map_refresh_desc"
+            android:dialogTitle="@string/map_refresh"
+            android:entries="@array/MapRereshRate"
+            android:entryValues="@array/MapRereshRateValues"
+            android:defaultValue="2" />
+        <ListPreference
+            android:key="pokemonIconScale"
+            android:title="@string/icon_scale"
+            android:summary="@string/icon_scale_desc"
+            android:dialogTitle="@string/icon_scale"
+            android:entries="@array/IconScale"
+            android:entryValues="@array/IconScaleValues"
+            android:defaultValue="2" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/category_clear">
+        <Preference
+            android:title="@string/clear_pokemon"
+            android:summary="@string/clear_pokemon_desc"
+            android:key="clear_pokemon"/>
+        <Preference
+            android:title="@string/clear_gyms"
+            android:summary="@string/clear_gyms_desc"
+            android:key="clear_gyms"/>
+        <Preference
+            android:title="@string/clear_pokestops"
+            android:summary="@string/clear_pokestops_desc"
+            android:key="clear_pokestops"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/logout">
+    <Preference
+        android:title="@string/logout"
+        android:key="logout"/>
+    </PreferenceCategory>
+</PreferenceScreen>

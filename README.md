@@ -1,5 +1,5 @@
 # PokeScanner
-A Scanning tool dedicated to helping you locate pokemon in your area. Currently the tool is very limited in range I'm working on a fix to increase the range of the scanning tool.
+A Scanning tool dedicated to helping you locate pokemon in your area. 
 
 # Instructions
 - Download the APK
@@ -10,11 +10,10 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 
 
 # Tweaks
-- Changed the Pokemon icons from the really old sprites to Pokemon Shuffle icons (I think they are easier to distinguish!)
-- Changed the Gym icons and Pokestop icons
-- Can toggle whether to show the Pokemon icon that is currently at a Lured Pokestop instead of the Lured Pokestop icon
+- Can toggle whether to show Pokemon Shuffle icons instead of the old sprites (I think they are easier to distinguish!)
+- Replaced the Gym icons and Pokestop icons
+- Can toggle whether to show the Pokemon icon that is currently at a Lured Pokestop instead of the Lured Pokestop icon (Filtered Pokemon will still show a Lured Pokestop icon)
 - Filtered Pokemon will show up at the top of the Filtered list
-- Snippets (the tooptips that pop up from clicking a marker on the map) have more useful info (in my opinion)
 - Pokestops and Gyms don't have their text above them (it was too cluttered in my opinion) (Lured Pokestops still have their timer)
 - Some other minor stuff I forget
 
@@ -23,13 +22,12 @@ A Scanning tool dedicated to helping you locate pokemon in your area. Currently 
 - [Java Api](https://github.com/Grover-c13/PokeGOAPI-Java/)
 - [Original](https://github.com/BrianEstrada/PokeScanner)
 
-
 # To be attempted
 - Notifications
 - Toggleable continuous scanning
 
 
 # Known issues that I don't know how to fix yet
-- Sometimes scanning stops working until until I logoff and login again (maybe login info expires or something?)
 - App crashes when switching back to it after switching to another app if it was automatically closed
-- mispelled pokemon names
+- mispelled pokemon names (Geoduge and Clefary so far)
+- Lured Pokestops don't disappear after expiring if "Show Only Lured" is enabled, they just turn back to blue and stay there

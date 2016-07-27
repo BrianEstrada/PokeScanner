@@ -25,14 +25,15 @@
     <string name="blacklist">Blacklist</string>
     <string name="save">Save</string>
     <string name="search_radius">Search Radius</string>
-    <string name="higher_number_slower_search">1 Unit ~= 200 Meters</string>
+    <string name="search_radius_desc">Allows you to change the search radius of Poke Scanner (warning large values will slow down your device)</string>
+    <string name="higher_number_slower_search">1 Unit ≈ 200 Meters</string>
     <string name="cancel">Cancel</string>
-
+    <string name="filter">Filter</string>
     <string name="none">None</string>
     <string name="select_all">Select All</string>
     <string name="pokemon_name">Pokemon Name</string>
 
-    <string name="AUTH_FAILED">Login failed!</string>
+    <string name="AUTH_FAILED">Bad Login Credentials</string>
     <string name="SERVER_FAILED">Servers not responding</string>
     <string name="ERROR_FILTERS">Error loading filters</string>
     <string name="LOGIN_OK">Login Successful</string>
@@ -53,32 +54,77 @@
     <string name="hide">Hide</string>
     <string name="searchicon">SearchIcon</string>
     <string name="menubutton">MenuButton</string>
-    <string name="show_range">Show Range</string>
     <string name="yellow_team">Yellow team</string>
     <string name="blue_team">Blue team</string>
     <string name="red_team">Red team</string>
     <string name="neutral_gyms">Neutral gyms</string>
     <string name="guard_pokemon_cp">Guard pokemon CP</string>
     <string name="_0" translatable="false">0</string>
-    <string name="server_refresh">Server Refresh</string>
-    <string name="pokemon_filters">Pokemon Filters</string>
+    <string name="expiration_time">Hide Pokemon expiring in</string>
+    <string name="expiration_min">Min:</string>
+    <string name="expiration_max">Max:</string>
+
+
     <string name="settings">Settings</string>
     <string name="logout">Log out</string>
-    <string name="map_refresh">Map Refresh</string>
     <string name="check_hidden">Check = Hidden</string>
+
+    <string name="server_refresh">Server Refresh</string>
+    <string name="server_refresh_desc">Adjust the rate at which the map is scanned (If you are on a poor connection you should be on slow)</string>
+    <string name="pokemon_filters">Pokemon Filters</string>
+    <string name="map_refresh">Map Refresh</string>
+    <string name="map_refresh_desc">Adjust the rate at which the map refreshes (Older devices should be on the slower setting)</string>
     <string name="donate">Donate</string>
+
+    <string name="category_donate">Donate and Support continued development!</string>
+    <string name="category_range_options">Range Options</string>
+    <string name="category_map_options">Map Options</string>
+    <string name="category_extendedMap_options">Advance Map Options</string>
+    <string name="category_filters">Filter Options</string>
+    <string name="category_clear">Clear Options</string>
+    <string name="category_update">Update Options</string>
+
+    <string name="enable_update">Enable Auto-Updates</string>
+    <string name="enable_update_desc">Checks every time you start to the app if there is an update (On by default).</string>
+
+    <string name="show_range">Show Range</string>
+    <string name="show_range_desc">Creates a black round circle around the scanning area.</string>
+
+    <string name="show_expiration_filter">Pokemon Expiration Filter</string>
+    <string name="show_expiration_filter_desc">Allows you to choose minimum and maximum expiration time</string>
+
+    <string name="show_pokemon_filter">Pokemon Filter</string>
+    <string name="show_pokemon_filter_desc">Allows you to pick and choose which pokemon appear on the map</string>
+    <string name="show_gym_filter">Gym Filter</string>
+    <string name="show_gym_filter_desc">Allows you to pick which gyms will appear on the map</string>
+
+    <string name="clear_pokemon">Clear Pokemon</string>
+    <string name="clear_pokemon_desc">Cleared the current Pokemon</string>
+    <string name="clear_pokestops">Clear Pokestops</string>
+    <string name="clear_pokestops_desc">Clears the current Pokestops</string>
+    <string name="clear_gyms">Clear Gyms</string>
+    <string name="clear_gyms_desc">Clears the current Gyms</string>
+
+
     <string name="icon_scale">Icon Scale</string>
-    <string name="only_lured">Only Lured P-Stops</string>
+    <string name="icon_scale_desc">Adjust the size of the icons</string>
+    <string name="only_lured">Only Lured Pokestops</string>
+    <string name="only_lured_desc">Displays only Pokestops with active lures</string>
     <string name="show_gyms">Show Gyms</string>
+    <string name="show_gyms_desc">Enables/Disables Gyms on the map</string>
     <string name="show_pokestops">Show PokeStops</string>
-    <string name="show_lured_pokemon">Show Lure Pokémon</string>
+    <string name="show_pokestop_desc">Enables/Disables Pokestops on the map</string>
+    <string name="show_luredpokemon">Show Lured Pokemon</string>
+    <string name="show_luredpokemon_desc">Shows the pokemon icon instead of a lured pokestop icon (unless that pokemon is filtered)</string>
     <string name="lock_gps">Scan Based on GPS</string>
+    <string name="lock_gps_desc">Instead of scanning in the center of view (wherever you\'re looking) it will scan your location</string>
 
-    <string name="clear_gyms">Clear Gyms/Stops</string>
-    <string name="clear_pokemons">Clear Pokemons</string>
+    <string name="shuffle_icons">Use Shuffle Icons</string>
+    <string name="shuffle_icons_desc">Use Pokemon Shuffle Icons instead of the standard sprites (easier to distinguish!)</string>
 
-    <string name="gyms_cleared">Gyms and Pokestops cleared</string>
-    <string name="pokemon_cleared">Pokemon cleared</string>
+    <string name="gyms_cleared">Gyms Cleared</string>
+    <string name="pokestops_cleared">Pokestops Cleared</string>
+    <string name="pokemon_cleared">Pokemon Cleared</string>
     <string name="icon">Icon</string>
 
     <string name="settingsbutton">SettingsButton</string>
@@ -88,7 +134,29 @@
     <string name="update_available_title">Update available</string>
     <string name="update_check_failed">Update check failed.</string>
     <string name="changes">Changes:</string>
-    <string name="update_available_long">An update for Poke Scanner is available.</string>
+    <string name="update_available_long">is available.</string>
+
+    <string name="guard_pokemon">Guard pokemon : </string>
+    <string name="gym_points">Gym points : </string>
+    <string name="expires_in">Expires in : </string>
+    <string name="lure_expires_in">Lure expires in : </string>
+    <string name="lured_pokemon">Lured pokemon</string>
+    <string name="open_in_gmaps">Open in Google Maps</string>
+    <string name="get_directions">In-App directions</string>
 
     <string name="ERROR_GENERATING_GRID">Error Generating Grid, Try again.</string>
+    <string name="CAMERA_CENTER_FAILED">Failed to center camera.</string>
+    <string name="LOGOUT_ERROR">Server not responding, Logging out</string>
+    <string name="check_server_status">Check Server Status</string>
+
+    <string name="Permission_Required_Auto_Updater">Permission is required for the auto-updater!</string>
+    <string name="Get_Permission_Auto_Updater">Getting permission for auto updater!</string>
+
+    <string name="auto_update_denied">Permission Denied! Disabling auto updater :(</string>
+    <string name="location_denied">App will not work without location!</string>
+
+    <string name="Check_For_Update">Check for updates</string>
+    <string name="Check_For_Update_desc">Checks for an update manually</string>
+
+    <string name="ERROR_NO_DIRECTION_SELECTED">No marker selected for directions!</string>
 </resources>

@@ -36,7 +36,7 @@ public class GymFilters
         SwitchCompat blueGymsSwitch = (SwitchCompat) dialog.findViewById(R.id.showBlueTeam);
         SwitchCompat redGymsSwitch = (SwitchCompat) dialog.findViewById(R.id.showRedTeam);
         RangeSeekBar cpSeekBar = (RangeSeekBar) dialog.findViewById(R.id.guardPokemonCpSeekbar);
-        cpSeekBar.setRangeValues(2, 4145);
+        cpSeekBar.setRangeValues(1, 2000);
 
         //Load saved filters
         GymFilter currentGymFilter = getGymFilter(context);
@@ -124,8 +124,8 @@ public class GymFilters
                 sharedPrefs.getBoolean(SHOW_YELLOW_GYMS, true),
                 sharedPrefs.getBoolean(SHOW_BLUE_GYMS, true),
                 sharedPrefs.getBoolean(SHOW_RED_GYMS, true),
-                sharedPrefs.getInt(GUARD_MIN_CP, 2),
-                sharedPrefs.getInt(GUARD_MAX_CP, 4145)
+                sharedPrefs.getInt(GUARD_MIN_CP, 1),
+                sharedPrefs.getInt(GUARD_MAX_CP, 999)
         );
     }
 

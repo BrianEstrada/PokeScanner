@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.pokescanner.helper.DrawableUtils;
+import com.pokescanner.utils.DrawableUtils;
 
 import POGOProtos.Map.Fort.FortDataOuterClass;
 import io.realm.RealmObject;
@@ -50,23 +50,13 @@ public class Gym extends RealmObject
     }
 
     public MarkerOptions getMarker(Context context) {
-        String uri = "gym" + getOwnedByTeamValue();
-        int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
-
         LatLng position = new LatLng(getLatitude(), getLongitude());
-        Bitmap out = DrawableUtils.writeTextOnDrawable(resourceID, "", 3, context);
 
         String guardPokemonName = getGuardPokemonName();
         long gymPoints = getPoints();
         guardPokemonName = guardPokemonName.substring(0, 1).toUpperCase() + guardPokemonName.substring(1).toLowerCase();
 
-        String teamname;
-        if (ownedByTeamValue == 1) teamname = "Mystic";
-        else if (ownedByTeamValue == 2) teamname = "Valor";
-        else if (ownedByTeamValue == 3) teamname = "Instinct";
-        else teamname = "Neutral";
-
-        int level;
+        int level = 0;
         if (gymPoints < 2000) level = 1;
         else if (gymPoints < 4000) level = 2;
         else if (gymPoints < 8000) level = 3;
@@ -78,13 +68,32 @@ public class Gym extends RealmObject
         else if (gymPoints < 50000) level = 9;
         else level = 10;
 
-        int CP = getGuardPokemonCp();
-
         MarkerOptions gymMarker = new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromBitmap(out))
+                .icon(BitmapDescriptorFactory.fromBitmap(getBitmap(context)))
                 .position(position)
-                .title(teamname)
-                .snippet("Level: " + level + " | Points: " + gymPoints + " | CP: " + CP);
+                .title(getTitle())
+                .snippet("Level: " + level + " | Points: " + gymPoints);
         return gymMarker;
+    }
+
+    public Bitmap getBitmap(Context context)
+    {
+        String uri = "gym" + getOwnedByTeamValue();
+        int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
+        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, "", context);
+        return out;
+    }
+
+    public String getTitle()
+    {
+        int ownedBy = getOwnedByTeamValue();
+        if(ownedBy == 0)
+            return "Neutral";
+        else if(ownedBy == 1)
+            return "Mystic";
+        else if(ownedBy == 2)
+            return "Valor";
+        else
+            return "Instinct";
     }
 }
