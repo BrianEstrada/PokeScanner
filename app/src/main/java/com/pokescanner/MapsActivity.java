@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
@@ -288,6 +289,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 else
                     return false;
             }
+            else
+            {
+                //Try again after half a second
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        moveCameraToCurrentPosition();
+                    }
+                }, 500);
+            }
         }
         return false;
     }
@@ -307,9 +318,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onConnected(Bundle connectionHint) {
         if (PermissionUtils.doWeHaveGPSandLOC(this)) {
-            //If called from the login activity
-            if(getIntent().hasExtra("callerActivity"))
-                moveCameraToCurrentPosition();
+            currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
     }
 

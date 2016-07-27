@@ -146,7 +146,6 @@ public class LoginActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, MapsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("callerActivity", "LoginActivity");
         startActivity(intent);
         finish();
     }
