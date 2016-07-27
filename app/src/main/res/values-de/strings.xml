@@ -82,14 +82,14 @@
   <string name="show_pokemon_filter_desc">Erlaubt es, auszuwählen, welche Pokemon auf der Karte angezeigt werden</string>
   <string name="show_gym_filter">Arenen-Filter</string>
   <string name="show_gym_filter_desc">Erlaubt es, auszuwählen, welche Arenen auf der Karte angezeigt werden</string>
-  <string name="clear_pokemon">Angezeigte Pokemon ausblenden</string>
-  <string name="clear_pokemon_desc">Blende das aktuelle Pokemon aus</string>
-  <string name="clear_pokestops">Pokestops ausblenden</string>
-  <string name="clear_pokestops_desc">Blendet die aktuellen Pokestops aus</string>
-  <string name="clear_gyms">Arenen ausblenden</string>
-  <string name="clear_gyms_desc">Blendet die aktuellen Arenen aus</string>
+  <string name="clear_pokemon">Angezeigte Pokemon von der Karte säubern</string>
+  <string name="clear_pokemon_desc">Säubert die Karte von allen angezeigten Pokemon</string>
+  <string name="clear_pokestops">Angezeigte Pokestops von der Karte säubern</string>
+  <string name="clear_pokestops_desc">Säubert die Karte von allen angezeigten Pokestops</string>
+  <string name="clear_gyms">Angezeigte Arenen von der Karte säubern</string>
+  <string name="clear_gyms_desc">Säubert die Karte von allen angezeigten Arenen</string>
   <string name="icon_scale">Symbolskalierung</string>
-  <string name="icon_scale_desc">Verändet die Skalierung der Symbole</string>
+  <string name="icon_scale_desc">Verändert die Skalierung der Symbole</string>
   <string name="only_lured">Nur Pokestops mit Lockmodul</string>
   <string name="only_lured_desc">Zeigt nur Pokestops mit aktiven Lockmodulen an</string>
   <string name="show_gyms">Zeige Arenen</string>
@@ -128,4 +128,10 @@
   <string name="Check_For_Update">Suche nach Updates</string>
   <string name="Check_For_Update_desc">Suche manuell nach einem Update</string>
   <string name="ERROR_NO_DIRECTION_SELECTED">Keine Markierung für die Wegbeschreibung ausgewählt!</string>
+  <string name="faster">Schneller</string>
+  <string name="fast">Schnell</string>
+  <string name="normal">Normal</string>
+  <string name="Slowest">Langsam</string>
+  <string name="large">Groß</string>
+  <string name="small">Klein</string>
 </resources>
