@@ -91,7 +91,7 @@
     <string name="show_range_desc">Creates a black round circle around the scanning area.</string>
 
     <string name="show_expiration_filter">Pokemon Expiration Filter</string>
-    <string name="show_expiration_filter_desc">Allows you to choose minimum and maximum expiration time</string>
+    <string name="show_expiration_filter_desc">Allows you to choose expiration time</string>
 
     <string name="show_pokemon_filter">Pokemon Filter</string>
     <string name="show_pokemon_filter_desc">Allows you to pick and choose which pokemon appear on the map</string>
