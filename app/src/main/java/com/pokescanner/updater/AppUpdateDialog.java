@@ -11,6 +11,7 @@ import android.net.Uri;
 
 import com.pokescanner.LoginActivity;
 import com.pokescanner.R;
+import com.pokescanner.SplashScreenActivity;
 
 import java.io.File;
 
@@ -29,12 +30,8 @@ public class AppUpdateDialog {
                 .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                            if (context instanceof LoginActivity) {
-                                ((LoginActivity) context).checkIfUserIsLoggedIn();
-                            }else
-                            {
-                                //Do nothing?
-                            }
+                            if (context instanceof SplashScreenActivity)
+                                ((SplashScreenActivity) context).goToLoginScreen();
                     }
                 })
                 .setCancelable(false);
