@@ -347,6 +347,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
             createMapObjects();
+
+            //If in driving mode, move camera to current location
+            if(SettingsUtil.getSettings(MapsActivity.this).isDrivingModeEnabled())
+                moveCameraToCurrentPosition();
+
             //Load our Pokemon Array
             ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
             //Okay so we're going to fix the annoying issue where the markers were being constantly redrawn
