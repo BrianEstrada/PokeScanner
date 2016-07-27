@@ -80,6 +80,7 @@ public class MarkerDetails
 
             markerTitle = selectedPokemon.getFormalName();
 
+            iconPic.setImageBitmap(DrawableUtils.getBitmapFromView(selectedPokemon.getResourceID(context),"",context));
 
             guardPkmnLayout.setVisibility(View.GONE);
             lureExpTimeLayout.setVisibility(View.GONE);
@@ -89,6 +90,7 @@ public class MarkerDetails
                     .subscribe(new Action1<Long>() {
                         @Override
                         public void call(Long aLong) {
+                            String expires = DrawableUtils.getExpireTime(selectedPokemon.getExpires());
                             pokemonTimer.setText(expires);
                         }
                     });
