@@ -9,8 +9,8 @@
         android:text="New Text"
         android:id="@+id/timer"
         android:textAlignment="center"
-        android:textColor="@android:color/white"
-        android:background="@drawable/rounded_corners_pokemon" />
+        android:background="@drawable/rounded_corners_pokemon"
+        android:textSize="18dp" />
 
     <ImageView
         android:layout_width="fill_parent"

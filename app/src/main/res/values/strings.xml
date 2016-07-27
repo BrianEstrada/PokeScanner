@@ -154,4 +154,12 @@
     <string name="Check_For_Update_desc">Checks for an update manually</string>
 
     <string name="ERROR_NO_DIRECTION_SELECTED">No marker selected for directions!</string>
+
+    <string name="faster">Faster</string>
+    <string name="fast">Fast</string>
+    <string name="normal">Normal</string>
+    <string name="slow">Slow</string>
+    <string name="slowest">Slowest</string>
+    <string name="large">Large</string>
+    <string name="small">Small</string>
 </resources>

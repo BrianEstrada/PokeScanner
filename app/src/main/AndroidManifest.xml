@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -16,6 +17,17 @@
         android:supportsRtl="true"
         android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name=".service.PokeService"
+            android:exported="false"/>
+        <receiver
+            android:name=".service.ServerPollReceiver"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="STOP_ACTION"/>
+            </intent-filter>
+        </receiver>
 
         <activity android:name=".LoginActivity"
             android:configChanges="orientation"
