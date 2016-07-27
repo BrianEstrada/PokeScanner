@@ -27,12 +27,12 @@
     <string name="cancel">Annuler</string>
     <string name="filter">Filtre</string>
     <string name="none">Aucun</string>
-    <string name="select_all">Tout sélectionner</string>
-    <string name="pokemon_name">Nom du Pokemon</string>
+    <string name="select_all">Sélectionner tout</string>
+    <string name="pokemon_name">Nom du Pokémon</string>
 
-    <string name="AUTH_FAILED">Bad Login Credentials</string>
+    <string name="AUTH_FAILED">Mauvaises informations de connexion</string>
     <string name="SERVER_FAILED">Pas de réponse du serveur</string>
-    <string name="ERROR_FILTERS">Erreur chargement des filtres</string>
+    <string name="ERROR_FILTERS">Erreur de chargement des filtres</string>
     <string name="LOGIN_OK">Connexion réussie</string>
     <string name="PERMISSION_OK">Merci pour les autorisations !</string>
 
@@ -42,7 +42,7 @@
     <string name="on">On</string>
     <string name="off">Off</string>
 
-    <string name="username">Pseudo</string>
+    <string name="username">Nom d\'utilisateur</string>
     <string name="password">Mot de passe</string>
     <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">Attention : \n N\'utilisez pas votre comptre \nprincipal avec cette application</string>
     <string name="filter_pokemon">Trier les Pokemons</string>
@@ -51,23 +51,23 @@
     <string name="hide">Cacher</string>
     <string name="searchicon">IconeRecherche</string>
     <string name="menubutton">BouttonMenu</string>
-    <string name="yellow_team">Equipe Jaune</string>
-    <string name="blue_team">Equipe Bleu</string>
-    <string name="red_team">Equipe Rouge</string>
+    <string name="yellow_team">Equipe jaune</string>
+    <string name="blue_team">Equipe bleu</string>
+    <string name="red_team">Equipe rouge</string>
     <string name="neutral_gyms">Arène neutre</string>
-    <string name="guard_pokemon_cp">Guard pokemon CP</string>
+    <string name="guard_pokemon_cp">Pokémon en défense CP</string>
 
 
 
-    <string name="settings">paramètres</string>
-    <string name="logout">Deconnexion</string>
+    <string name="settings">Paramètres</string>
+    <string name="logout">Déconnexion</string>
     <string name="check_hidden">Coché = Cacher</string>
 
     <string name="server_refresh">Rafraichissement du serveur</string>
-    <string name="server_refresh_desc">Règle la vitesse de scan de la carte (Si vous avez une mauvaise connexion, mettez sur Lent)</string>
-    <string name="pokemon_filters">Filtres Pokemons</string>
+    <string name="server_refresh_desc">Règle la vitesse de scan de la carte (Si vous êtes sur une mauvaise connexion, vous devriez être sur lent)</string>
+    <string name="pokemon_filters">Filtres Pokémon</string>
     <string name="map_refresh">Rafraichissement de la carte</string>
-    <string name="map_refresh_desc">Règle la vitesse à laquelle la carte se rafraichit (Mettre sur Le plus lent pour les vieux téléphones)</string>
+    <string name="map_refresh_desc">Règle la vitesse à laquelle la carte se rafraichit (Les appareils anciens devraient être sur le réglage plus lent)</string>
     <string name="donate">Faire un don</string>
 
     <string name="category_donate">Faire un don pour supporter les développeurs</string>
@@ -77,50 +77,63 @@
     <string name="category_filters">Options des filtres</string>
     <string name="category_clear">Réinitialiser les options</string>
 
+    <string name="enable_update">Active les mises à jour automatiques</string>
+    <string name="enable_update_desc">Vérifie à chaque fois que vous lancez l'application s'il y a une mise à jour (activé par défaut).</string>
 
     <string name="show_range">Afficher le rayon</string>
     <string name="show_range_desc">Affiche un cercle autour de la zone de scannée</string>
 
-    <string name="show_pokemon_filter">Filtre Pokemons</string>
-    <string name="show_pokemon_filter_desc">Vous permet de choisir quel pokemon apparait sur la carte</string>
-    <string name="show_gym_filter">Filtre Arènes</string>
-    <string name="show_gym_filter_desc">Vous permet de choisir quelle arène apparait sur la carte</string>
+    <string name="show_pokemon_filter">Filtre Pokémon</string>
+    <string name="show_pokemon_filter_desc">Vous permet de choisir quel Pokémon apparaîtra sur la carte</string>
+    <string name="show_gym_filter">Filtre arènes</string>
+    <string name="show_gym_filter_desc">Vous permet de choisir quelle arène apparaîtra sur la carte</string>
 
-    <string name="clear_pokemon">Effacer les Pokemons</string>
-    <string name="clear_pokemon_desc">Suppression des Pokemons</string>
-    <string name="clear_pokestops">Effacer les Pokestops</string>
-    <string name="clear_pokestops_desc">Suppression des Pokestops</string>
-    <string name="clear_gyms">Effaces les Arènes</string>
-    <string name="clear_gyms_desc">Suppression des Arènes</string>
+    <string name="clear_pokemon">Effacer les Pokémon</string>
+    <string name="clear_pokemon_desc">Suppression des Pokémon</string>
+    <string name="clear_pokestops">Effacer les Pokéstops</string>
+    <string name="clear_pokestops_desc">Suppression des Pokéstops</string>
+    <string name="clear_gyms">Effaces les arènes</string>
+    <string name="clear_gyms_desc">Suppression des arènes</string>
 
 
-    <string name="icon_scale">Taille des icones</string>
-    <string name="icon_scale_desc">Régler la taille des icones</string>
-    <string name="only_lured">Uniquement Pokestops Leurrés</string>
-    <string name="only_lured_desc">Afficher uniquement les Pokestops avec un Leurre actif</string>
-    <string name="show_gyms">Afficher Arènes</string>
-    <string name="show_gyms_desc">Activer/Désactiver les Arènes sur la carte</string>
-    <string name="show_pokestops">Afficher les Pokestops</string>
-    <string name="show_pokestop_desc">Activer/Désactiver les Pokestops sur la carte</string>
+    <string name="icon_scale">Taille des icônes</string>
+    <string name="icon_scale_desc">Régler la taille des icônes</string>
+    <string name="only_lured">Uniquement Pokéstops leurrés</string>
+    <string name="only_lured_desc">Afficher uniquement les Pokéstops avec un leurre actif</string>
+    <string name="show_gyms">Afficher arènes</string>
+    <string name="show_gyms_desc">Active/désactive les arènes sur la carte</string>
+    <string name="show_pokestops">Afficher les Pokéstops</string>
+    <string name="show_pokestop_desc">Activer/désactiver les Pokéstops sur la carte</string>
     <string name="lock_gps">Scan via GPS</string>
-    <string name="lock_gps_desc">Scan en fonction de votre localisation plutot qu\'en fonction du point du vue</string>
+    <string name="lock_gps_desc">Scan en fonction de votre localisation plutôt qu\'en fonction du point du vue</string>
 
     <string name="gyms_cleared">Arènes effacées</string>
-    <string name="pokestops_cleared">Pokestops effacés</string>
-    <string name="pokemon_cleared">Pokemons effacés</string>
-    <string name="icon">Icone</string>
+    <string name="pokestops_cleared">Pokéstops effacés</string>
+    <string name="pokemon_cleared">Pokémon effacés</string>
+    <string name="icon">Icône</string>
 
     <string name="settingsbutton">BouttonParametres</string>
-    <string name="version_check_failed">Echec vérification version.</string>
-    <string name="updating_pokescanner">Mise à jour Poke Scanner</string>
+    <string name="version_check_failed">Echec de vérification de la version.</string>
+    <string name="updating_pokescanner">Mise à jour de Poke Scanner</string>
     <string name="update">Mise à jour</string>
     <string name="update_available_title">Mise à jour disponible</string>
-    <string name="update_check_failed">Echec vérification mise à jour.</string>
+    <string name="update_check_failed">Echec de vérification de la mise à jour.</string>
     <string name="changes">Modifications :</string>
     <string name="update_available_long">est disponible.</string>
 
-    <string name="ERROR_GENERATING_GRID">Impossible de générer Grid, essayez à nouveau.</string>
+    <string name="ERROR_GENERATING_GRID">Impossible de générer la grille, essayez à nouveau.</string>
     <string name="CAMERA_CENTER_FAILED">Impossible de centrer la caméra.</string>
-    <string name="LOGOUT_ERROR">Le serveur ne répond pas, Déconnexion</string>
+    <string name="LOGOUT_ERROR">Le serveur ne répond pas, déconnexion</string>
     <string name="check_server_status">Vérifier l\'état du serveur</string>
+    
+    <string name="Permission_Required_Auto_Updater">Permission nécessaire pour la mise à jour automatique !</string>
+    <string name="Get_Permission_Auto_Updater">Obtenir la permission de mise à jour automatique !</string>
+
+    <string name="auto_update_denied">Permission refusée ! Désactivation des mises à jour automatiques</string>
+    <string name="location_denied">L\'application ne fonctionnera pas sans emplacement !</string>
+
+    <string name="Check_For_Update">Vérifier les mises à jour</string>
+    <string name="Check_For_Update_desc">Vérifier les mises à jour manuellement</string>
+
+    <string name="ERROR_NO_DIRECTION_SELECTED">Aucun marqueur sélectionné pour les directions !</string>
 </resources>
