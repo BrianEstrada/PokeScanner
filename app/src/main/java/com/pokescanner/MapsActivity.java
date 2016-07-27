@@ -62,6 +62,7 @@ import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
+import com.pokescanner.utils.DrawableUtils;
 import com.pokescanner.utils.MarkerDetails;
 import com.pokescanner.utils.PermissionUtils;
 import com.pokescanner.utils.SettingsUtil;
@@ -247,7 +248,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             removeAdapterAndListener();
                             MarkerDetails.showMarkerDetailsDialog(MapsActivity.this, markerKey, currentLocation);
                         } else {
-                            setAdapterAndListener();
+                            setAdapterAndListener(markerKey);
                             marker.showInfoWindow();
                         }
                     }
@@ -600,7 +601,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentCameraPos = cameraPosition;
     }
 
-    private void setAdapterAndListener() {
+    private void setAdapterAndListener(final Object markerKey) {
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker arg0) {
@@ -621,7 +622,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 TextView snippet = new TextView(MapsActivity.this);
                 snippet.setTextColor(Color.GRAY);
                 snippet.setGravity(Gravity.CENTER);
-                snippet.setText(marker.getSnippet());
+                if(markerKey instanceof Pokemons){
+                    snippet.setText(MapsActivity.this.getText(R.string.expires_in) + DrawableUtils.getExpireTime(((Pokemons) markerKey).getExpires()));
+                }else{
+                    snippet.setText(marker.getSnippet());
+                }
 
                 TextView navigate = new TextView(MapsActivity.this);
                 navigate.setTextColor(Color.GRAY);
