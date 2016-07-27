@@ -74,11 +74,13 @@ public class MarkerDetails
         if(selectedMarkerData instanceof Pokemons)
         {
             final Pokemons selectedPokemon = (Pokemons) selectedMarkerData;
+
             markerLatitude = selectedPokemon.getLatitude();
             markerLongitude = selectedPokemon.getLongitude();
-            markerTitle = selectedPokemon.getName();
-            markerTitle = markerTitle.substring(0, 1).toUpperCase() + markerTitle.substring(1).toLowerCase();
-            iconPic.setImageBitmap(selectedPokemon.getBitmap(context, 3));
+
+            markerTitle = selectedPokemon.getFormalName();
+
+
             guardPkmnLayout.setVisibility(View.GONE);
             lureExpTimeLayout.setVisibility(View.GONE);
             luredPkmnLayout.setVisibility(View.GONE);
@@ -87,7 +89,7 @@ public class MarkerDetails
                     .subscribe(new Action1<Long>() {
                         @Override
                         public void call(Long aLong) {
-                            pokemonTimer.setText(selectedPokemon.getExpireTime());
+                            pokemonTimer.setText(expires);
                         }
                     });
         }
