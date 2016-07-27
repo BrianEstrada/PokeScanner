@@ -23,6 +23,7 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class DrawableUtils
 {
+
     public static String getExpireTime(long expireTime) {
         //Create a date from the expire time (Long value)
         DateTime date = new DateTime(expireTime);
@@ -38,7 +39,6 @@ public class DrawableUtils
         {
             return "Expired";
         }
-
     }
     public static  Bitmap getBitmap(Context context, String URI) {
         int unitScale = Settings.get(context).getScale();

@@ -4,11 +4,14 @@ import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.pokescanner.helper.ExpirationFilter;
 import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.Pokemons;
 
 import org.joda.time.DateTime;
+import org.joda.time.Instant;
+import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -28,6 +31,23 @@ public class UiUtils {
         DateTime dt = new DateTime(millis);
         DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
         return fmt.print(dt);
+    }
+
+    public static boolean isPokemonExpiredFiltered(Pokemons pokemons,Context context) {
+        long millis = ExpirationFilter.getFilter(context).getPokemonExpirationMinSec() * 100;
+        //Create a date from the expire time (Long value)
+        DateTime date = new DateTime(pokemons.getExpires());
+        //If our date time is after now then it's expired and we'll return expired (So we don't get an exception
+        if (date.isAfter(new Instant())) {
+            Interval interval;
+            interval = new Interval(new Instant(), date);
+
+            if (millis > interval.toDurationMillis()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
     public static boolean isPokemonFiltered(Pokemons pokemons) {

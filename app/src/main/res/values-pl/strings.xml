@@ -1,11 +1,8 @@
 <resources>
-    <string name="app_name" translatable="false">Poke Scanner</string>
-    <string name="shared_key" translatable="false">POKESCANNER</string>
     <string name="title_activity_maps">Mapa</string>
     <string name="scan">Skanuj</string>
     <string name="ptclogin">Login PTC</string>
     <string name="googlelogin">Login Google</string>
-    <string name="poke_scanner" translatable="false">Poke Scanner</string>
     <string name="blacklist">Czarna lista</string>
     <string name="save">Zapisz</string>
     <string name="search_radius">Promień skanowania</string>
@@ -43,8 +40,6 @@
     <string name="red_team">Czerwoni</string>
     <string name="neutral_gyms">Neutralne Gymy</string>
     <string name="guard_pokemon_cp">CP Pokemona chroniącego</string>
-    <string name="_0" translatable="false">0</string>
-
 
 
     <string name="settings">Ustawienia</string>
@@ -87,8 +82,8 @@
 
     <string name="icon_scale">Skala Ikon</string>
     <string name="icon_scale_desc">Dostosuj rozmiar ikon</string>
-    <string name="only_lured">Tylko Pokestopy z Lure'm</string>
-    <string name="only_lured_desc">Pokaż tylko Pokestopy z aktywnym Lure'm</string>
+    <string name="only_lured">Tylko Pokestopy z Lure\'m</string>
+    <string name="only_lured_desc">Pokaż tylko Pokestopy z aktywnym Lure\'m</string>
     <string name="show_gyms">Pokaż Gymy</string>
     <string name="show_gyms_desc">Włącza/Wyłącza Gymy na mapie</string>
     <string name="show_pokestops">Pokaż Pokestopy</string>

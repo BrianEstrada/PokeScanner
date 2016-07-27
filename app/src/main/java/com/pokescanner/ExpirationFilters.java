@@ -2,16 +2,13 @@ package com.pokescanner;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.view.Window;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.pokescanner.events.RestartRefreshEvent;
 import com.pokescanner.helper.ExpirationFilter;
 
-import org.greenrobot.eventbus.EventBus;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 
@@ -49,25 +46,6 @@ public class ExpirationFilters
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
-        {
-            @Override
-            public void onCancel(DialogInterface dialogInterface)
-            {
-                EventBus.getDefault().post(new RestartRefreshEvent());
-            }
-        });
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface)
-            {
-                EventBus.getDefault().post(new RestartRefreshEvent());
-            }
-        });
-
         dialog.show();
     }
 
@@ -75,7 +53,7 @@ public class ExpirationFilters
     {
         SharedPreferences sharedPrefs = context.getSharedPreferences(context.getString(R.string.shared_key), Context.MODE_PRIVATE);
         return new ExpirationFilter(
-                sharedPrefs.getInt(MIN_SEC, 900)
+                sharedPrefs.getInt(MIN_SEC, 0)
         );
     }
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Poke Scanner</string>
     <string name="AUTH_FAILED">Credenziali non valide</string>
     <string name="CAMERA_CENTER_FAILED">Impossibile centrare la vista</string>
     <string name="Check_For_Update">Frequenza aggiornamenti</string>

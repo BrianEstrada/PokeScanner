@@ -327,8 +327,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //Is our pokemon contained within the bounds of the camera?
                 if (curScreen.contains(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))) {
                     //If yes then has he expired?
+                    //This isnt worded right it should say isNotExpired (Will fix later)
                     if (pokemon.isExpired()) {
-                        if (UiUtils.isPokemonFiltered(pokemon)) {
+                        if (UiUtils.isPokemonFiltered(pokemon)||
+                                UiUtils.isPokemonExpiredFiltered(pokemon,this)) {
                             if (pokemonsMarkerMap.containsKey(pokemon)) {
                                 Marker marker = pokemonsMarkerMap.get(pokemon);
                                 if (marker != null) {
@@ -336,7 +338,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     pokemonsMarkerMap.remove(pokemon);
                                 }
                             }
-                        } else {
+                        }else{
                             //Okay finally is he contained within our hashmap?
                             if (pokemonsMarkerMap.containsKey(pokemon)) {
                                 //Well if he is then lets pull out our marker.

@@ -60,7 +60,9 @@
     <string name="neutral_gyms">Neutral gyms</string>
     <string name="guard_pokemon_cp">Guard pokemon CP</string>
     <string name="_0" translatable="false">0</string>
-
+    <string name="expiration_time">Hide Pokemon expiring in</string>
+    <string name="expiration_min">Min:</string>
+    <string name="expiration_max">Max:</string>
 
 
     <string name="settings">Settings</string>
@@ -87,6 +89,9 @@
 
     <string name="show_range">Show Range</string>
     <string name="show_range_desc">Creates a black round circle around the scanning area.</string>
+
+    <string name="show_expiration_filter">Pokemon Expiration Filter</string>
+    <string name="show_expiration_filter_desc">Allows you to choose minimum and maximum expiration time</string>
 
     <string name="show_pokemon_filter">Pokemon Filter</string>
     <string name="show_pokemon_filter_desc">Allows you to pick and choose which pokemon appear on the map</string>

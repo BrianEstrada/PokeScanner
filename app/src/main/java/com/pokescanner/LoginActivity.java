@@ -113,7 +113,6 @@ public class LoginActivity extends AppCompatActivity {
         if (realm.where(User.class).findAll().size() != 0) {
             User user = realm.where(User.class).findFirst();
             if (user.getAuthType() == User.PTC) {
-                System.out.println(user);
                 etUsername.setText(user.getUsername());
                 etPassword.setText(user.getPassword());
                 btnPTCLogin();
