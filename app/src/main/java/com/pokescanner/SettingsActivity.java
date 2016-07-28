@@ -189,6 +189,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             case AppUpdateEvent.FAILED:
                 Toast.makeText(SettingsActivity.this, getString(R.string.update_check_failed), Toast.LENGTH_SHORT).show();
                 break;
+            case AppUpdateEvent.UPTODATE:
+                Toast.makeText(SettingsActivity.this, getString(R.string.up_to_date), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 

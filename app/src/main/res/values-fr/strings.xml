@@ -55,8 +55,10 @@
     <string name="blue_team">Equipe Bleu</string>
     <string name="red_team">Equipe Rouge</string>
     <string name="neutral_gyms">Arène neutre</string>
-    <string name="guard_pokemon_cp">Guard pokemon CP</string>
-
+    <string name="guard_pokemon_cp">PC du Pokemon gardien</string>
+    <string name="expiration_time">Cacher les Pokemons disparaissant dans</string>
+    <string name="expiration_min">Min:</string>
+    <string name="expiration_max">Max:</string>
 
 
     <string name="settings">paramètres</string>
@@ -76,13 +78,26 @@
     <string name="category_extendedMap_options">Options avancée de la carte</string>
     <string name="category_filters">Options des filtres</string>
     <string name="category_clear">Réinitialiser les options</string>
+    <string name="category_update">Paramètres de mise à jour</string>
 
+    <string name="enable_update">Activer les mise à jours automatiques</string>
+    <string name="enable_update_desc">Vérifier s\'il existe une mise à jour a chaque lancement de l\'application (Activé par défaut)</string>
 
     <string name="show_range">Afficher le rayon</string>
     <string name="show_range_desc">Affiche un cercle autour de la zone de scannée</string>
+    
+    <string name="show_expiration_filter">Filtre de durée d\'expiration</string>
+    <string name="show_expiration_filter_desc">Vous permet de choisir la durée d\'expiration des Pokémons</string>
 
     <string name="show_pokemon_filter">Filtre Pokemons</string>
     <string name="show_pokemon_filter_desc">Vous permet de choisir quel pokemon apparait sur la carte</string>
+    
+    <string name="show_pokemon_whitelist_filter">Liste blanche Pokemons</string>
+    <string name="show_pokemon_whitelist_filter_desc">Vous permet de choisir quels Pokemons apparaissent sur la carte</string>
+    
+    <string name="show_pokemon_blacklist_filter">Liste noire Pokemons</string>
+    <string name="show_pokemon_blacklist_filter_desc">Vous permet de choisir quels Pokemons n\'apparaissent pas sur la carte</string>
+
     <string name="show_gym_filter">Filtre Arènes</string>
     <string name="show_gym_filter_desc">Vous permet de choisir quelle arène apparait sur la carte</string>
 
@@ -96,14 +111,20 @@
 
     <string name="icon_scale">Taille des icones</string>
     <string name="icon_scale_desc">Régler la taille des icones</string>
-    <string name="only_lured">Uniquement Pokestops Leurrés</string>
+    <string name="only_lured">Uniquement Pokestops avec Leurre</string>
     <string name="only_lured_desc">Afficher uniquement les Pokestops avec un Leurre actif</string>
     <string name="show_gyms">Afficher Arènes</string>
     <string name="show_gyms_desc">Activer/Désactiver les Arènes sur la carte</string>
     <string name="show_pokestops">Afficher les Pokestops</string>
     <string name="show_pokestop_desc">Activer/Désactiver les Pokestops sur la carte</string>
+    <string name="show_lured_pokemon">Afficher les Pokemons avec Leurre</string>
+    <string name="show_lured_pokemon_desc">Afficher une îcone Pokemon au lieu de l\îcone d\'un Pokestop avec Leurre(A moins que le Pokemon soit filtré)</string>
     <string name="lock_gps">Scan via GPS</string>
-    <string name="lock_gps_desc">Scan en fonction de votre localisation plutot qu\'en fonction du point du vue</string>
+    <string name="lock_gps_desc">Scan en fonction de votre localisation plutot qu\'en fonction de la zone choisie à l\'écran</string>
+    <string name="old_marker">Utiliser l\'ancien marqueur de carte</string>
+    <string name="old_marker_desc"></string>
+    <string name="driving_mode">Mode conduite</string>
+    <string name="driving_mode_desc">Garde la carte centrée sur votre position</string>
 
     <string name="gyms_cleared">Arènes effacées</string>
     <string name="pokestops_cleared">Pokestops effacés</string>
@@ -119,8 +140,36 @@
     <string name="changes">Modifications :</string>
     <string name="update_available_long">est disponible.</string>
 
+    <string name="guard_pokemon">Pokemon gardien : </string>
+    <string name="gym_points">Points de l\'arène : </string>
+    <string name="expires_in">Expire dans : </string>
+    <string name="lure_expires_in">Le leurre expire dans : </string>
+    <string name="lured_pokemon">Pokemon avec leurre</string>
+    <string name="open_in_gmaps">Ouvrir avec Google Maps</string>
+    <string name="get_directions">Directions In-App</string>
+    <string name="click_open_in_gmaps">Cliquer ici pour ouvrir avec Google Maps</string>
+
     <string name="ERROR_GENERATING_GRID">Impossible de générer Grid, essayez à nouveau.</string>
     <string name="CAMERA_CENTER_FAILED">Impossible de centrer la caméra.</string>
     <string name="LOGOUT_ERROR">Le serveur ne répond pas, Déconnexion</string>
     <string name="check_server_status">Vérifier l\'état du serveur</string>
+    
+    <string name="Permission_Required_Auto_Updater">Permission requise pour les mises à jour automatiques</string>
+    <string name="Get_Permission_Auto_Updater">Demande de permission pour les mises à jour automatiques</string>
+    
+    <string name="auto_update_denied">Permission refusée ! Mises à jour automatique désactivées :(</string>
+    <string name="location_denied">L\\\'application ne fonctionnera pas sans la localisation !</string>
+    
+    <string name="Check_For_Update">Vérifier les mise à jour</string>
+    <string name="Check_For_Update_desc">Rechercher une mise à jour</string>
+    
+    <string name="ERROR_NO_DIRECTION_SELECTED">Aucun marqueur sélectionné pour calculer un itinéraire</string>
+    <string name="cleared_map">Carte effacée</string>
+    <string name="faster">Le plus rapide</string>
+    <string name="fast">Rapide</string>
+    <string name="normal">Normal</string>
+    <string name="slow">Lent</string>
+    <string name="slowest">Le plus lent</string>
+    <string name="large">Grand</string>
+    <string name="small">Petit</string>
 </resources>
