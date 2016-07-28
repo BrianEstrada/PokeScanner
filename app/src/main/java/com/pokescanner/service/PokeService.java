@@ -31,7 +31,7 @@ public class PokeService extends IntentService {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.icon)
-                .addAction(new NotificationCompat.Action(R.drawable.ic_settings_black_24dp,"Cancel Service",pendingIntentStop))
+                .addAction(new NotificationCompat.Action(R.drawable.ic_close_white_24dp,"Cancel Service",pendingIntentStop))
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.icon))
                 .setContentTitle("Poke Scanner")
                 .setVibrate(Vibration)

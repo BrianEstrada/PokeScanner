@@ -159,7 +159,7 @@
     <string name="Check_For_Update_desc">Checks for an update manually</string>
 
     <string name="ERROR_NO_DIRECTION_SELECTED">No marker selected for directions!</string>
-
+    <string name="cleared_map">Map Cleared</string>
     <string name="faster">Faster</string>
     <string name="fast">Fast</string>
     <string name="normal">Normal</string>
