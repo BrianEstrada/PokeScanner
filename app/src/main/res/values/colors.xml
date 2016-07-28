@@ -25,13 +25,13 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
-    <color name="IconDefault">#BF3F51B5</color>
-    <color name="IconPokemon">#BF009688</color>
-    <color name="IconPokeStop">#BF3F51B5</color>
-    <color name="IconPokeLure">#BF673AB7</color>
-    <color name="GymRed">#BFF44336</color>
-    <color name="GymBlue">#BF2196F3</color>
-    <color name="GymYellow">#BFFFEB3B</color>
-    <color name="GymNeutral">#BF9E9E9E</color>
+    <color name="IconDefault">#803F51B5</color>
+    <color name="IconPokemon">#80009688</color>
+    <color name="IconPokeStop">#803F51B5</color>
+    <color name="IconPokeLure">#80673AB7</color>
+    <color name="GymRed">#80F44336</color>
+    <color name="GymBlue">#802196F3</color>
+    <color name="GymYellow">#80FFEB3B</color>
+    <color name="GymNeutral">#80FE9E9E</color>
 
 </resources>
