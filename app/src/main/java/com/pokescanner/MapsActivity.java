@@ -172,6 +172,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    @OnClick(R.id.btnClear)
+    public void clearMap() {
+        if (mMap != null) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    realm.where(Pokemons.class).findAll().deleteAllFromRealm();
+                    realm.where(Gym.class).findAll().deleteAllFromRealm();
+                    realm.where(PokeStop.class).findAll().deleteAllFromRealm();
+                    mMap.clear();
+                    showToast(R.string.cleared_map);
+                }
+            });
+        }
+    }
     @OnClick(R.id.btnSearch)
     public void PokeScan() {
         if (SCANNING_STATUS) {
@@ -239,7 +255,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setOnCameraChangeListener(this);
             //Let's find our location and set it!
             mMap.getUiSettings().setMapToolbarEnabled(false);
-            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(false);
             mMap.getUiSettings().setCompassEnabled(true);
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
