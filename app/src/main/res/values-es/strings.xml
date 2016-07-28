@@ -122,7 +122,6 @@
   <string name="LOGOUT_ERROR">Servidor no responde, cerrando sesión</string>
   <string name="check_server_status">Comprobar el estado del servidor</string>
   <string name="Permission_Required_Auto_Updater">¡Se requieren permisos para las actualizaciones automáticas!</string>
-  <string name="Get_Permission_Auto_Updater">¡Consiguiendo permisos para las actualizaciones automáticas!</string>
   <string name="auto_update_denied">¡Permisos denegados! Deshabilitando actualizaciones automáticas :(</string>
   <string name="location_denied">¡La app no funcionará sin ubicación!</string>
   <string name="Check_For_Update">Comprueba si hay actualizaciones</string>

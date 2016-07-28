@@ -133,7 +133,6 @@
   <string name="LOGOUT_ERROR">Сервер не отвечает, выходим</string>
   <string name="check_server_status">Проверьте состояние серверов</string>
   <string name="Permission_Required_Auto_Updater">Требуются разрешения для авто-обновления!</string>
-  <string name="Get_Permission_Auto_Updater">Получаю разрешения для авто обновления!</string>
   <string name="auto_update_denied">Разрешение не дано, автообновление отключено :(</string>
   <string name="location_denied">Приложение не будет работать без разрешения на локацию!</string>
   <string name="Check_For_Update">Проверить обновление</string>

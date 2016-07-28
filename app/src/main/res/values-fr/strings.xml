@@ -133,7 +133,6 @@
   <string name="LOGOUT_ERROR">Le serveur ne répond pas, Déconnexion</string>
   <string name="check_server_status">Vérifier l\'état du serveur</string>
   <string name="Permission_Required_Auto_Updater">Permission requise pour les mises à jour automatiques</string>
-  <string name="Get_Permission_Auto_Updater">Demande de permission pour les mises à jour automatiques</string>
   <string name="auto_update_denied">Permission refusée ! Mises à jour automatique désactivées :(</string>
   <string name="location_denied">L\'application ne fonctionnera pas sans la localisation !</string>
   <string name="Check_For_Update">Vérifier les mise à jour</string>

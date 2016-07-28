@@ -115,12 +115,12 @@ public class SplashScreenActivity extends AppCompatActivity
                             goToLoginScreen();
                     }
                     else
-                        displayErrorDialog("Please enalble your location services to continue.");
+                        displayErrorDialog(getString(R.string.enable_location_services));
                 }
             }
         }
         else
-            displayErrorDialog("Could not connect to the internet. Please check your internet connection.");
+            displayErrorDialog(getString(R.string.no_internet));
     }
 
     private void displayErrorDialog(String message)
@@ -247,7 +247,6 @@ public class SplashScreenActivity extends AppCompatActivity
                 })
                 .show();
         } else {
-            showToast(R.string.Get_Permission_Auto_Updater);
             ActivityCompat.requestPermissions(SplashScreenActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUESTED);
         }
@@ -264,7 +263,7 @@ public class SplashScreenActivity extends AppCompatActivity
                     checkRequirementsAndInitialize();
                 }else {
                     // Permission request was denied.
-                    displayErrorDialog("This application requires location services to function.");
+                    displayErrorDialog(getString(R.string.requires_location_services));
                 }
             }
             break;
@@ -276,7 +275,7 @@ public class SplashScreenActivity extends AppCompatActivity
                 }
                 else
                 {
-                    Toast.makeText(mContext, "Update cancelled.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.update_canceled, Toast.LENGTH_SHORT).show();
                     goToLoginScreen();
                 }
                 break;

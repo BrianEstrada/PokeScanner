@@ -7,7 +7,6 @@
     <string name="ERROR_FILTERS">Impossibile caricare i filtri</string>
     <string name="ERROR_GENERATING_GRID">Impossibile generare la mappa, riprova!</string>
     <string name="ERROR_NO_DIRECTION_SELECTED">Nessun punto selezionato per la navigazione!</string>
-    <string name="Get_Permission_Auto_Updater">Permesso per l\'aggiornamento automatico!</string>
     <string name="LOGIN_OK">Connessione riuscita</string>
     <string name="LOGOUT_ERROR">Il server non risponde, disconnessione..</string>
     <string name="PERMISSION_OK">Grazie per il permesso!</string>

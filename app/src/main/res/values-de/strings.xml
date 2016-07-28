@@ -133,7 +133,6 @@
   <string name="LOGOUT_ERROR">Der Server antwortet nicht. Ausloggen...</string>
   <string name="check_server_status">Serverstatus überprüfen</string>
   <string name="Permission_Required_Auto_Updater">Der Auto-Updater benötigt Zugriffsrechte für das Update!</string>
-  <string name="Get_Permission_Auto_Updater">Frage Zugriffsrechte für den Auto-Updater ab!</string>
   <string name="auto_update_denied">Zugriffsrechte verweigert! Auto-Update wird deaktiviert :(</string>
   <string name="location_denied">Diese App funktioniert nicht ohne GPS!</string>
   <string name="Check_For_Update">Suche nach Updates</string>

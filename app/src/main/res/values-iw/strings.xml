@@ -133,7 +133,6 @@
   <string name="LOGOUT_ERROR">השרתים אינם מגיבים, מתנתק</string>
   <string name="check_server_status">בדוק את מצב השרתים</string>
   <string name="Permission_Required_Auto_Updater">דרושות הרשאות נוספות בשביל לבצע עדכונים אוטומטים!</string>
-  <string name="Get_Permission_Auto_Updater">מקבל הרשאות בשביל לבצע עדכונים אוטומטים!</string>
   <string name="auto_update_denied">ההרשאות נדחו! משביט עדכונים אוטומטים :(</string>
   <string name="location_denied">היישום לא יעבוד ללא מיקום!</string>
   <string name="Check_For_Update">בדוק אם קיימים עדכונים</string>

@@ -160,7 +160,6 @@
     <string name="check_server_status">Check Server Status</string>
 
     <string name="Permission_Required_Auto_Updater">Permission is required for the auto-updater!</string>
-    <string name="Get_Permission_Auto_Updater">Getting permission for auto updater!</string>
 
     <string name="auto_update_denied">Permission Denied! Disabling auto updater :(</string>
     <string name="location_denied">App will not work without location!</string>
