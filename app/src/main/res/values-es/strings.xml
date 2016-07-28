@@ -131,7 +131,7 @@
   <string name="faster">Más rápido</string>
   <string name="fast">Rápido</string>
   <string name="normal">Normal</string>
-  <string name="Slowest">Lento</string>
+  <string name="slowest">Lento</string>
   <string name="large">Grande</string>
   <string name="small">Pequeño</string>
 </resources>

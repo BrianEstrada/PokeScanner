@@ -15,13 +15,10 @@
   -->
 
 <resources>
-    <string name="app_name" translatable="false">Poke Scanner</string>
-    <string name="shared_key" translatable="false">POKESCANNER</string>
     <string name="title_activity_maps">Carte</string>
     <string name="scan">Scan</string>
     <string name="ptclogin">Connexion PTC</string>
     <string name="googlelogin">Connexion Google</string>
-    <string name="poke_scanner" translatable="false">Poke Scanner</string>
     <string name="blacklist">Liste noire</string>
     <string name="save">Sauvegarder</string>
     <string name="search_radius">Rayon de recherche</string>
@@ -59,7 +56,6 @@
     <string name="red_team">Equipe Rouge</string>
     <string name="neutral_gyms">Arène neutre</string>
     <string name="guard_pokemon_cp">PC du Pokemon gardien</string>
-    <string name="_0" translatable="false">0</string>
     <string name="expiration_time">Cacher les Pokemons disparaissant dans</string>
     <string name="expiration_min">Min:</string>
     <string name="expiration_max">Max:</string>

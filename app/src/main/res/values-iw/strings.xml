@@ -131,7 +131,7 @@
   <string name="faster">מהר יותר</string>
   <string name="fast">מהר</string>
   <string name="normal">רגיל</string>
-  <string name="Slowest">לאט</string>
+  <string name="slowest">לאט</string>
   <string name="large">גדול</string>
   <string name="small">קטן</string>
 </resources>
