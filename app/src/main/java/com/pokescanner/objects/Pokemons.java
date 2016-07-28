@@ -100,8 +100,8 @@ public class Pokemons  extends RealmObject{
         return pokeIcon;
     }
 
-    public String getFormalName() {
-        String name = getName();
+    public String getFormalName(Context context) {
+        String name = context.getString(DrawableUtils.getStringID(getNumber(),context));
         return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 

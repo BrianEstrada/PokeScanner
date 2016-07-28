@@ -78,7 +78,7 @@ public class MarkerDetails
             markerLatitude = selectedPokemon.getLatitude();
             markerLongitude = selectedPokemon.getLongitude();
 
-            markerTitle = selectedPokemon.getFormalName();
+            markerTitle = selectedPokemon.getFormalName(context);
 
             iconPic.setImageBitmap(DrawableUtils.getBitmapFromView(selectedPokemon.getResourceID(context),"",context,-1));
 
