@@ -34,8 +34,9 @@ import io.realm.Realm;
 
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     SharedPreferences preferences;
-    Preference scan_dialog,gym_filter,pokemon_filter,expiration_filter;
+    Preference scan_dialog,gym_filter,expiration_filter;
     Preference clear_pokemon,clear_gyms,clear_pokestops;
+    Preference pokemon_blacklist,pokemon_whitelist;
     Preference logout,update;
     Realm realm;
     int scanValue;
@@ -91,10 +92,19 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        pokemon_filter = (Preference) getPreferenceManager().findPreference("pokemon_filter");
-        pokemon_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        pokemon_blacklist = (Preference) getPreferenceManager().findPreference("pokemon_blacklist");
+        pokemon_blacklist.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                Intent filterIntent = new Intent(SettingsActivity.this,FilterActivity.class);
+                Intent filterIntent = new Intent(SettingsActivity.this,BlacklistActivity.class);
+                startActivity(filterIntent);
+                return true;
+            }
+        });
+
+        pokemon_whitelist = (Preference) getPreferenceManager().findPreference("pokemon_whitelist");
+        pokemon_whitelist.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                Intent filterIntent = new Intent(SettingsActivity.this,WhitelistActivity.class);
                 startActivity(filterIntent);
                 return true;
             }

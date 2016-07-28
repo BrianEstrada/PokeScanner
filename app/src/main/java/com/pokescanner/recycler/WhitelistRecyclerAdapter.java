@@ -31,7 +31,7 @@ import java.util.ArrayList;
 /**
  * Created by Brian on 7/21/2016.
  */
-public class FilterRecyclerAdapter extends RecyclerView.Adapter<FilterViewHolder> {
+public class WhitelistRecyclerAdapter extends RecyclerView.Adapter<WhitelistViewHolder> {
     private onCheckedListener listener;
     private ArrayList<FilterItem> filteritems;
 
@@ -39,20 +39,20 @@ public class FilterRecyclerAdapter extends RecyclerView.Adapter<FilterViewHolder
         void onChecked(FilterItem filterItem);
     }
 
-    public FilterRecyclerAdapter(ArrayList<FilterItem> filteritems, onCheckedListener listener) {
+    public WhitelistRecyclerAdapter(ArrayList<FilterItem> filteritems, onCheckedListener listener) {
         this.filteritems = filteritems;
         this.listener = listener;
     }
 
 
     @Override
-    public FilterViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public WhitelistViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_pokemon_filter_row, viewGroup, false);
-        return new FilterViewHolder(view);
+        return new WhitelistViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(FilterViewHolder filterViewHolder, int i) {
+    public void onBindViewHolder(WhitelistViewHolder filterViewHolder, int i) {
         filterViewHolder.bind(filteritems.get(i), listener);
     }
 

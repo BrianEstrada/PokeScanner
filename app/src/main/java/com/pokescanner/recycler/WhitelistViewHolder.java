@@ -34,14 +34,14 @@ import com.pokescanner.objects.FilterItem;
 /**
  * Created by Brian on 7/21/2016.
  */
-public class FilterViewHolder extends RecyclerView.ViewHolder {
+public class WhitelistViewHolder extends RecyclerView.ViewHolder {
     ImageView imageFilterRow;
     TextView pokemonName;
     TextView tvStatus;
     CheckBox checkBox;
     Context context;
 
-    public FilterViewHolder(View itemView) {
+    public WhitelistViewHolder(View itemView) {
         super(itemView);
 
         pokemonName = (TextView) itemView.findViewById(R.id.tvName);
@@ -53,11 +53,11 @@ public class FilterViewHolder extends RecyclerView.ViewHolder {
         checkBox.setClickable(true);
     }
 
-    public void bind(final FilterItem filterItem, final FilterRecyclerAdapter.onCheckedListener listener) {
+    public void bind(final FilterItem filterItem, final WhitelistRecyclerAdapter.onCheckedListener listener) {
         checkBox.setOnCheckedChangeListener(null);
 
         pokemonName.setText(filterItem.getName());
-        checkBox.setChecked(filterItem.isFiltered());
+        checkBox.setChecked(!filterItem.isFiltered());
 
         String uri = "p" + filterItem.getNumber();
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
@@ -68,7 +68,7 @@ public class FilterViewHolder extends RecyclerView.ViewHolder {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                filterItem.setFiltered(b);
+                filterItem.setFiltered(!b);
                 listener.onChecked(filterItem);
             }
         });

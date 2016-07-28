@@ -52,7 +52,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity
-            android:name=".FilterActivity"
+            android:name=".BlacklistActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
+        <activity
+            android:name=".WhitelistActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
