@@ -111,13 +111,14 @@ public class PokeStop extends RealmObject
 
     public Bitmap getBitmap(Context context)
     {
+        int pokeStopType = DrawableUtils.PokeStopType;
         int pokemonnumber = (int) getActivePokemonNo();
 
         String uri = "stop";
 
         if(hasLureInfo && getExpiryTime().isAfter(new Instant())) {
             uri = "stop_lure";
-
+            pokeStopType = DrawableUtils.LuredPokeStopType;
             //if ShowLuredPokemon is enabled, show the icon of the lured pokemon
             if (SettingsUtil.getSettings(context).isShowLuredPokemon()) {
                 if (SettingsUtil.getSettings(context).isShuffleIcons()) {
@@ -133,7 +134,7 @@ public class PokeStop extends RealmObject
         }
 
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
-        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, getLureExpiryTime(), context);
+        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, getLureExpiryTime(), context, pokeStopType);
 
         return out;
     }

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +26,13 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class DrawableUtils
 {
+    public static final int PokemonType = 6;
+    public static final int PokeStopType = 4;
+    public static final int LuredPokeStopType = 5;
+    public static final int RedGymType = 2;
+    public static final int BlueGymType = 1;
+    public static final int YellowGymType = 3;
+    public static final int NeutralGymType = 0;
 
     public static String getExpireTime(long expireTime) {
         //Create a date from the expire time (Long value)
@@ -45,7 +53,7 @@ public class DrawableUtils
     public static  Bitmap getBitmap(Context context, String URI) {
         int unitScale = Settings.get(context).getScale();
         int resourceID = context.getResources().getIdentifier(URI, "drawable", context.getPackageName());
-        return DrawableUtils.getBitmapFromView(resourceID, "", context);
+        return DrawableUtils.getBitmapFromView(resourceID, "", context,100);
     }
 
     public static int getResourceID(int pokemonid,Context context) {
@@ -59,7 +67,7 @@ public class DrawableUtils
         return resourceID;
     }
 
-    public static Bitmap getBitmapFromView(int drawableId, String text, Context context) {
+    public static Bitmap getBitmapFromView(int drawableId, String text, Context context,int type) {
         int scale = Settings.get(context).getScale();
 
         Bitmap bm = BitmapFactory.decodeResource(context.getResources(), drawableId).copy(Bitmap.Config.ARGB_8888, true);
@@ -76,6 +84,8 @@ public class DrawableUtils
             timer.setTypeface(Typeface.create("Helvetica", Typeface.BOLD));
             timer.setTextSize(convertToPixels(context, 7));
         }
+
+        timer.setBackgroundColor(getColorFromType(type,context));
 
         timer.setText(text);
         icon.setImageBitmap(bm);
@@ -97,6 +107,26 @@ public class DrawableUtils
         return bitmap;
     }
 
+    public static int getColorFromType(int unitType, Context context) {
+        switch(unitType){
+            case PokemonType:
+                return ResourcesCompat.getColor(context.getResources(),R.color.IconPokemon,null);
+            case PokeStopType:
+                return ResourcesCompat.getColor(context.getResources(),R.color.IconPokeStop,null);
+            case LuredPokeStopType:
+                return ResourcesCompat.getColor(context.getResources(),R.color.IconPokeLure,null);
+            case BlueGymType:
+                return ResourcesCompat.getColor(context.getResources(),R.color.GymBlue,null);
+            case RedGymType:
+                return ResourcesCompat.getColor(context.getResources(),R.color.GymRed,null);
+            case YellowGymType:
+                return ResourcesCompat.getColor(context.getResources(),R.color.GymYellow,null);
+            case NeutralGymType:
+                return ResourcesCompat.getColor(context.getResources(),R.color.GymNeutral,null);
+            default:
+                return ResourcesCompat.getColor(context.getResources(),R.color.IconPokemon,null);
+        }
+    }
     public static int convertToPixels(Context context, int nDP) {
         final float conversionScale = context.getResources().getDisplayMetrics().density;
 
