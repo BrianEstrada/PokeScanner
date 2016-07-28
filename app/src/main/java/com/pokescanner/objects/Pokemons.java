@@ -88,7 +88,7 @@ public class Pokemons  extends RealmObject{
         //set our location
         LatLng position = new LatLng(getLatitude(), getLongitude());
 
-        Bitmap out = DrawableUtils.getBitmapFromView(resourceID,timeOut,context);
+        Bitmap out = DrawableUtils.getBitmapFromView(resourceID,timeOut,context,DrawableUtils.PokemonType);
 
         MarkerOptions pokeIcon = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(out))
@@ -109,7 +109,7 @@ public class Pokemons  extends RealmObject{
 
         String expires = DrawableUtils.getExpireTime(getExpires());
 
-        Bitmap newbit = DrawableUtils.getBitmapFromView(getResourceID(context),expires,context);
+        Bitmap newbit = DrawableUtils.getBitmapFromView(getResourceID(context),expires,context,DrawableUtils.PokemonType);
 
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(newbit));
 

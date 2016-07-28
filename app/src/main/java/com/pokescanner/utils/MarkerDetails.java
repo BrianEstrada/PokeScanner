@@ -80,7 +80,7 @@ public class MarkerDetails
 
             markerTitle = selectedPokemon.getFormalName();
 
-            iconPic.setImageBitmap(DrawableUtils.getBitmapFromView(selectedPokemon.getResourceID(context),"",context));
+            iconPic.setImageBitmap(DrawableUtils.getBitmapFromView(selectedPokemon.getResourceID(context),"",context,-1));
 
             guardPkmnLayout.setVisibility(View.GONE);
             lureExpTimeLayout.setVisibility(View.GONE);
