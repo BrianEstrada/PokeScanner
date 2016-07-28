@@ -39,6 +39,8 @@
 
 We are currently looking for translators to help us translate the app to other languages!
 
+Start translating on [Crowdin](https://crowdin.com/project/poke-scanner). 
+
 - Thanya31 (Spanish)
 - Chemi (Hebrew)
 - Sébastien Bénazet (French)
