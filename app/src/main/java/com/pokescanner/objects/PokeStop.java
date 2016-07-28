@@ -8,6 +8,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.utils.DrawableUtils;
+import com.pokescanner.utils.SettingsUtil;
+import com.pokescanner.utils.UiUtils;
 
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
@@ -109,11 +111,30 @@ public class PokeStop extends RealmObject
 
     public Bitmap getBitmap(Context context)
     {
+        int pokemonnumber = (int) getActivePokemonNo();
+
         String uri = "stop";
-        if(hasLureInfo && getExpiryTime().isAfter(new Instant()))
-             uri = "stop_lure";
+
+        if(hasLureInfo && getExpiryTime().isAfter(new Instant())) {
+            uri = "stop_lure";
+
+            //if ShowLuredPokemon is enabled, show the icon of the lured pokemon
+            if (SettingsUtil.getSettings(context).isShowLuredPokemon()) {
+                if (SettingsUtil.getSettings(context).isShuffleIcons()) {
+                    uri = "ps" + pokemonnumber;
+                }
+                else uri = "p" + pokemonnumber;
+            }
+
+            //but don't show it if it's filtered, just show the lured pokestop icon
+            if (UiUtils.isPokemonFiltered(pokemonnumber)) {
+                uri = "stop_lure";
+            }
+        }
+
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
-        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, "", context);
+        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, getLureExpiryTime(), context);
+
         return out;
     }
 }

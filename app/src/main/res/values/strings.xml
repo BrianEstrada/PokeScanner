@@ -121,6 +121,8 @@
     <string name="show_gyms_desc">Enables/Disables Gyms on the map</string>
     <string name="show_pokestops">Show PokeStops</string>
     <string name="show_pokestop_desc">Enables/Disables Pokestops on the map</string>
+    <string name="show_lured_pokemon">Show Lured Pokemon</string>
+    <string name="show_lured_pokemon_desc">Shows the pokemon icon instead of a lured pokestop icon (unless that pokemon is filtered)</string>
     <string name="lock_gps">Scan Based on GPS</string>
     <string name="lock_gps_desc">Instead of scanning in the center of view (wherever you\'re looking) it will scan your location</string>
     <string name="old_marker">Use Old Map Markers</string>

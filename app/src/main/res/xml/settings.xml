@@ -88,6 +88,13 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content" />
         <SwitchPreference
+            android:key="showLuredPokemon"
+            android:title="@string/show_lured_pokemon"
+            android:summary="@string/show_lured_pokemon_desc"
+            android:defaultValue="true"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+        <SwitchPreference
             android:key="lockGpsEnabled"
             android:title="@string/lock_gps"
             android:summary="@string/lock_gps_desc"
