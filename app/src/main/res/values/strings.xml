@@ -95,6 +95,13 @@
 
     <string name="show_pokemon_filter">Pokemon Filter</string>
     <string name="show_pokemon_filter_desc">Allows you to pick and choose which pokemon appear on the map</string>
+
+    <string name="show_pokemon_whitelist_filter">Pokemon Whitelist</string>
+    <string name="show_pokemon_whitelist_filter_desc">Allows you to pick and choose which pokemon appear on the map</string>
+
+    <string name="show_pokemon_blacklist_filter">Pokemon Blacklist</string>
+    <string name="show_pokemon_blacklist_filter_desc">Allows you to pick which pokemon you do not want to see on the map</string>
+
     <string name="show_gym_filter">Gym Filter</string>
     <string name="show_gym_filter_desc">Allows you to pick which gyms will appear on the map</string>
 

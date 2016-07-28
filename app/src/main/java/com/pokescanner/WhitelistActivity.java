@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.objects.FilterItem;
-import com.pokescanner.recycler.FilterRecyclerAdapter;
+import com.pokescanner.recycler.WhitelistRecyclerAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import io.realm.Realm;
 /**
  * Created by Brian on 7/22/2016.
  */
-public class FilterActivity extends AppCompatActivity implements TextWatcher {
+public class WhitelistActivity extends AppCompatActivity implements TextWatcher {
     @BindView(R.id.etSearch) EditText etSearch;
     @BindView(R.id.filterRecycler) RecyclerView filterRecycler;
     @BindView(R.id.btnNone) Button btnNone;
@@ -61,7 +61,7 @@ public class FilterActivity extends AppCompatActivity implements TextWatcher {
         mLayoutManager = new LinearLayoutManager(this);
         filterRecycler.setLayoutManager(mLayoutManager);
 
-        mAdapter = new FilterRecyclerAdapter(filterItems, new FilterRecyclerAdapter.onCheckedListener() {
+        mAdapter = new WhitelistRecyclerAdapter(filterItems, new WhitelistRecyclerAdapter.onCheckedListener() {
             @Override
             public void onChecked(final FilterItem filterItem) {
                 realm.executeTransaction(new Realm.Transaction() {
@@ -103,7 +103,7 @@ public class FilterActivity extends AppCompatActivity implements TextWatcher {
                 filterItems.addAll(realm.copyFromRealm(realm.where(FilterItem.class)
                         .findAll()));
                 for (FilterItem filterItem: filterItems) {
-                    filterItem.setFiltered(false);
+                    filterItem.setFiltered(true);
                 }
                 mAdapter.notifyDataSetChanged();
             }
@@ -119,7 +119,7 @@ public class FilterActivity extends AppCompatActivity implements TextWatcher {
                 filterItems.addAll(realm.copyFromRealm(realm.where(FilterItem.class)
                         .findAll()));
                 for (FilterItem filterItem: filterItems) {
-                    filterItem.setFiltered(true);
+                    filterItem.setFiltered(false);
                 }
                 mAdapter.notifyDataSetChanged();
             }
