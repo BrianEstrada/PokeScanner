@@ -6,9 +6,9 @@
 
 <br>
 
-![Map](http://i.imgur.com/u8zPO1B.png)
-![Map](http://i.imgur.com/7szBuM0.png)
-![Map](http://i.imgur.com/aHofJAV.png)
+![Login](http://i.imgur.com/a26X4Zt.png)
+![Map](http://i.imgur.com/AW0P9zY.png)
+![Settings](http://i.imgur.com/eIHy5XF.png)
 
 
 ## Instructions
