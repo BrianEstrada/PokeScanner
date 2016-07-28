@@ -23,7 +23,7 @@
   <string name="blacklist">רשימה שחורה</string>
   <string name="save">שמור</string>
   <string name="search_radius">רדיוס חיפוש</string>
-  <string name="search_radius_desc">מאפשר לך לשנות את רדיוס החיפוש של הסורק (אזהרה רדיוס חיפוש גדול יאט מכשירים ישנים)</string>
+  <string name="search_radius_desc">מאפשר לך לשנות את רדיוס החיפוש של הסורק (אזהרה: רדיוס חיפוש גדול יאט מכשירים ישנים)</string>
   <string name="higher_number_slower_search">יחידה 1 ≈ 200 מטרים</string>
   <string name="cancel">ביטול</string>
   <string name="filter">סינון</string>
@@ -53,6 +53,9 @@
   <string name="red_team">קבוצה אדומה</string>
   <string name="neutral_gyms">מכונים ניטרליים</string>
   <string name="guard_pokemon_cp">הCP של הפוקימון השומר</string>
+  <string name="expiration_time">הסתר פוקימונים שיעלמו בעוד</string>
+  <string name="expiration_min">מינימום:</string>
+  <string name="expiration_max">מקסימום:</string>
   <string name="settings">הגדרות</string>
   <string name="logout">התנתק</string>
   <string name="check_hidden">מסומן = מוסתר</string>
@@ -69,10 +72,12 @@
   <string name="category_filters">הגדרות סינון</string>
   <string name="category_clear">נקה הגדרות</string>
   <string name="category_update">הגדרות עדכון</string>
-  <string name="enable_update">הפעלת עדכונים אוטומטיים</string>
+  <string name="enable_update">הפעל עדכונים אוטומטיים</string>
   <string name="enable_update_desc">בודק אם יש עדכון כל פעם שאת/ה מפעיל/ה את היישום. (פועל כברירת מחדל).</string>
   <string name="show_range">הצג טווח סריקה</string>
   <string name="show_range_desc">יוצר עיגול שחור סביב אזור הסריקה.</string>
+  <string name="show_expiration_filter">מסנן תפוגת פוקימונים</string>
+  <string name="show_expiration_filter_desc">מאפשר לך לסנן פוקימונים שזמן התפוגה שלהם לא בין המינימום והמקסימום שתבחר</string>
   <string name="show_pokemon_filter">מסנן פוקימונים</string>
   <string name="show_pokemon_filter_desc">מאפשר לך לבחור אילו פוקימונים יופיעו על המפה</string>
   <string name="show_gym_filter">מסנן מכונים</string>
@@ -105,6 +110,13 @@
   <string name="update_check_failed">בדיקת העדכונים נכשלה.</string>
   <string name="changes">שינויים:</string>
   <string name="update_available_long">זמין.</string>
+  <string name="guard_pokemon">הפוקימון השומר : </string>
+  <string name="gym_points">נקודות המכון : </string>
+  <string name="expires_in">יעלם בעוד : </string>
+  <string name="lure_expires_in">מודל הפיתוי יפוג בעוד : </string>
+  <string name="lured_pokemon">הפוקימון שנמשך לפוקסטופ : </string>
+  <string name="open_in_gmaps">פתח באמצעות גוגל מפות</string>
+  <string name="get_directions">הכוונה דרך היישום</string>
   <string name="ERROR_GENERATING_GRID">אירעה שגיאה בבניית הרשת, אנא נסה שנית.</string>
   <string name="CAMERA_CENTER_FAILED">נכשל מרכוז המצלמה.</string>
   <string name="LOGOUT_ERROR">השרתים אינם מגיבים, מתנתק</string>
@@ -115,5 +127,11 @@
   <string name="location_denied">היישום לא יעבוד ללא מיקום!</string>
   <string name="Check_For_Update">בדוק אם קיימים עדכונים</string>
   <string name="Check_For_Update_desc">בודק אם קיימים עדכונים באופן ידני</string>
-  <string name="ERROR_NO_DIRECTION_SELECTED">לא נבחר סמן בשביל כיוונים!</string>
+  <string name="ERROR_NO_DIRECTION_SELECTED">לא נבחר סמן להכוונה!</string>
+  <string name="faster">מהר יותר</string>
+  <string name="fast">מהר</string>
+  <string name="normal">רגיל</string>
+  <string name="Slowest">לאט</string>
+  <string name="large">גדול</string>
+  <string name="small">קטן</string>
 </resources>
