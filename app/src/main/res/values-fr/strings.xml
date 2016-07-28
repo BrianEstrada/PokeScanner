@@ -162,7 +162,7 @@
     <string name="Get_Permission_Auto_Updater">Demande de permission pour les mises à jour automatiques</string>
     
     <string name="auto_update_denied">Permission refusée ! Mises à jour automatique désactivées :(</string>
-    <string name="location_denied">L'application ne fonctionnera pas sans la localisation !</string>
+    <string name="location_denied">L\\\'application ne fonctionnera pas sans la localisation !</string>
     
     <string name="Check_For_Update">Vérifier les mise à jour</string>
     <string name="Check_For_Update_desc">Rechercher une mise à jour</string>
