@@ -85,7 +85,9 @@ public class DrawableUtils
             timer.setTextSize(convertToPixels(context, 7));
         }
 
-        timer.setBackgroundColor(getColorFromType(type,context));
+        if (!Settings.get(context).isUseOldMapMarker()) {
+            timer.setBackgroundColor(getColorFromType(type, context));
+        }
 
         timer.setText(text);
         icon.setImageBitmap(bm);
