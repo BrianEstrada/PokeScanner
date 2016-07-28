@@ -32,6 +32,8 @@ public class SettingsUtil {
 
     public static final String LAST_USERNAME = "lastUsername";
 
+    public static final String SHUFFLE_ICONS = "shuffleIcons";
+
     public static void searchRadiusDialog(final Context context) {
         int scanValue = Settings.get(context).getScanValue();
 
@@ -112,7 +114,8 @@ public class SettingsUtil {
             sharedPrefs.getBoolean(SHOW_GYMS, true),
             sharedPrefs.getBoolean(SHOW_POKESTOPS, true),
                 sharedPrefs.getBoolean(SHOW_LURED_POKEMON, true),
-            sharedPrefs.getBoolean(KEY_OLD_MARKER, false)
+            sharedPrefs.getBoolean(KEY_OLD_MARKER, false),
+                sharedPrefs.getBoolean(SHUFFLE_ICONS, false)
         );
     }
 
@@ -133,6 +136,7 @@ public class SettingsUtil {
             .putBoolean(SHOW_POKESTOPS, settings.isPokestopsEnabled())
                 .putBoolean(SHOW_LURED_POKEMON, settings.isShowLuredPokemon())
             .putBoolean(KEY_OLD_MARKER, settings.isUseOldMapMarker())
+                .putBoolean(SHUFFLE_ICONS, settings.isShuffleIcons())
             .apply();
     }
 }

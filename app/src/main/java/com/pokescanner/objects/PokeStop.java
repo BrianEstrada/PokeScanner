@@ -121,12 +121,10 @@ public class PokeStop extends RealmObject
             pokeStopType = DrawableUtils.LuredPokeStopType;
             //if ShowLuredPokemon is enabled, show the icon of the lured pokemon
             if (SettingsUtil.getSettings(context).isShowLuredPokemon()) {
-                /*
                 if (SettingsUtil.getSettings(context).isShuffleIcons()) {
                     uri = "ps" + pokemonnumber;
                 }
-                else */
-                uri = "p" + pokemonnumber;
+                else uri = "p" + pokemonnumber;
             }
 
             //but don't show it if it's filtered, just show the lured pokestop icon

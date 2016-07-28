@@ -130,6 +130,9 @@
     <string name="driving_mode">Driving mode</string>
     <string name="driving_mode_desc">Keeps the map centered at your current location</string>
 
+    <string name="shuffle_icons">Use Shuffle Icons</string>
+    <string name="shuffle_icons_desc">Use Pokemon Shuffle Icons instead of the standard sprites (easier to distinguish!)</string>
+
     <string name="gyms_cleared">Gyms Cleared</string>
     <string name="pokestops_cleared">Pokestops Cleared</string>
     <string name="pokemon_cleared">Pokemon Cleared</string>
