@@ -69,7 +69,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         realm = Realm.getDefaultInstance();
 
-        scan_dialog = (Preference) getPreferenceManager().findPreference("scan_dialog");
+        scan_dialog = getPreferenceManager().findPreference("scan_dialog");
         scan_dialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 SettingsUtil.searchRadiusDialog(SettingsActivity.this);
@@ -77,7 +77,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        gym_filter = (Preference) getPreferenceManager().findPreference("gym_filter");
+        gym_filter = getPreferenceManager().findPreference("gym_filter");
         gym_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 GymFilters.showGymFiltersDialog(SettingsActivity.this);
@@ -85,7 +85,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        expiration_filter = (Preference) getPreferenceManager().findPreference("expiration_filter");
+        expiration_filter = getPreferenceManager().findPreference("expiration_filter");
         expiration_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 ExpirationFilters.showExpirationFiltersDialog(SettingsActivity.this);
@@ -93,7 +93,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        pokemon_blacklist = (Preference) getPreferenceManager().findPreference("pokemon_blacklist");
+        pokemon_blacklist = getPreferenceManager().findPreference("pokemon_blacklist");
         pokemon_blacklist.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 Intent filterIntent = new Intent(SettingsActivity.this,BlacklistActivity.class);
@@ -102,7 +102,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        clear_gyms = (Preference) getPreferenceManager().findPreference("clear_gyms");
+        clear_gyms = getPreferenceManager().findPreference("clear_gyms");
         clear_gyms.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 realm.executeTransaction(new Realm.Transaction() {
@@ -118,7 +118,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        clear_pokemon = (Preference) getPreferenceManager().findPreference("clear_pokemon");
+        clear_pokemon = getPreferenceManager().findPreference("clear_pokemon");
         clear_pokemon.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 realm.executeTransaction(new Realm.Transaction() {
@@ -134,7 +134,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        clear_pokestops = (Preference) getPreferenceManager().findPreference("clear_pokestops");
+        clear_pokestops = getPreferenceManager().findPreference("clear_pokestops");
         clear_pokestops.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 realm.executeTransaction(new Realm.Transaction() {
@@ -150,7 +150,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        logout = (Preference) getPreferenceManager().findPreference("logout");
+        logout = getPreferenceManager().findPreference("logout");
         logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 logOut();
@@ -158,7 +158,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        update = (Preference) getPreferenceManager().findPreference("update");
+        update = getPreferenceManager().findPreference("update");
         update.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 new AppUpdateLoader().start();
