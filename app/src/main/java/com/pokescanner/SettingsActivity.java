@@ -56,6 +56,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 .putBoolean(SettingsUtil.SHOW_ONLY_LURED,settings.isShowOnlyLured())
                 .putBoolean(SettingsUtil.SHOW_GYMS,settings.isGymsEnabled())
                 .putBoolean(SettingsUtil.SHOW_POKESTOPS,settings.isPokestopsEnabled())
+                .putBoolean(SettingsUtil.SHOW_LURED_POKEMON,settings.isShowLuredPokemon())
                 .putBoolean(SettingsUtil.KEY_LOCK_GPS,settings.isLockGpsEnabled())
                 .putBoolean(SettingsUtil.KEY_OLD_MARKER,settings.isUseOldMapMarker())
                 .putString(SettingsUtil.SERVER_REFRESH_RATE,String.valueOf(settings.getServerRefresh()))
@@ -207,6 +208,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_ONLY_LURED, true),
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_GYMS, true),
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_POKESTOPS, true),
+                sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKEMON, true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_OLD_MARKER, false)
         ));
     }
