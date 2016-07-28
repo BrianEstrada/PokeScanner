@@ -32,7 +32,7 @@
 
     <string name="AUTH_FAILED">Gagal melakukan login</string>
     <string name="SERVER_FAILED">Tidak ada respon dari server</string>
-   <string name="ERROR_FILTERS">Loading filter error</string>
+    <string name="ERROR_FILTERS">Loading filter error</string>
     <string name="LOGIN_OK">Login Sukses</string>
     <string name="PERMISSION_OK">Terima kasih anda telah memberikan akses!</string>
 
@@ -142,7 +142,6 @@
     <string name="check_server_status">Cek Status Server</string>
 
     <string name="Permission_Required_Auto_Updater">Dibutuhkan ijin untuk melakukan update otomatis!</string>
-    <string name="Get_Permission_Auto_Updater">Mendapatkan ijin untuk update otomatis!</string>
 
     <string name="auto_update_denied">Ijin Ditolak! Update Otomatis Dimatikan :(</string>
     <string name="location_denied">Aplikasi tidak dapat bekerja tanpa lokasi!</string>
