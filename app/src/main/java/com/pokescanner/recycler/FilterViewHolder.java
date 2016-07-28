@@ -30,7 +30,6 @@ import android.widget.TextView;
 
 import com.pokescanner.R;
 import com.pokescanner.objects.FilterItem;
-import com.pokescanner.utils.SettingsUtil;
 
 /**
  * Created by Brian on 7/21/2016.
@@ -60,14 +59,7 @@ public class FilterViewHolder extends RecyclerView.ViewHolder {
         pokemonName.setText(filterItem.getName());
         checkBox.setChecked(filterItem.isFiltered());
 
-        String uri;
-        int pokemonnumber = filterItem.getNumber();
-
-        if (SettingsUtil.getSettings(context).isShuffleIcons()) {
-            uri = "ps" + pokemonnumber;
-        }
-        else uri = "p" + pokemonnumber;
-
+        String uri = "p" + filterItem.getNumber();
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
         Bitmap bm = BitmapFactory.decodeResource(context.getResources(), resourceID);
 
