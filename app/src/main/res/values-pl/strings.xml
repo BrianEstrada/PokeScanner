@@ -76,9 +76,6 @@
     <string name="show_pokemon_filter">Filtr Pokémonów</string>
     <string name="show_pokemon_filter_desc">Pozwala Ci na wybór Pokémonów, które będą się pokazywać na mapie</string>
     
-    <string name="show_pokemon_whitelist_filter">Biała lista Pokémonów</string>
-    <string name="show_pokemon_whitelist_filter_desc">Pozwala na wybór Pokémonów, które będą się pokazywać na mapie</string>
-
     <string name="show_pokemon_blacklist_filter">Czarna lista Pokémonów</string>
     <string name="show_pokemon_blacklist_filter_desc">Pozwala na wybór Pokémonów, których nie chcesz widzieć na mapie</string>
 

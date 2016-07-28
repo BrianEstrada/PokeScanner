@@ -80,8 +80,6 @@
   <string name="show_expiration_filter_desc">Erlaubt es, die minimale und maximale Ablaufzeit festzulegen</string>
   <string name="show_pokemon_filter">Pokemon-Filter</string>
   <string name="show_pokemon_filter_desc">Erlaubt es, auszuwählen, welche Pokemon auf der Karte angezeigt werden</string>
-  <string name="show_pokemon_whitelist_filter">Pokemon Whitelist</string>
-  <string name="show_pokemon_whitelist_filter_desc">Erlaubt es, auszuwählen, welche Pokemon auf der Karte angezeigt werden</string>
   <string name="show_pokemon_blacklist_filter">Pokemon Blacklist</string>
   <string name="show_pokemon_blacklist_filter_desc">Ermöglicht es, auszuwählen, welche Pokemon nicht auf der Karte angezeigt werden</string>
   <string name="show_gym_filter">Arenen-Filter</string>

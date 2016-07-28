@@ -80,8 +80,6 @@
   <string name="show_expiration_filter_desc">מאפשר לך לסנן פוקימונים שזמן התפוגה שלהם לא בין המינימום והמקסימום שתבחר</string>
   <string name="show_pokemon_filter">מסנן פוקימונים</string>
   <string name="show_pokemon_filter_desc">מאפשר לך לבחור אילו פוקימונים יופיעו על המפה</string>
-  <string name="show_pokemon_whitelist_filter">רשימת פוקימונים מועדפים</string>
-  <string name="show_pokemon_whitelist_filter_desc">מאפשר לך לבחור אילו פוקימונים יופיעו על המפה</string>
   <string name="show_pokemon_blacklist_filter">רשימת סינון פוקימונים</string>
   <string name="show_pokemon_blacklist_filter_desc">מאפשר לך לבחור אילו פוקימונים את/ה לא רוצה לראות על המפה</string>
   <string name="show_gym_filter">מסנן מכונים</string>

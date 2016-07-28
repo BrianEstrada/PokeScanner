@@ -80,8 +80,6 @@
   <string name="show_expiration_filter_desc">Vous permet de choisir la durée d\'expiration des Pokémons</string>
   <string name="show_pokemon_filter">Filtre Pokemons</string>
   <string name="show_pokemon_filter_desc">Vous permet de choisir quel pokemon apparait sur la carte</string>
-  <string name="show_pokemon_whitelist_filter">Liste blanche Pokemons</string>
-  <string name="show_pokemon_whitelist_filter_desc">Vous permet de choisir quels Pokemons apparaissent sur la carte</string>
   <string name="show_pokemon_blacklist_filter">Liste noire Pokemons</string>
   <string name="show_pokemon_blacklist_filter_desc">Vous permet de choisir quels Pokemons n\'apparaissent pas sur la carte</string>
   <string name="show_gym_filter">Filtre Arènes</string>

@@ -36,7 +36,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     SharedPreferences preferences;
     Preference scan_dialog,gym_filter,expiration_filter;
     Preference clear_pokemon,clear_gyms,clear_pokestops;
-    Preference pokemon_blacklist,pokemon_whitelist;
+    Preference pokemon_blacklist;
     Preference logout,update;
     Realm realm;
     int scanValue;
@@ -97,15 +97,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         pokemon_blacklist.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 Intent filterIntent = new Intent(SettingsActivity.this,BlacklistActivity.class);
-                startActivity(filterIntent);
-                return true;
-            }
-        });
-
-        pokemon_whitelist = (Preference) getPreferenceManager().findPreference("pokemon_whitelist");
-        pokemon_whitelist.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                Intent filterIntent = new Intent(SettingsActivity.this,WhitelistActivity.class);
                 startActivity(filterIntent);
                 return true;
             }

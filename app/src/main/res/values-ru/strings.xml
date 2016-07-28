@@ -80,8 +80,6 @@
   <string name="show_expiration_filter_desc">Разрешает выбрать время истечения</string>
   <string name="show_pokemon_filter">Фильтр покемонов</string>
   <string name="show_pokemon_filter_desc">Позволяет выбрать какие покемоны будут показаны на карте</string>
-  <string name="show_pokemon_whitelist_filter">Разрешённый список покемонов</string>
-  <string name="show_pokemon_whitelist_filter_desc">Позволяет выбрать, какие покемоны будут показаны на карте</string>
   <string name="show_pokemon_blacklist_filter">Запрещённый список покемонов</string>
   <string name="show_pokemon_blacklist_filter_desc">Разрешает выбрать покемонов, которых вы не хотите видеть на карте</string>
   <string name="show_gym_filter">Фильтр гимов</string>
