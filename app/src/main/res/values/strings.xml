@@ -330,4 +330,8 @@
     <string name="p149">Dragonite</string>
     <string name="p150">Mewtwo</string>
     <string name="p151">Mew</string>
+    <string name="enable_location_services">Please enable location services to continue.</string>
+    <string name="no_internet">Could not connect to the internet. Please check your internet connection.</string>
+    <string name="requires_location_services">This application requires location services to function.</string>
+    <string name="update_canceled">Update cancelled.</string>
 </resources>

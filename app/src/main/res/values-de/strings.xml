@@ -298,4 +298,8 @@
   <string name="p149">Dragoran</string>
   <string name="p150">Mewtu</string>
   <string name="p151">Mew</string>
+  <string name="enable_location_services">Bitte aktiviere die Standortdienste um fortzufahren.</string>
+  <string name="no_internet">Es kann keine Verbindung mit dem Internet hergestellt werden. Bitte überprüfe deine Verbindung.</string>
+  <string name="requires_location_services">Diese Applikation benötigt Standortdienste um zu funktionieren.</string>
+  <string name="update_canceled">Update abgebrochen.</string>
 </resources>
