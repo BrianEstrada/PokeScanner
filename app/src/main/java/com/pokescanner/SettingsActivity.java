@@ -56,14 +56,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 .putBoolean(SettingsUtil.SHOW_ONLY_LURED,settings.isShowOnlyLured())
                 .putBoolean(SettingsUtil.SHOW_GYMS,settings.isGymsEnabled())
                 .putBoolean(SettingsUtil.SHOW_POKESTOPS,settings.isPokestopsEnabled())
-                .putBoolean(SettingsUtil.SHOW_LURED_POKEMON,settings.isShowLuredPokemon())
                 .putBoolean(SettingsUtil.KEY_LOCK_GPS,settings.isLockGpsEnabled())
-                .putBoolean(SettingsUtil.KEY_OLD_MARKER,settings.isUseOldMapMarker())
                 .putString(SettingsUtil.SERVER_REFRESH_RATE,String.valueOf(settings.getServerRefresh()))
                 .putString(SettingsUtil.MAP_REFRESH_RATE,String.valueOf(settings.getMapRefresh()))
                 .putString(SettingsUtil.POKEMON_ICON_SCALE,String.valueOf(settings.getScale()))
                 .putString(SettingsUtil.LAST_USERNAME,settings.getLastUsername())
+                .putBoolean(SettingsUtil.KEY_OLD_MARKER,settings.isUseOldMapMarker())
                 .putBoolean(SettingsUtil.SHUFFLE_ICONS,settings.isShuffleIcons())
+                .putBoolean(SettingsUtil.SHOW_LURED_POKEMON,settings.isShowLuredPokemon())
                 .commit();
 
         addPreferencesFromResource(R.xml.settings);
@@ -212,9 +212,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_ONLY_LURED, true),
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_GYMS, true),
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_POKESTOPS, true),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKEMON, true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_OLD_MARKER, false),
-                sharedPreferences.getBoolean(SettingsUtil.SHUFFLE_ICONS, false)
+                sharedPreferences.getBoolean(SettingsUtil.SHUFFLE_ICONS, false),
+                sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKEMON, true)
         ));
     }
 
