@@ -18,6 +18,7 @@ public class Settings {
     boolean updatesEnabled;
     boolean boundingBoxEnabled;
     boolean lockGpsEnabled;
+    boolean drivingModeEnabled;
     int scanValue;
     int serverRefresh;
     int scale;
@@ -26,7 +27,7 @@ public class Settings {
     boolean showOnlyLured;
     boolean gymsEnabled;
     boolean pokestopsEnabled;
-    boolean showLuredPokemon;
+    boolean useOldMapMarker;
     boolean shuffleIcons;
 
     public void save(Context context) {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="ServerRefreshRate">
-        <item>Fast</item>
-        <item>Normal</item>
-        <item>Slow</item>
+        <item>@string/fast</item>
+        <item>@string/normal</item>
+        <item>@string/slow</item>
     </string-array>
     <string-array name="ServerRefreshRateValues">
         <item>1</item>
@@ -12,11 +12,11 @@
     </string-array>
 
     <string-array name="MapRereshRate">
-        <item>Fastest</item>
-        <item>Fast</item>
-        <item>Normal</item>
-        <item>Slow</item>
-        <item>Slowest</item>
+        <item>@string/faster</item>
+        <item>@string/fast</item>
+        <item>@string/normal</item>
+        <item>@string/slow</item>
+        <item>@string/slowest</item>
     </string-array>
     <string-array name="MapRereshRateValues">
         <item>1</item>
@@ -27,9 +27,9 @@
     </string-array>
 
     <string-array name="IconScale">
-        <item>Large</item>
-        <item>Normal</item>
-        <item>Small</item>
+        <item>@string/large</item>
+        <item>@string/normal</item>
+        <item>@string/small</item>
     </string-array>
     <string-array name="IconScaleValues">
         <item>1</item>

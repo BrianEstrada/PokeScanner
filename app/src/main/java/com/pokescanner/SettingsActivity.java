@@ -55,13 +55,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 .putBoolean(SettingsUtil.SHOW_ONLY_LURED,settings.isShowOnlyLured())
                 .putBoolean(SettingsUtil.SHOW_GYMS,settings.isGymsEnabled())
                 .putBoolean(SettingsUtil.SHOW_POKESTOPS,settings.isPokestopsEnabled())
-                .putBoolean(SettingsUtil.SHOW_LURED_POKEMON,settings.isShowLuredPokemon())
                 .putBoolean(SettingsUtil.KEY_LOCK_GPS,settings.isLockGpsEnabled())
+                .putBoolean(SettingsUtil.KEY_OLD_MARKER,settings.isUseOldMapMarker())
                 .putString(SettingsUtil.SERVER_REFRESH_RATE,String.valueOf(settings.getServerRefresh()))
                 .putString(SettingsUtil.MAP_REFRESH_RATE,String.valueOf(settings.getMapRefresh()))
                 .putString(SettingsUtil.POKEMON_ICON_SCALE,String.valueOf(settings.getScale()))
                 .putString(SettingsUtil.LAST_USERNAME,settings.getLastUsername())
-                .putBoolean(SettingsUtil.SHUFFLE_ICONS,settings.isShuffleIcons())
                 .commit();
 
         addPreferencesFromResource(R.xml.settings);
@@ -71,7 +70,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         scan_dialog = (Preference) getPreferenceManager().findPreference("scan_dialog");
         scan_dialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                searchRadiusDialog();
+                SettingsUtil.searchRadiusDialog(SettingsActivity.this);
                 return true;
             }
         });
@@ -189,6 +188,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 sharedPreferences.getBoolean(SettingsUtil.ENABLE_UPDATES,true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_BOUNDING_BOX, false),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_LOCK_GPS, false),
+                sharedPreferences.getBoolean(SettingsUtil.DRIVING_MODE, false),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SCAN_VALUE,"4")),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SERVER_REFRESH_RATE, "1")),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.POKEMON_ICON_SCALE, "2")),
@@ -197,7 +197,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_ONLY_LURED, true),
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_GYMS, true),
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_POKESTOPS, true),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKEMON, true),
+                sharedPreferences.getBoolean(SettingsUtil.KEY_OLD_MARKER, false),
                 sharedPreferences.getBoolean(SettingsUtil.SHUFFLE_ICONS, false)
         ));
     }

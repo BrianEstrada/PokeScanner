@@ -15,7 +15,8 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,15 +26,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.pokescanner.LoginActivity"
     android:gravity="center_vertical|center_horizontal"
-    android:orientation="vertical"
-    android:id="@+id/main">
-
-    <ImageView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:id="@+id/imageIcon"
-        android:contentDescription="@string/icon"
-        android:src="@drawable/icon" />
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
@@ -112,13 +105,6 @@
             android:id="@+id/tvCheckServer"
             android:layout_marginTop="15dp"
             android:textColor="@color/colorPrimaryDark" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/tvVersionNumber" />
 
     </LinearLayout>
 

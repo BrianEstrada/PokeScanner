@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -17,19 +18,34 @@
         android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".LoginActivity"
+        <service
+            android:name=".service.PokeService"
+            android:exported="false"/>
+
+        <receiver
+            android:name=".service.ServerPollReceiver"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="STOP_ACTION"/>
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".SplashScreenActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|adjustResize">>
+            android:windowSoftInputMode="adjustPan|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/GOOGLEAPIKEY" />
+
+        <activity android:name=".LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
+
         <activity
             android:name=".GoogleLoginActivity"
             android:configChanges="orientation"
@@ -51,11 +67,12 @@
             android:screenOrientation="portrait"/>
 
         <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="fb79ebdaab674d309573e536fb1e7c6a69beccfc" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/GOOGLEAPIKEY" />
 
         <meta-data android:name="com.samsung.android.sdk.multiwindow.enable"
             android:value="true"/>
+
     </application>
 
 </manifest>

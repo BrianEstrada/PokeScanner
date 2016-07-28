@@ -62,17 +62,28 @@
             android:progressDrawable="@drawable/circular_progress"
             android:indeterminate="false" />
 
-    </RelativeLayout>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSettings"
+            android:background="@drawable/circle_button"
+            android:src="@drawable/ic_settings_white_24dp"
+            android:layout_toEndOf="@+id/btnSearch"
+            android:padding="2dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/settingsbutton" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnSettings"
-        android:src="@drawable/ic_settings_red_500_36dp"
-        android:contentDescription="@string/settingsbutton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="16dp"
-        android:background="@android:color/transparent" />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnClear"
+            android:background="@drawable/circle_button"
+            android:src="@drawable/ic_close_white_24dp"
+            android:padding="2dp"
+            android:contentDescription="@string/settingsbutton"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btnSearch" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

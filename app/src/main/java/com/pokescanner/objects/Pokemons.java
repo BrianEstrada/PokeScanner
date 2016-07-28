@@ -25,6 +25,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.pokescanner.R;
+import com.pokescanner.helper.Settings;
 import com.pokescanner.utils.DrawableUtils;
 
 import org.joda.time.DateTime;
@@ -91,6 +93,10 @@ public class Pokemons  extends RealmObject{
         MarkerOptions pokeIcon = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(out))
                 .position(position);
+        if(Settings.get(context).isUseOldMapMarker()){
+            pokeIcon.title(getName());
+            pokeIcon.snippet(context.getText(R.string.expires_in) + timeOut);
+        }
         return pokeIcon;
     }
 

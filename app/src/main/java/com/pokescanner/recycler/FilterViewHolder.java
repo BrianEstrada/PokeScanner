@@ -60,7 +60,6 @@ public class FilterViewHolder extends RecyclerView.ViewHolder {
         pokemonName.setText(filterItem.getName());
         checkBox.setChecked(filterItem.isFiltered());
 
-
         String uri;
         int pokemonnumber = filterItem.getNumber();
 

@@ -1,0 +1,153 @@
+<!--
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="title_activity_maps">Mapa</string>
+    <string name="scan">Pesquisar</string>
+    <string name="ptclogin">Login PTC</string>
+    <string name="googlelogin">Login Google</string>
+    <string name="blacklist">Lita Negra</string>
+    <string name="save">Guardar</string>
+    <string name="search_radius">Raio de Pesquisa</string>
+    <string name="search_radius_desc">Permite mudar o raio de pesquisa do Poke Scanner (aviso: valores elevados irão abrandar o dispositivo)</string>
+    <string name="higher_number_slower_search">1 Unidade ≈ 200 Metros</string>
+    <string name="cancel">Cancelar</string>
+    <string name="filter">Filtro</string>
+    <string name="none">Nenhum</string>
+    <string name="select_all">Selecionar Tudo</string>
+    <string name="pokemon_name">Nome do Pokémon</string>
+
+    <string name="AUTH_FAILED">Credenciais de Login Erradas</string>
+    <string name="SERVER_FAILED">Servidores sem resposta</string>
+    <string name="ERROR_FILTERS">Erro ao carregar filtros</string>
+    <string name="LOGIN_OK">Login Efetuado</string>
+    <string name="PERMISSION_OK">Obrigado pelas permissões!</string>
+
+    <string name="TRYING_PTC_LOGIN">A tentar login PTC.</string>
+    <string name="TRYING_GOOGLE_LOGIN">A tentar login Google.</string>
+
+    <string name="on">On</string>
+    <string name="off">Off</string>
+
+    <string name="username">Nome de Utilizador</string>
+    <string name="password">Palavra-passe</string>
+    <string name="warning_nplease_do_not_use_your_main_pokego_naccount_for_this_app">AVISO: \nPor favor não use a sua conta \nPokeGo principal nesta app!</string>
+    <string name="filter_pokemon">Filtrar Pokémon</string>
+    <string name="filter_gyms">Filtrar Ginásios</string>
+    <string name="timeEstimate">Tempo Estimado de Pesquisa: </string>
+    <string name="hide">Esconder</string>
+    <string name="searchicon">IconePesquisa</string>
+    <string name="menubutton">BotooMenu</string>
+    <string name="yellow_team">Equipa Amarela</string>
+    <string name="blue_team">Equipa Azul</string>
+    <string name="red_team">Equipa Vermelha</string>
+    <string name="neutral_gyms">Ginásios Neutros</string>
+    <string name="guard_pokemon_cp">CP de Pokémon de Guarda</string>
+    <string name="expiration_time">Esconder Pokémon que expiram em</string>
+    <string name="expiration_min">Mín:</string>
+    <string name="expiration_max">Máx:</string>
+
+
+    <string name="settings">Definições</string>
+    <string name="logout">Terminar Sessão</string>
+    <string name="check_hidden">Marcado = Escondido</string>
+
+    <string name="server_refresh">Atualização do Servidor</string>
+    <string name="server_refresh_desc">Ajustar o rácio de pesquisa no mapa (se a sua ligação é fraca, deve usar lento)</string>
+    <string name="pokemon_filters">Filtros de Pokémon</string>
+    <string name="map_refresh">Atualização do Mapa</string>
+    <string name="map_refresh_desc">Ajustar o rácio de atualização do mapa (dispositivos antigos devem usar a definição mais lenta)</string>
+    <string name="donate">Doar</string>
+
+    <string name="category_donate">Doar e apoiar o desenvolvimento contínuo da app!</string>
+    <string name="category_range_options">Opções de Alcance</string>
+    <string name="category_map_options">Opções de Mapa</string>
+    <string name="category_extendedMap_options">Opções de Mapa Avançadas</string>
+    <string name="category_filters">Opções de Filtragem</string>
+    <string name="category_clear">Opções de Limpeza</string>
+    <string name="category_update">Opções de Atualização</string>
+
+    <string name="enable_update">Ativar Auto-Atualização</string>
+    <string name="enable_update_desc">Verifica se existe uma atualização sempre que a app é aberta (ligado por defeito)</string>
+
+    <string name="show_range">Mostrar Alcance</string>
+    <string name="show_range_desc">Cria um círculo preto em redor da área de pesquisa</string>
+
+    <string name="show_expiration_filter">Filtro de Expiração de Pokémon</string>
+    <string name="show_expiration_filter_desc">Permite escolher o tempo mínimo e máximo de expiração</string>
+
+    <string name="show_pokemon_filter">Filtro de Pokémon</string>
+    <string name="show_pokemon_filter_desc">Permite escolher quais os pokémon que aparecem no mapa</string>
+    <string name="show_gym_filter">Filtro de Ginásios</string>
+    <string name="show_gym_filter_desc">Permite escolher quais os ginásios que aparecem no mapa</string>
+
+    <string name="clear_pokemon">Limpar Pokémon</string>
+    <string name="clear_pokemon_desc">Limpa os Pokémon atuais</string>
+    <string name="clear_pokestops">Limpar Pokéstops</string>
+    <string name="clear_pokestops_desc">Limpa as Pokéstops atuais</string>
+    <string name="clear_gyms">Limpar Ginásios</string>
+    <string name="clear_gyms_desc">Limpa os Ginásios atuais</string>
+
+
+    <string name="icon_scale">Escala dos Ícones</string>
+    <string name="icon_scale_desc">Permite ajustar a escala dos ícones</string>
+    <string name="only_lured">Apenas Pokéstops com Lure</string>
+    <string name="only_lured_desc">Mostra apenas Pokéstops com lures ativos</string>
+    <string name="show_gyms">Mostrar Ginásios</string>
+    <string name="show_gyms_desc">Mostra/Esconde os ginásios no mapa</string>
+    <string name="show_pokestops">Mostrar Pokéstops</string>
+    <string name="show_pokestop_desc">Mostra/Esconde Pokéstops no mapa</string>
+    <string name="lock_gps">Pesquisar Baseado no GPS</string>
+    <string name="lock_gps_desc">Em vez de pesquisar no centro do ecrã (onde quer que seja), irá pesquisar na sua localização</string>
+
+    <string name="gyms_cleared">Ginásios Limpos</string>
+    <string name="pokestops_cleared">Pokéstops Limpas</string>
+    <string name="pokemon_cleared">Pokémon Limpos</string>
+    <string name="icon">Ícone</string>
+
+    <string name="settingsbutton">BotaoDefinicoes</string>
+    <string name="version_check_failed">Falha na verificação de versão.</string>
+    <string name="updating_pokescanner">A atualizar o Poke Scanner</string>
+    <string name="update">Atualizar</string>
+    <string name="update_available_title">Atualização disponível</string>
+    <string name="update_check_failed">Falha na verificação de atualização.</string>
+    <string name="changes">Alterações:</string>
+    <string name="update_available_long">está disponível.</string>
+
+    <string name="guard_pokemon">Pokémon de guarda : </string>
+    <string name="gym_points">Pontos do ginásio : </string>
+    <string name="expires_in">Expira em : </string>
+    <string name="lure_expires_in">Lure expira em : </string>
+    <string name="lured_pokemon">Pokémon de Lure</string>
+    <string name="open_in_gmaps">Abrir em Google Maps</string>
+    <string name="get_directions">Direções dentro da app</string>
+
+    <string name="ERROR_GENERATING_GRID">Error ao Gerar Grelha, Tente novamente.</string>
+    <string name="CAMERA_CENTER_FAILED">Falha ao centrar a câmara.</string>
+    <string name="LOGOUT_ERROR">O servidor não responde, A terminar sessão</string>
+    <string name="check_server_status">Verificar Estado do Servidor</string>
+
+    <string name="Permission_Required_Auto_Updater">Permissão obrigatória para auto-atualização!</string>
+    <string name="Get_Permission_Auto_Updater">A obter permissão para auto-atualização!</string>
+
+    <string name="auto_update_denied">Permissão recusada! A desativar auto-atualização :(</string>
+    <string name="location_denied">A app não funcionará sem localização!</string>
+
+    <string name="Check_For_Update">Procurar Atualizações</string>
+    <string name="Check_For_Update_desc">Procura uma atualização manualmente</string>
+
+    <string name="ERROR_NO_DIRECTION_SELECTED">Nenhum marcador selecionado para direções!</string>
+</resources>

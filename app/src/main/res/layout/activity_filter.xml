@@ -89,8 +89,8 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:text="@string/save"
-            android:id="@+id/btnSave"
+            android:text="@string/select_all"
+            android:id="@+id/btnAll"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:layout_marginRight="5dp"
@@ -99,8 +99,8 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:text="@string/cancel"
-            android:id="@+id/btnCancel"
+            android:text="@string/none"
+            android:id="@+id/btnNone"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:layout_marginRight="5dp"

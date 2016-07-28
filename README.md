@@ -1,33 +1,62 @@
-# PokeScanner
-A Scanning tool dedicated to helping you locate pokemon in your area. 
+# Poke Scanner
 
-# Instructions
-- Download the APK
-- Allow installations from Unknown sources
-- Install the APK
-- Enter your username and password (Warning:Do not use your main account information)
-- Press Scan and where ever your camera is centered is where the application will scan
+<a href="https://github.com/BrianEstrada/PokeScanner"><img src="https://github.com/BrianEstrada/PokeScanner/blob/master/app/src/main/res/mipmap-hdpi/ic_launcher.png?raw=true" align="left" hspace="10" vspace="0"></a>
 
+**Poke Scanner** is an Android scanning application dedicated to helping you locate Pokemons, Gyms and Pokestops in your area with Filter options and more.
 
-# Tweaks
-- Can toggle whether to show Pokemon Shuffle icons instead of the old sprites (I think they are easier to distinguish!)
-- Replaced the Gym icons and Pokestop icons
-- Can toggle whether to show the Pokemon icon that is currently at a Lured Pokestop instead of the Lured Pokestop icon (Filtered Pokemon will still show a Lured Pokestop icon)
-- Filtered Pokemon will show up at the top of the Filtered list
-- Pokestops and Gyms don't have their text above them (it was too cluttered in my opinion) (Lured Pokestops still have their timer)
-- Some other minor stuff I forget
+<br>
+
+![Map](http://i.imgur.com/u8zPO1B.png)
+![Map](http://i.imgur.com/7szBuM0.png)
+![Map](http://i.imgur.com/aHofJAV.png)
 
 
-# Credits
+## Instructions
+1. Download the APK
+2. Allow installations from Unknown sources
+3. Install the APK
+4. Enter your Username and Password (**Warning**:Do not use your main account information)
+5. Press Scan and where ever your camera is centered is where the application will scan
+
+###[Download Section](https://github.com/BrianEstrada/PokeScanner/releases)
+
+
+## Credits
+
 - [Java Api](https://github.com/Grover-c13/PokeGOAPI-Java/)
-- [Original](https://github.com/BrianEstrada/PokeScanner)
+- [Tsunamii](https://github.com/Tsunamii) (Material Icon)
+- [rhari991](https://github.com/rhari991)
+- [swhittaker](https://github.com/swhittaker)
+- [toumeitou](https://github.com/toumeitou)
+- [leTokki](https://github.com/leTokki)
+- [ljk1291](https://github.com/ljk1291)
+- [fizzxed](https://github.com/fizzxed)
+- [EZTEQ](https://github.com/EZTEQ)
+- [akymos](https://github.com/akymos)
 
-# To be attempted
-- Notifications
-- Toggleable continuous scanning
+
+## Translators
+
+We are currently looking for translators to help us translate the app to other languages!
+
+- Thanya31 (Spanish)
+- Chemi (Hebrew)
+- Sébastien Bénazet (French)
+- MrYadro (Russian)
+- EZTEQ (German)
+- tajchert (Polish)
+- guidodavid (Italian)
+- jorgersn (Portuguese)
+- udarian (Indonesian)
 
 
-# Known issues that I don't know how to fix yet
-- App crashes when switching back to it after switching to another app if it was automatically closed
-- mispelled pokemon names (Geoduge and Clefary so far)
-- Lured Pokestops don't disappear after expiring if "Show Only Lured" is enabled, they just turn back to blue and stay there
+## Bugs and Feedback
+
+For bugs and questions please use the [Github Issues](https://github.com/BrianEstrada/PokeScanner/issues).
+
+
+## Contributions
+
+Anyone is welcome to help out on the project just go ahead and submit any changes and I'll aprove em!
+
+For discussion, feature request and just general information follow us at [/r/PokeScanner](https://www.reddit.com/r/PokeScanner)

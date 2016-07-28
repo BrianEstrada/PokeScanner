@@ -34,7 +34,7 @@ public class UiUtils {
     }
 
     public static boolean isPokemonExpiredFiltered(Pokemons pokemons,Context context) {
-        long millis = ExpirationFilter.getFilter(context).getPokemonExpirationMinSec() * 100;
+        long millis = ExpirationFilter.getFilter(context).getPokemonExpirationMinSec() * 1000;
         //Create a date from the expire time (Long value)
         DateTime date = new DateTime(pokemons.getExpires());
         //If our date time is after now then it's expired and we'll return expired (So we don't get an exception
@@ -53,10 +53,5 @@ public class UiUtils {
     public static boolean isPokemonFiltered(Pokemons pokemons) {
         //lol this is really long but it's simple and to the point
         return PokemonListLoader.getFilteredList().contains(new FilterItem(pokemons.getNumber()));
-    }
-
-    public static boolean isPokemonFiltered(int number) {
-        //lol this is really long but it's simple and to the point
-        return PokemonListLoader.getFilteredList().contains(new FilterItem(number));
     }
 }

@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.pokescanner.R;
+import com.pokescanner.helper.Settings;
 import com.pokescanner.utils.DrawableUtils;
 
 import POGOProtos.Map.Fort.FortDataOuterClass;
@@ -56,23 +58,13 @@ public class Gym extends RealmObject
         long gymPoints = getPoints();
         guardPokemonName = guardPokemonName.substring(0, 1).toUpperCase() + guardPokemonName.substring(1).toLowerCase();
 
-        int level = 0;
-        if (gymPoints < 2000) level = 1;
-        else if (gymPoints < 4000) level = 2;
-        else if (gymPoints < 8000) level = 3;
-        else if (gymPoints < 12000) level = 4;
-        else if (gymPoints < 16000) level = 5;
-        else if (gymPoints < 20000) level = 6;
-        else if (gymPoints < 30000) level = 7;
-        else if (gymPoints < 40000) level = 8;
-        else if (gymPoints < 50000) level = 9;
-        else level = 10;
-
         MarkerOptions gymMarker = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(getBitmap(context)))
-                .position(position)
-                .title(getTitle())
-                .snippet("Level: " + level + " | Points: " + gymPoints);
+                .position(position);
+        if(Settings.get(context).isUseOldMapMarker()){
+            gymMarker.title("Gym");
+            gymMarker.snippet(context.getText(R.string.guard_pokemon) + guardPokemonName + "\n" + context.getText(R.string.gym_points) + gymPoints);
+        }
         return gymMarker;
     }
 
@@ -80,7 +72,7 @@ public class Gym extends RealmObject
     {
         String uri = "gym" + getOwnedByTeamValue();
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
-        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, "", context);
+        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, "Gym", context);
         return out;
     }
 
@@ -88,12 +80,12 @@ public class Gym extends RealmObject
     {
         int ownedBy = getOwnedByTeamValue();
         if(ownedBy == 0)
-            return "Neutral";
+            return "Neutral Gym";
         else if(ownedBy == 1)
-            return "Mystic";
+            return "Blue Gym";
         else if(ownedBy == 2)
-            return "Valor";
+            return "Red Gym";
         else
-            return "Instinct";
+            return "Yellow Gym";
     }
 }
