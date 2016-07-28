@@ -56,6 +56,13 @@
     <PreferenceCategory
         android:title="@string/category_map_options">
         <SwitchPreference
+            android:key="shuffleIcons"
+            android:title="@string/shuffle_icons"
+            android:summary="@string/shuffle_icons_desc"
+            android:defaultValue="false"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+        <SwitchPreference
             android:key="showOnlyLured"
             android:title="@string/only_lured"
             android:summary="@string/only_lured_desc"
@@ -73,13 +80,6 @@
             android:key="showPokestops"
             android:title="@string/show_pokestops"
             android:summary="@string/show_pokestop_desc"
-            android:defaultValue="true"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content" />
-        <SwitchPreference
-            android:key="showLuredPokemon"
-            android:title="@string/show_lured_pokemon"
-            android:summary="@string/show_lured_pokemon_desc"
             android:defaultValue="true"
             android:layout_height="match_parent"
             android:layout_width="wrap_content" />

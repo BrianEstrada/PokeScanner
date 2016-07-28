@@ -54,9 +54,4 @@ public class UiUtils {
         //lol this is really long but it's simple and to the point
         return PokemonListLoader.getFilteredList().contains(new FilterItem(pokemons.getNumber()));
     }
-
-    public static boolean isPokemonFiltered(int number) {
-        //lol this is really long but it's simple and to the point
-        return PokemonListLoader.getFilteredList().contains(new FilterItem(number));
-    }
 }

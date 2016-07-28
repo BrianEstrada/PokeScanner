@@ -114,14 +114,15 @@
     <string name="show_gyms_desc">Enables/Disables Gyms on the map</string>
     <string name="show_pokestops">Show PokeStops</string>
     <string name="show_pokestop_desc">Enables/Disables Pokestops on the map</string>
-    <string name="show_lured_pokemon">Show Lured Pokemon</string>
-    <string name="show_lured_pokemon_desc">Shows the pokemon icon instead of a lured pokestop icon (unless that pokemon is filtered)</string>
     <string name="lock_gps">Scan Based on GPS</string>
     <string name="lock_gps_desc">Instead of scanning in the center of view (wherever you\'re looking) it will scan your location</string>
     <string name="old_marker">Use Old Map Markers</string>
     <string name="old_marker_desc"></string>
     <string name="driving_mode">Driving mode</string>
     <string name="driving_mode_desc">Keeps the map centered at your current location</string>
+
+    <string name="shuffle_icons">Use Shuffle Icons</string>
+    <string name="shuffle_icons_desc">Use Pokemon Shuffle Icons instead of the standard sprites (easier to distinguish!)</string>
 
     <string name="gyms_cleared">Gyms Cleared</string>
     <string name="pokestops_cleared">Pokestops Cleared</string>
