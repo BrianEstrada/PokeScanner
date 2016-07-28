@@ -31,6 +31,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -178,10 +179,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-
                     realm.where(Pokemons.class).findAll().deleteAllFromRealm();
                     realm.where(Gym.class).findAll().deleteAllFromRealm();
                     realm.where(PokeStop.class).findAll().deleteAllFromRealm();
+
+                    pokemonsMarkerMap = new ArrayMap<Pokemons, Marker>();
+                    pokestopMarkerMap = new ArrayMap<PokeStop, Marker>();
+                    gymMarkerMap = new ArrayMap<Gym, Marker>();
+
                     mMap.clear();
                     showToast(R.string.cleared_map);
                 }
@@ -419,7 +424,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 //Well if he is then lets pull out our marker.
                                 Marker marker = pokemonsMarkerMap.get(pokemon);
                                 //Update the marker
-                                marker = pokemon.updateMarker(marker, this);
+                                //UNTESTED
+                                if (marker != null) {
+                                    marker = pokemon.updateMarker(marker, this);
+                                }
                             } else {
                                 //If our pokemon wasn't in our hashmap lets add him
                                 pokemonsMarkerMap.put(pokemon, mMap.addMarker(pokemon.getMarker(this)));

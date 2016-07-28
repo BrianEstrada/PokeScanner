@@ -72,7 +72,7 @@ public class Gym extends RealmObject
     {
         String uri = "gym" + getOwnedByTeamValue();
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
-        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, "Gym", context,getOwnedByTeamValue());
+        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, "", context,getOwnedByTeamValue());
         return out;
     }
 

@@ -140,6 +140,7 @@
     <string name="updating_pokescanner">Updating Poke Scanner</string>
     <string name="update">Update</string>
     <string name="update_available_title">Update available</string>
+    <string name="up_to_date">You have the latest version!</string>
     <string name="update_check_failed">Update check failed.</string>
     <string name="changes">Changes:</string>
     <string name="update_available_long">is available.</string>
