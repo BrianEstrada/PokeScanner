@@ -56,6 +56,12 @@ public class DrawableUtils
         return DrawableUtils.getBitmapFromView(resourceID, "", context,100);
     }
 
+    public static int getStringID(int pokemonid,Context context) {
+        String uri = "p" + pokemonid;
+        int resourceID = context.getResources().getIdentifier(uri, "string", context.getPackageName());
+        return resourceID;
+    }
+
     public static int getResourceID(int pokemonid,Context context) {
         String uri = "p" + pokemonid;
 
