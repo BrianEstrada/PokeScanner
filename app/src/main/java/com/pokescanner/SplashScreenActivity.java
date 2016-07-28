@@ -91,7 +91,7 @@ public class SplashScreenActivity extends AppCompatActivity
         {
             PackageInfo pInfo = pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
-            splashVersion.setText("V"+ version + " ALPHA");
+            splashVersion.setText("V"+ version);
         }
         catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

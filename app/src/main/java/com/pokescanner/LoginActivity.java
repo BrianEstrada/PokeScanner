@@ -28,6 +28,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LoginEvent;
 import com.pokescanner.events.AuthLoadedEvent;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.loaders.AuthGOOGLELoader;
@@ -101,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onAuthLoadedEvent(final AuthLoadedEvent event) {
         switch (event.getStatus()) {
             case AuthLoadedEvent.OK:
+
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -112,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                         realm.copyToRealmOrUpdate(user);
                         startMapIntent();
                         showToast(R.string.LOGIN_OK);
-
+                        loginLog();
                         LoginActivity context = LoginActivity.this;
                         Settings.get(context).toBuilder()
                                 .lastUsername(user.getUsername())
@@ -130,6 +133,25 @@ public class LoginActivity extends AppCompatActivity {
                 break;
         }
 
+    }
+
+    public void loginLog(){
+        //This method is used to track which login method users are using
+        // We're going to use to see if we should be improving the google login
+        //or not (We are not storing any sort of login information via this method)
+        switch (LOGIN_METHOD)
+        {
+            case User.GOOGLE:
+                Answers.getInstance().logLogin(new LoginEvent()
+                        .putMethod("GOOGLE")
+                        .putSuccess(true));
+                break;
+            case User.PTC:
+                Answers.getInstance().logLogin(new LoginEvent()
+                        .putMethod("PTC")
+                        .putSuccess(true));
+                break;
+        }
     }
 
     public void startMapIntent()

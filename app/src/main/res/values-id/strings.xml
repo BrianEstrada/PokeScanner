@@ -56,7 +56,6 @@
     <string name="red_team">Tim Merah</string>
     <string name="neutral_gyms">Gym Netral</string>
     <string name="guard_pokemon_cp">CP Pokemon Penjaga</string>
-    <string name="_0" translatable="false">0</string>
     <string name="expiration_time">Sembunyikan Pokemon yang telah expire dalam</string>
     <string name="expiration_min">Min:</string>
     <string name="expiration_max">Max:</string>

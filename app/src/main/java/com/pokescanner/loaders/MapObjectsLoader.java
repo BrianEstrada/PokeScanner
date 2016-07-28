@@ -145,6 +145,7 @@ public class MapObjectsLoader extends Thread{
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (RemoteServerException e) {
+            //EventBus.getDefault().post(new ForceLogoutEvent());
             e.printStackTrace();
         } catch (LoginFailedException e) {
             e.printStackTrace();

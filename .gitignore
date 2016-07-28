@@ -36,3 +36,4 @@ app/src/main/res/values/keys.xml
 crashlytics.properties
 *.jks
 **/*.jks
+app/src/main/res/values/keys.xml
