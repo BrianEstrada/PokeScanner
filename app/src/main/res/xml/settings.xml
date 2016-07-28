@@ -60,13 +60,6 @@
     <PreferenceCategory
         android:title="@string/category_map_options">
         <SwitchPreference
-            android:key="shuffleIcons"
-            android:title="@string/shuffle_icons"
-            android:summary="@string/shuffle_icons_desc"
-            android:defaultValue="false"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content" />
-        <SwitchPreference
             android:key="showOnlyLured"
             android:title="@string/only_lured"
             android:summary="@string/only_lured_desc"

@@ -62,9 +62,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 .putString(SettingsUtil.POKEMON_ICON_SCALE,String.valueOf(settings.getScale()))
                 .putString(SettingsUtil.LAST_USERNAME,settings.getLastUsername())
                 .putBoolean(SettingsUtil.KEY_OLD_MARKER,settings.isUseOldMapMarker())
-                .putBoolean(SettingsUtil.SHUFFLE_ICONS,settings.isShuffleIcons())
                 .putBoolean(SettingsUtil.SHOW_LURED_POKEMON,settings.isShowLuredPokemon())
-                .commit();
+                .apply();
 
         addPreferencesFromResource(R.xml.settings);
 
@@ -213,7 +212,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_GYMS, true),
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_POKESTOPS, true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_OLD_MARKER, false),
-                sharedPreferences.getBoolean(SettingsUtil.SHUFFLE_ICONS, false),
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKEMON, true)
         ));
     }

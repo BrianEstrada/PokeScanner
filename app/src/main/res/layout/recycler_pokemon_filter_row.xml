@@ -31,7 +31,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/imageFilterRow"
-            android:src="@drawable/p1" />
+            android:src="@drawable/ps1" />
     </LinearLayout>
 
     <LinearLayout
