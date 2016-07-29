@@ -91,14 +91,14 @@
     <ImageButton
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:id="@+id/imgSearch"
         android:src="@drawable/ic_search_blue_grey_500_24dp"
         android:clickable="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/search"
         android:layout_margin="25dp"
-        android:background="@color/MaterialGray" />
+        android:background="@color/MaterialGray"
+        android:id="@+id/btnAddressSearch" />
 
     <ImageButton
         android:layout_width="35dp"

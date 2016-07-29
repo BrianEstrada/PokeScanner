@@ -334,4 +334,5 @@
     <string name="requires_location_services">This application requires location services to function.</string>
     <string name="update_canceled">Update cancelled.</string>
     <string name="search">Search</string>
+    <string name="search_by_address">Search By Address</string>
 </resources>

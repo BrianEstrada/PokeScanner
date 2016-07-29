@@ -165,8 +165,7 @@ public class MarkerDetails
         });
     }
 
-    public static void getAddressFromLocation(final Context context, final Handler handler)
-    {
+    public static void getAddressFromLocation(final Context context, final Handler handler) {
         Thread thread = new Thread() {
             @Override public void run() {
                 Geocoder geocoder = new Geocoder(context, Locale.getDefault());
@@ -204,8 +203,7 @@ public class MarkerDetails
         thread.start();
     }
 
-    private static class GeocoderHandler extends Handler
-    {
+    private static class GeocoderHandler extends Handler {
         @Override
         public void handleMessage(Message message)
         {
