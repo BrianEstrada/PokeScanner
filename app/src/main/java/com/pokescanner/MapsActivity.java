@@ -735,18 +735,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 String addy = etAddress.getText().toString();
-                Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
-                try {
-                    System.out.println("Click");
-                    List<Address> addresses = geocoder.getFromLocationName(addy,10);
-                    if (addresses != null) {
-                        Address address = addresses.get(0);
-                        LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                        builder.dismiss();
+                if (addy.length() > 0) {
+                    Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
+                    try {
+                        List<Address> addresses = geocoder.getFromLocationName(addy, 10);
+                        if (addresses != null) {
+                            if (addresses.size() > 0 ) {
+                                Address address = addresses.get(0);
+                                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                                builder.dismiss();
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                }else
+                {
+                    etAddress.setError("Cannot be empty");
                 }
             }
         });
