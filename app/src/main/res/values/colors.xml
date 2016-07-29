@@ -27,7 +27,7 @@
 
     <color name="MaterialGray">#CCF5F5F5</color>
     <color name="IconDefault">#803F51B5</color>
-    <color name="IconPokemon">#80009688</color>
+    <color name="IconPokemon">#993399ff</color>
     <color name="IconPokeStop">#803F51B5</color>
     <color name="IconPokeLure">#80673AB7</color>
     <color name="GymRed">#80F44336</color>
