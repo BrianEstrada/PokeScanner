@@ -15,7 +15,7 @@
   -->
 
 <resources>
-    <string name="app_name" translatable="false">Poke Scanner</string>
+    <string name="app_name" translatable="false">Poké Scanner</string>
     <string name="shared_key" translatable="false">POKESCANNER</string>
     <string name="title_activity_maps">Map</string>
     <string name="scan">Scan</string>
@@ -96,9 +96,6 @@
     <string name="show_pokemon_filter">Pokemon Filter</string>
     <string name="show_pokemon_filter_desc">Allows you to pick and choose which pokemon appear on the map</string>
 
-    <string name="show_pokemon_whitelist_filter">Pokemon Whitelist</string>
-    <string name="show_pokemon_whitelist_filter_desc">Allows you to pick and choose which pokemon appear on the map</string>
-
     <string name="show_pokemon_blacklist_filter">Pokemon Blacklist</string>
     <string name="show_pokemon_blacklist_filter_desc">Allows you to pick which pokemon you do not want to see on the map</string>
 
@@ -163,7 +160,6 @@
     <string name="check_server_status">Check Server Status</string>
 
     <string name="Permission_Required_Auto_Updater">Permission is required for the auto-updater!</string>
-    <string name="Get_Permission_Auto_Updater">Getting permission for auto updater!</string>
 
     <string name="auto_update_denied">Permission Denied! Disabling auto updater :(</string>
     <string name="location_denied">App will not work without location!</string>
@@ -333,4 +329,10 @@
     <string name="p149">Dragonite</string>
     <string name="p150">Mewtwo</string>
     <string name="p151">Mew</string>
+    <string name="enable_location_services">Please enable location services to continue.</string>
+    <string name="no_internet">Could not connect to the internet. Please check your internet connection.</string>
+    <string name="requires_location_services">This application requires location services to function.</string>
+    <string name="update_canceled">Update cancelled.</string>
+    <string name="search">Search</string>
+    <string name="search_by_address">Search By Address</string>
 </resources>

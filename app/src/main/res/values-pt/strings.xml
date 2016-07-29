@@ -141,7 +141,6 @@
     <string name="check_server_status">Verificar Estado do Servidor</string>
 
     <string name="Permission_Required_Auto_Updater">Permissão obrigatória para auto-atualização!</string>
-    <string name="Get_Permission_Auto_Updater">A obter permissão para auto-atualização!</string>
 
     <string name="auto_update_denied">Permissão recusada! A desativar auto-atualização :(</string>
     <string name="location_denied">A app não funcionará sem localização!</string>

@@ -44,10 +44,6 @@
             android:summary="@string/show_expiration_filter_desc"
             android:key="expiration_filter"/>
         <Preference
-            android:title="@string/show_pokemon_whitelist_filter"
-            android:summary="@string/show_pokemon_whitelist_filter_desc"
-            android:key="pokemon_whitelist"/>
-        <Preference
             android:title="@string/show_pokemon_blacklist_filter"
             android:summary="@string/show_pokemon_blacklist_filter_desc"
             android:key="pokemon_blacklist"/>
@@ -92,13 +88,6 @@
             android:title="@string/show_lured_pokemon"
             android:summary="@string/show_lured_pokemon_desc"
             android:defaultValue="true"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content" />
-        <SwitchPreference
-            android:key="lockGpsEnabled"
-            android:title="@string/lock_gps"
-            android:summary="@string/lock_gps_desc"
-            android:defaultValue="false"
             android:layout_height="match_parent"
             android:layout_width="wrap_content" />
         <SwitchPreference

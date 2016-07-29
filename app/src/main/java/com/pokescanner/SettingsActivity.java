@@ -36,7 +36,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     SharedPreferences preferences;
     Preference scan_dialog,gym_filter,expiration_filter;
     Preference clear_pokemon,clear_gyms,clear_pokestops;
-    Preference pokemon_blacklist,pokemon_whitelist;
+    Preference pokemon_blacklist;
     Preference logout,update;
     Realm realm;
     int scanValue;
@@ -56,21 +56,20 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 .putBoolean(SettingsUtil.SHOW_ONLY_LURED,settings.isShowOnlyLured())
                 .putBoolean(SettingsUtil.SHOW_GYMS,settings.isGymsEnabled())
                 .putBoolean(SettingsUtil.SHOW_POKESTOPS,settings.isPokestopsEnabled())
-                .putBoolean(SettingsUtil.SHOW_LURED_POKEMON,settings.isShowLuredPokemon())
-                .putBoolean(SettingsUtil.KEY_LOCK_GPS,settings.isLockGpsEnabled())
-                .putBoolean(SettingsUtil.KEY_OLD_MARKER,settings.isUseOldMapMarker())
                 .putString(SettingsUtil.SERVER_REFRESH_RATE,String.valueOf(settings.getServerRefresh()))
                 .putString(SettingsUtil.MAP_REFRESH_RATE,String.valueOf(settings.getMapRefresh()))
                 .putString(SettingsUtil.POKEMON_ICON_SCALE,String.valueOf(settings.getScale()))
                 .putString(SettingsUtil.LAST_USERNAME,settings.getLastUsername())
+                .putBoolean(SettingsUtil.KEY_OLD_MARKER,settings.isUseOldMapMarker())
                 .putBoolean(SettingsUtil.SHUFFLE_ICONS,settings.isShuffleIcons())
+                .putBoolean(SettingsUtil.SHOW_LURED_POKEMON,settings.isShowLuredPokemon())
                 .commit();
 
         addPreferencesFromResource(R.xml.settings);
 
         realm = Realm.getDefaultInstance();
 
-        scan_dialog = (Preference) getPreferenceManager().findPreference("scan_dialog");
+        scan_dialog = getPreferenceManager().findPreference("scan_dialog");
         scan_dialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 SettingsUtil.searchRadiusDialog(SettingsActivity.this);
@@ -78,7 +77,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        gym_filter = (Preference) getPreferenceManager().findPreference("gym_filter");
+        gym_filter = getPreferenceManager().findPreference("gym_filter");
         gym_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 GymFilters.showGymFiltersDialog(SettingsActivity.this);
@@ -86,7 +85,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        expiration_filter = (Preference) getPreferenceManager().findPreference("expiration_filter");
+        expiration_filter = getPreferenceManager().findPreference("expiration_filter");
         expiration_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 ExpirationFilters.showExpirationFiltersDialog(SettingsActivity.this);
@@ -94,7 +93,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        pokemon_blacklist = (Preference) getPreferenceManager().findPreference("pokemon_blacklist");
+        pokemon_blacklist = getPreferenceManager().findPreference("pokemon_blacklist");
         pokemon_blacklist.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 Intent filterIntent = new Intent(SettingsActivity.this,BlacklistActivity.class);
@@ -103,16 +102,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        pokemon_whitelist = (Preference) getPreferenceManager().findPreference("pokemon_whitelist");
-        pokemon_whitelist.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                Intent filterIntent = new Intent(SettingsActivity.this,WhitelistActivity.class);
-                startActivity(filterIntent);
-                return true;
-            }
-        });
-
-        clear_gyms = (Preference) getPreferenceManager().findPreference("clear_gyms");
+        clear_gyms = getPreferenceManager().findPreference("clear_gyms");
         clear_gyms.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 realm.executeTransaction(new Realm.Transaction() {
@@ -128,7 +118,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        clear_pokemon = (Preference) getPreferenceManager().findPreference("clear_pokemon");
+        clear_pokemon = getPreferenceManager().findPreference("clear_pokemon");
         clear_pokemon.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 realm.executeTransaction(new Realm.Transaction() {
@@ -144,7 +134,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        clear_pokestops = (Preference) getPreferenceManager().findPreference("clear_pokestops");
+        clear_pokestops = getPreferenceManager().findPreference("clear_pokestops");
         clear_pokestops.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 realm.executeTransaction(new Realm.Transaction() {
@@ -160,7 +150,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        logout = (Preference) getPreferenceManager().findPreference("logout");
+        logout = getPreferenceManager().findPreference("logout");
         logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 logOut();
@@ -168,7 +158,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        update = (Preference) getPreferenceManager().findPreference("update");
+        update = getPreferenceManager().findPreference("update");
         update.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 new AppUpdateLoader().start();
@@ -202,7 +192,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         SettingsUtil.saveSettings(this,new Settings(
                 sharedPreferences.getBoolean(SettingsUtil.ENABLE_UPDATES,true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_BOUNDING_BOX, false),
-                sharedPreferences.getBoolean(SettingsUtil.KEY_LOCK_GPS, false),
                 sharedPreferences.getBoolean(SettingsUtil.DRIVING_MODE, false),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SCAN_VALUE,"4")),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SERVER_REFRESH_RATE, "1")),
@@ -212,9 +201,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_ONLY_LURED, true),
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_GYMS, true),
                 sharedPreferences.getBoolean(SettingsUtil.SHOW_POKESTOPS, true),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKEMON, true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_OLD_MARKER, false),
-                sharedPreferences.getBoolean(SettingsUtil.SHUFFLE_ICONS, false)
+                sharedPreferences.getBoolean(SettingsUtil.SHUFFLE_ICONS, false),
+                sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKEMON, true)
         ));
     }
 

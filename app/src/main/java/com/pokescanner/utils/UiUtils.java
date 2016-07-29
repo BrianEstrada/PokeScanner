@@ -42,10 +42,7 @@ public class UiUtils {
             Interval interval;
             interval = new Interval(new Instant(), date);
 
-            if (millis > interval.toDurationMillis()) {
-                return true;
-            }
-            return false;
+            return millis > interval.toDurationMillis();
         }
         return false;
     }

@@ -14,10 +14,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
-
-
 package com.pokescanner.helper;
 
 import android.content.Context;
@@ -80,6 +76,7 @@ public class PokemonListLoader {
             Gson gson = new Gson();
             Type listType = new TypeToken<ArrayList<FilterItem>>() {}.getType();
             final ArrayList<FilterItem> filterItems = gson.fromJson(bufferString, listType);
+            translateNamesIfNeeded(context, filterItems);
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
@@ -89,4 +86,13 @@ public class PokemonListLoader {
         }
     }
 
+    private static void translateNamesIfNeeded(Context context, ArrayList<FilterItem> filterItems) {
+        for (FilterItem item : filterItems) {
+            String identifierName = "p" + Integer.toString(item.getNumber());
+            int resourceID = context.getResources().getIdentifier(identifierName, "string", context.getPackageName());
+            if (resourceID != 0) {
+                item.setName(context.getResources().getString(resourceID));
+            }
+        }
+    }
 }

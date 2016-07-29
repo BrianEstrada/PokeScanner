@@ -32,8 +32,6 @@
 
         <activity
             android:name=".SplashScreenActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,34 +40,19 @@
         </activity>
 
         <activity android:name=".LoginActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
 
         <activity
             android:name=".GoogleLoginActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity
             android:name=".BlacklistActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|adjustResize"/>
-        <activity
-            android:name=".WhitelistActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:label="@string/title_activity_maps" />
         <activity
-            android:name=".SettingsActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:name=".SettingsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

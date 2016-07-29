@@ -76,9 +76,6 @@
     <string name="show_pokemon_filter">Filtr Pokémonów</string>
     <string name="show_pokemon_filter_desc">Pozwala Ci na wybór Pokémonów, które będą się pokazywać na mapie</string>
     
-    <string name="show_pokemon_whitelist_filter">Biała lista Pokémonów</string>
-    <string name="show_pokemon_whitelist_filter_desc">Pozwala na wybór Pokémonów, które będą się pokazywać na mapie</string>
-
     <string name="show_pokemon_blacklist_filter">Czarna lista Pokémonów</string>
     <string name="show_pokemon_blacklist_filter_desc">Pozwala na wybór Pokémonów, których nie chcesz widzieć na mapie</string>
 
@@ -144,7 +141,6 @@
     <string name="check_server_status">Sprawdź stan serwera</string>
 
     <string name="Permission_Required_Auto_Updater">Uprawnienia jest wymagane do automatycznej aktualizacji!</string>
-    <string name="Get_Permission_Auto_Updater">Biorę uprawnienia!</string>
 
     <string name="auto_update_denied">Uprawnienie zabronione! Wyłączam automatyczną aktualizację :(</string>
     <string name="location_denied">Aplikacja nie będzie działać bez lokalizacji!</string>

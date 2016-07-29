@@ -23,6 +23,41 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/colorPrimary"
+        android:padding="10dp"
+        android:gravity="center_vertical|center_horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="@string/select_all"
+            android:id="@+id/btnAll"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="@string/none"
+            android:id="@+id/btnNone"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/filterRecycler"
+        android:layout_weight="6" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight=".80"
         android:background="@color/colorPrimary"
@@ -55,56 +90,6 @@
             android:layout_marginRight="20dp"
             android:contentDescription="@string/hide"
             android:visibility="invisible" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".5"
-        android:gravity="center_vertical|center_horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/check_hidden"
-            android:id="@+id/tvInstructions" />
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/filterRecycler"
-        android:layout_weight="6" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:background="@color/colorPrimary"
-        android:padding="10dp"
-        android:gravity="center_vertical|center_horizontal">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:text="@string/select_all"
-            android:id="@+id/btnAll"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:text="@string/none"
-            android:id="@+id/btnNone"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp" />
     </LinearLayout>
 
 </LinearLayout>

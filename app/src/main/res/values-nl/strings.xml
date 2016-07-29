@@ -110,7 +110,6 @@
   <string name="LOGOUT_ERROR">Server niet reageert, uitloggen</string>
   <string name="check_server_status">Controleren Server Status</string>
   <string name="Permission_Required_Auto_Updater">Toestemming is vereist voor de auto-updater!</string>
-  <string name="Get_Permission_Auto_Updater">Toestemming verkrijgen voor automatische updates!</string>
   <string name="auto_update_denied">Geen toegang! De automatisch updates worden uitgeschakeld :(</string>
   <string name="location_denied">De App zal niet werken zonder locatie!</string>
   <string name="Check_For_Update">Controleren op updates</string>

@@ -121,7 +121,6 @@
   <string name="LOGOUT_ERROR">Els servidrs no resopnen, tancant sessió</string>
   <string name="check_server_status">Comprova l\'estat de servidor</string>
   <string name="Permission_Required_Auto_Updater">Autorització necessària per a l\'auto-actualització!</string>
-  <string name="Get_Permission_Auto_Updater">Aconseguint permisos per a l\'auto-actualització!</string>
   <string name="auto_update_denied">Permís Denegat! Desactivant auto-actualització :(</string>
   <string name="location_denied">L\'app no funcionarà sense ubicació!</string>
   <string name="Check_For_Update">Buscar actualitzacions</string>

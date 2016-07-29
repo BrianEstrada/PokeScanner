@@ -46,7 +46,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false,exclude = {"distance","Name","Number","expires"})
 public class Pokemons  extends RealmObject{
     int Number;
     @Index
@@ -55,6 +55,7 @@ public class Pokemons  extends RealmObject{
     long encounterid;
     long expires;
     double longitude,latitude;
+    double distance;
 
     public Pokemons() {}
 
@@ -74,11 +75,7 @@ public class Pokemons  extends RealmObject{
         //Create a date
         DateTime expires = new DateTime(getExpires());
         //If this date is after the current time then it has not expired!
-        if (expires.isAfter(new Instant())) {
-            return true;
-        }else {
-            return false;
-        }
+        return expires.isAfter(new Instant());
     }
 
     public MarkerOptions getMarker(Context context) {
@@ -92,9 +89,11 @@ public class Pokemons  extends RealmObject{
 
         MarkerOptions pokeIcon = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(out))
+                .draggable(true)
                 .position(position);
         if(Settings.get(context).isUseOldMapMarker()){
             pokeIcon.title(getName());
+            pokeIcon.draggable(true);
             pokeIcon.snippet(context.getText(R.string.expires_in) + timeOut);
         }
         return pokeIcon;

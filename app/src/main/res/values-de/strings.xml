@@ -80,8 +80,6 @@
   <string name="show_expiration_filter_desc">Erlaubt es, die minimale und maximale Ablaufzeit festzulegen</string>
   <string name="show_pokemon_filter">Pokemon-Filter</string>
   <string name="show_pokemon_filter_desc">Erlaubt es, auszuwählen, welche Pokemon auf der Karte angezeigt werden</string>
-  <string name="show_pokemon_whitelist_filter">Pokemon Whitelist</string>
-  <string name="show_pokemon_whitelist_filter_desc">Erlaubt es, auszuwählen, welche Pokemon auf der Karte angezeigt werden</string>
   <string name="show_pokemon_blacklist_filter">Pokemon Blacklist</string>
   <string name="show_pokemon_blacklist_filter_desc">Ermöglicht es, auszuwählen, welche Pokemon nicht auf der Karte angezeigt werden</string>
   <string name="show_gym_filter">Arenen-Filter</string>
@@ -135,7 +133,6 @@
   <string name="LOGOUT_ERROR">Der Server antwortet nicht. Ausloggen...</string>
   <string name="check_server_status">Serverstatus überprüfen</string>
   <string name="Permission_Required_Auto_Updater">Der Auto-Updater benötigt Zugriffsrechte für das Update!</string>
-  <string name="Get_Permission_Auto_Updater">Frage Zugriffsrechte für den Auto-Updater ab!</string>
   <string name="auto_update_denied">Zugriffsrechte verweigert! Auto-Update wird deaktiviert :(</string>
   <string name="location_denied">Diese App funktioniert nicht ohne GPS!</string>
   <string name="Check_For_Update">Suche nach Updates</string>
@@ -300,4 +297,10 @@
   <string name="p149">Dragoran</string>
   <string name="p150">Mewtu</string>
   <string name="p151">Mew</string>
+  <string name="enable_location_services">Bitte aktiviere die Standortdienste um fortzufahren.</string>
+  <string name="no_internet">Es kann keine Verbindung mit dem Internet hergestellt werden. Bitte überprüfe deine Verbindung.</string>
+  <string name="requires_location_services">Diese Applikation benötigt Standortdienste um zu funktionieren.</string>
+  <string name="update_canceled">Aktualisierung abgebrochen.</string>
+  <string name="search">Suchen</string>
+  <string name="search_by_address">Suche nach Adresse</string>
 </resources>

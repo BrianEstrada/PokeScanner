@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 
-import com.pokescanner.LoginActivity;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.pokescanner.R;
 import com.pokescanner.SplashScreenActivity;
 
 import java.io.File;
+
+import io.fabric.sdk.android.BuildConfig;
 
 public class AppUpdateDialog {
     public AppUpdateDialog(final Context context, final AppUpdate update) {
@@ -66,6 +69,8 @@ public class AppUpdateDialog {
             //set BroadcastReceiver to install app when .apk is downloaded
             BroadcastReceiver onComplete = new BroadcastReceiver() {
                 public void onReceive(Context ctxt, Intent intent) {
+                    if (!BuildConfig.DEBUG)
+                        Answers.getInstance().logCustom(new CustomEvent("AppSelfUpdate"));
                     Intent install = new Intent(Intent.ACTION_VIEW);
                     install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     install.setDataAndType(uri, manager.getMimeTypeForDownloadedFile(downloadId));
