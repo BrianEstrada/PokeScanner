@@ -1,5 +1,9 @@
 # Poke Scanner
 
+#WE ARE NO LONGER PUBLISHING UPDATES ON GITHUB
+
+##Due to users taking our work and posting it on the playstore and charging for it we are no longer publishing updates on github...If you have worked on our project before hand feel free to email me at lovesguitar@gmail.com for an invite to our private repo...sorry about this guys the few ruined it for the many.
+
 <a href="https://github.com/BrianEstrada/PokeScanner"><img src="https://github.com/BrianEstrada/PokeScanner/blob/master/app/src/main/res/mipmap-hdpi/ic_launcher.png?raw=true" align="left" hspace="10" vspace="0"></a>
 
 **Poke Scanner** is an Android scanning application dedicated to helping you locate Pokemons, Gyms and Pokestops in your area with Filter options and more.
