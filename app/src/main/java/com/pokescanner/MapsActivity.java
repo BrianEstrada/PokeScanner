@@ -231,13 +231,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
 
-            scanMap = makeHexScanMap(pos, scanValue, 1, new ArrayList<LatLng>());
-            if (scanMap != null) {
-                mapObjectsLoader = new MapObjectsLoader(user, scanMap, millis, this);
-                mapObjectsLoader.start();
-            } else {
-                showToast(R.string.ERROR_GENERATING_GRID);
-                showProgressbar(false);
+            if (pos != null) {
+                scanMap = makeHexScanMap(pos, scanValue, 1, new ArrayList<LatLng>());
+                if (scanMap != null) {
+                    mapObjectsLoader = new MapObjectsLoader(user, scanMap, millis, this);
+                    mapObjectsLoader.start();
+                } else {
+                    showToast(R.string.ERROR_GENERATING_GRID);
+                    showProgressbar(false);
+                }
             }
         }
     }
@@ -644,7 +646,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void listModeDialog(){
         //GET OUR LOCATION AND SET A VARIABLE
         getLocation();
-        Location pos;
+        Location pos = null;
         //CREATE TWO LIST (THIS IS A GHETTO SOLUTION BOYS)
         ArrayList<Pokemons> pokelist = new ArrayList<>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
         ArrayList<Pokemons> listout = new ArrayList<>();
@@ -652,9 +654,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (currentLocation != null) {
                 pos = currentLocation;
             } else {
-                pos = new Location("");
-                pos.setLongitude(currentCameraPos.target.longitude);
-                pos.setLatitude(currentCameraPos.target.latitude);
+                if (currentCameraPos != null) {
+                    pos = new Location("");
+                    pos.setLongitude(currentCameraPos.target.longitude);
+                    pos.setLatitude(currentCameraPos.target.latitude);
+                }
             }
 
             if (pos != null) {
