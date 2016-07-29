@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.Sort;
 
 /**
  * Created by Brian on 7/21/2016.
@@ -40,7 +41,7 @@ public class PokemonListLoader {
         return new ArrayList<>(realm.copyFromRealm(
                 realm.where(FilterItem.class)
                         .findAll()
-                        .sort("Number")));
+                        .sort("filtered", Sort.DESCENDING)));
     }
 
     public static ArrayList<FilterItem> getFilteredList() {
