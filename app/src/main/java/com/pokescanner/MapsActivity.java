@@ -40,6 +40,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -282,7 +283,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                //realm.where(User.class).findAll().deleteAllFromRealm();
+                if (user.getAuthType() == User.GOOGLE)
+                    realm.where(User.class).findAll().deleteAllFromRealm();
+
                 realm.where(PokeStop.class).findAll().deleteAllFromRealm();
                 realm.where(Pokemons.class).findAll().deleteAllFromRealm();
                 realm.where(Gym.class).findAll().deleteAllFromRealm();
@@ -716,36 +719,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.clear();
         }
     }
-    @OnClick(R.id.btnSearch)
+    @OnClick(R.id.btnAddressSearch)
     public void searchAddressDialog() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Address Search");
-        alert.setMessage("Search by Address");
+        LayoutInflater inflater = getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.dialog_search_address, null);
+        final AlertDialog builder = new AlertDialog.Builder(this).create();
 
-        final EditText input = new EditText(this);
-        alert.setView(input);
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String result = input.getText().toString();
+        final EditText etAddress = (EditText) dialoglayout.findViewById(R.id.etAddress);
+        Button btnSearch = (Button) dialoglayout.findViewById(R.id.btnSearch);
+        Button btnCancel = (Button) dialoglayout.findViewById(R.id.btnCancel);
+
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String addy = etAddress.getText().toString();
                 Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
                 try {
-                    List<Address> addresses = geocoder.getFromLocationName(result,10);
-                    Address address = addresses.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                    System.out.println("Click");
+                    List<Address> addresses = geocoder.getFromLocationName(addy,10);
+                    if (addresses != null) {
+                        Address address = addresses.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                        builder.dismiss();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.dismiss();
             }
         });
-        alert.show();
-    }
 
+        builder.setView(dialoglayout);
+        builder.show();
+    }
     @Override
     @SuppressWarnings({"MissingPermission"})
     public void onMapReady(GoogleMap googleMap) {
