@@ -29,6 +29,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
@@ -771,6 +772,43 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             moveCameraToCurrentPosition();
         }
         mMap.setOnCameraChangeListener(this);
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                Pokemons deletePokemon = null;
+                if (pokemonsMarkerMap.containsValue(marker)) {
+                    for (Map.Entry<Pokemons,Marker> e: pokemonsMarkerMap.entrySet()) {
+                        if (e.getValue().equals(marker)) {
+                            deletePokemon = e.getKey();
+                        }
+                    }
+                    if (deletePokemon != null) {
+                        final Pokemons finalDeletePokemon = deletePokemon;
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                if(realm.where(Pokemons.class).equalTo("encounterid",finalDeletePokemon.getEncounterid()).findAll().deleteAllFromRealm()){
+                                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                                    v.vibrate(50);
+                                    pokemonsMarkerMap.get(finalDeletePokemon).remove();
+                                    pokemonsMarkerMap.remove(finalDeletePokemon);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+
+            }
+        });
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {

@@ -89,9 +89,11 @@ public class Pokemons  extends RealmObject{
 
         MarkerOptions pokeIcon = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromBitmap(out))
+                .draggable(true)
                 .position(position);
         if(Settings.get(context).isUseOldMapMarker()){
             pokeIcon.title(getName());
+            pokeIcon.draggable(true);
             pokeIcon.snippet(context.getText(R.string.expires_in) + timeOut);
         }
         return pokeIcon;
