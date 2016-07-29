@@ -89,7 +89,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         try {
             PackageInfo pInfo = pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
-            splashVersion.setText("V" + version);
+            splashVersion.setText("v" + version);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
