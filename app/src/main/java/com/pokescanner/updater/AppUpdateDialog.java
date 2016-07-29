@@ -69,6 +69,7 @@ public class AppUpdateDialog {
             //set BroadcastReceiver to install app when .apk is downloaded
             BroadcastReceiver onComplete = new BroadcastReceiver() {
                 public void onReceive(Context ctxt, Intent intent) {
+                    if (!BuildConfig.DEBUG)
                         Answers.getInstance().logCustom(new CustomEvent("AppSelfUpdate"));
                     Intent install = new Intent(Intent.ACTION_VIEW);
                     install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
