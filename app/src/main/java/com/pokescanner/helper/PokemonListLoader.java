@@ -37,10 +37,11 @@ public class PokemonListLoader {
     public static ArrayList<FilterItem> getPokelist(Context context) throws IOException {
         Realm realm = Realm.getDefaultInstance();
         populatePokemonList(context);
-        return new ArrayList<>(realm.copyFromRealm(
+        ArrayList<FilterItem> returnlist = new ArrayList<>(realm.copyFromRealm(
                 realm.where(FilterItem.class)
                         .findAll()
                         .sort("Number")));
+        return returnlist;
     }
 
     public static ArrayList<FilterItem> getFilteredList() {
@@ -84,6 +85,7 @@ public class PokemonListLoader {
                 }
             });
         }
+        realm.close();
     }
 
     private static void translateNamesIfNeeded(Context context, ArrayList<FilterItem> filterItems) {
