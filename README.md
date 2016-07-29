@@ -8,7 +8,7 @@
 
 ![Login](http://i.imgur.com/P3WECeA.png)
 ![Settings](http://i.imgur.com/ATj5r30.png)
-![Map](http://i.imgur.com/S0fJMjX.png)
+![Map](http://i.imgur.com/57D7Ttn.png)
 
 
 ## Instructions
