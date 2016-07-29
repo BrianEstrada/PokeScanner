@@ -18,11 +18,12 @@
 package com.pokescanner;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.location.Criteria;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -32,9 +33,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -42,10 +48,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -65,10 +71,12 @@ import com.pokescanner.helper.GymFilter;
 import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.helper.Settings;
 import com.pokescanner.loaders.MapObjectsLoader;
+import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
+import com.pokescanner.recycler.ListViewRecyclerAdapter;
 import com.pokescanner.utils.DrawableUtils;
 import com.pokescanner.utils.MarkerDetails;
 import com.pokescanner.utils.PermissionUtils;
@@ -83,6 +91,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -103,11 +112,15 @@ import static com.pokescanner.helper.Generation.makeHexScanMap;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener,
         OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
-    @BindView(R.id.btnSearch) FloatingActionButton button;
-    @BindView(R.id.progressBar) ProgressBar progressBar;
+    @BindView(R.id.btnSearch)
+    FloatingActionButton button;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     private GoogleMap mMap;
-    @BindView(R.id.btnSettings) ImageButton btnSettings;
-    @BindView(R.id.main) RelativeLayout main;
+    @BindView(R.id.btnSettings)
+    ImageButton btnSettings;
+    @BindView(R.id.main)
+    RelativeLayout main;
 
     LocationManager locationManager;
     Location currentLocation;
@@ -129,6 +142,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     int pos = 1;
     //Used for determining Scan status
     boolean SCANNING_STATUS = false;
+    boolean LIST_MODE = false;
     //Used for our refreshing of the map
     Subscription pokeonRefresher, gymstopRefresher;
 
@@ -193,6 +207,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             });
         }
     }
+
     @OnClick(R.id.btnSearch)
     public void PokeScan() {
         if (SCANNING_STATUS) {
@@ -206,13 +221,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             showProgressbar(true);
             progressBar.setProgress(0);
             LatLng pos = mMap.getCameraPosition().target;
-            if(mGoogleApiClient.isConnected())
-                currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-            if ((SettingsUtil.getSettings(this).isLockGpsEnabled() ||
-                    SettingsUtil.getSettings(MapsActivity.this).isDrivingModeEnabled())
-                    && moveCameraToCurrentPosition()) {
-                pos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+            if (SettingsUtil.getSettings(MapsActivity.this).isDrivingModeEnabled() && moveCameraToCurrentPosition()) {
+                if (currentLocation != null) {
+                    pos = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                }
             }
 
             scanMap = makeHexScanMap(pos, scanValue, 1, new ArrayList<LatLng>());
@@ -225,11 +239,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+
     @OnClick(R.id.btnSettings)
     public void onSettingsClick() {
         Intent settingsIntent = new Intent(MapsActivity.this, SettingsActivity.class);
         startActivity(settingsIntent);
     }
+
     private void stopPokeScan() {
         try {
             mapObjectsLoader.interrupt();
@@ -250,96 +266,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toast.makeText(MapsActivity.this, getString(resString), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    @SuppressWarnings({"MissingPermission"})
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        if (PermissionUtils.doWeHaveGPSandLOC(this)) {
-            //Set our map stuff
-            mMap.setMyLocationEnabled(true);
-            mMap.setOnCameraChangeListener(this);
-            //Let's find our location and set it!
-            mMap.getUiSettings().setMapToolbarEnabled(false);
-            mMap.getUiSettings().setZoomControlsEnabled(false);
-            mMap.getUiSettings().setCompassEnabled(true);
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    Object markerKey = null;
-                    for (Map.Entry<Pokemons, Marker> pokemonsMarkerEntry : pokemonsMarkerMap.entrySet()) {
-                        if (pokemonsMarkerEntry.getValue().equals(marker)) {
-                            markerKey = pokemonsMarkerEntry.getKey();
-                            break;
-                        }
-                    }
-                    if (markerKey == null) {
-                        for (Map.Entry<Gym, Marker> gymMarkerEntry : gymMarkerMap.entrySet()) {
-                            if (gymMarkerEntry.getValue().equals(marker)) {
-                                markerKey = gymMarkerEntry.getKey();
-                                break;
-                            }
-                        }
-                    }
-                    if (markerKey == null) {
-                        for (Map.Entry<PokeStop, Marker> pokeStopMarkerEntry : pokestopMarkerMap.entrySet()) {
-                            if (pokeStopMarkerEntry.getValue().equals(marker)) {
-                                markerKey = pokeStopMarkerEntry.getKey();
-                                break;
-                            }
-                        }
-                    }
-                    if (markerKey != null) {
-                        if (!Settings.get(MapsActivity.this).isUseOldMapMarker()) {
-                            removeAdapterAndListener();
-                            MarkerDetails.showMarkerDetailsDialog(MapsActivity.this, markerKey, currentLocation);
-                        } else {
-                            setAdapterAndListener(markerKey);
-                            marker.showInfoWindow();
-                        }
-                    }
-                    return false;
-                }
-            });
-
-            moveCameraToCurrentPosition();
-            startRefresher();
-        }
-    }
-
-    @SuppressWarnings({"MissingPermission"})
-    public boolean moveCameraToCurrentPosition() {
-        if (PermissionUtils.doWeHaveGPSandLOC(this)) {
-            if(mGoogleApiClient.isConnected())
-                currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                createBoundingBox();
-            if (currentLocation != null) {
-                LatLng target = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                CameraPosition.Builder builder = new CameraPosition.Builder();
-                builder.zoom(15);
-                builder.target(target);
-
-                if(mMap != null)
-                {
-                    this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
-                    return true;
-                }
-                else
-                    return false;
-            }
-            else
-            {
-                //Try again after half a second
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        moveCameraToCurrentPosition();
-                    }
-                }, 500);
-            }
-        }
-        return false;
-    }
-
     public void showProgressbar(boolean status) {
         if (status) {
             progressBar.setVisibility(View.VISIBLE);
@@ -352,23 +278,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        if (PermissionUtils.doWeHaveGPSandLOC(this)) {
-            currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-
-    }
-
     public void logOut() {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.where(User.class).findAll().deleteAllFromRealm();
+                //realm.where(User.class).findAll().deleteAllFromRealm();
                 realm.where(PokeStop.class).findAll().deleteAllFromRealm();
                 realm.where(Pokemons.class).findAll().deleteAllFromRealm();
                 realm.where(Gym.class).findAll().deleteAllFromRealm();
@@ -382,56 +296,68 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //Map related Functions
     public void refreshMap() {
-        if (mMap != null) {
-            LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
-            //We use this to check when our map object loader is done loading anything
-            //If is done loading then we set our progress bar off
-            //It's a quick fix in the future we should implement a listener inside the thread.
-            if (mapObjectsLoader != null) {
-                if (mapObjectsLoader.getState().equals(Thread.State.TERMINATED)) {
-                    showProgressbar(false);
+        if (!LIST_MODE) {
+            if (mMap != null) {
+                LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
+                //We use this to check when our map object loader is done loading anything
+                //If is done loading then we set our progress bar off
+                //It's a quick fix in the future we should implement a listener inside the thread.
+                if (mapObjectsLoader != null) {
+                    if (mapObjectsLoader.getState().equals(Thread.State.TERMINATED)) {
+                        showProgressbar(false);
+                    }
                 }
-            }
-            createMapObjects();
+                createMapObjects();
 
-            //If in driving mode, move camera to current location
-            if(SettingsUtil.getSettings(MapsActivity.this).isDrivingModeEnabled())
-                moveCameraToCurrentPosition();
+                //If in driving mode, move camera to current location
+                if (SettingsUtil.getSettings(MapsActivity.this).isDrivingModeEnabled())
+                    moveCameraToCurrentPosition();
 
-            //Load our Pokemon Array
-            ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
-            //Okay so we're going to fix the annoying issue where the markers were being constantly redrawn
-            for (int i = 0; i < pokemons.size(); i++) {
-                //Get our pokemon from the list
-                Pokemons pokemon = pokemons.get(i);
-                //Is our pokemon contained within the bounds of the camera?
-                if (curScreen.contains(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))) {
-                    //If yes then has he expired?
-                    //This isnt worded right it should say isNotExpired (Will fix later)
-                    if (pokemon.isExpired()) {
-                        if (UiUtils.isPokemonFiltered(pokemon) ||
-                                UiUtils.isPokemonExpiredFiltered(pokemon, this)) {
-                            if (pokemonsMarkerMap.containsKey(pokemon)) {
-                                Marker marker = pokemonsMarkerMap.get(pokemon);
-                                if (marker != null) {
-                                    marker.remove();
-                                    pokemonsMarkerMap.remove(pokemon);
+                //Load our Pokemon Array
+                ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
+                //Okay so we're going to fix the annoying issue where the markers were being constantly redrawn
+                for (int i = 0; i < pokemons.size(); i++) {
+                    //Get our pokemon from the list
+                    Pokemons pokemon = pokemons.get(i);
+                    //Is our pokemon contained within the bounds of the camera?
+                    if (curScreen.contains(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))) {
+                        //If yes then has he expired?
+                        //This isnt worded right it should say isNotExpired (Will fix later)
+                        if (pokemon.isExpired()) {
+                            if (UiUtils.isPokemonFiltered(pokemon) ||
+                                    UiUtils.isPokemonExpiredFiltered(pokemon, this)) {
+                                if (pokemonsMarkerMap.containsKey(pokemon)) {
+                                    Marker marker = pokemonsMarkerMap.get(pokemon);
+                                    if (marker != null) {
+                                        marker.remove();
+                                        pokemonsMarkerMap.remove(pokemon);
+                                    }
+                                }
+                            } else {
+                                //Okay finally is he contained within our hashmap?
+                                if (pokemonsMarkerMap.containsKey(pokemon)) {
+                                    //Well if he is then lets pull out our marker.
+                                    Marker marker = pokemonsMarkerMap.get(pokemon);
+                                    //Update the marker
+                                    //UNTESTED
+                                    if (marker != null) {
+                                        marker = pokemon.updateMarker(marker, this);
+                                    }
+                                } else {
+                                    //If our pokemon wasn't in our hashmap lets add him
+                                    pokemonsMarkerMap.put(pokemon, mMap.addMarker(pokemon.getMarker(this)));
                                 }
                             }
                         } else {
-                            //Okay finally is he contained within our hashmap?
-                            if (pokemonsMarkerMap.containsKey(pokemon)) {
-                                //Well if he is then lets pull out our marker.
-                                Marker marker = pokemonsMarkerMap.get(pokemon);
-                                //Update the marker
-                                //UNTESTED
-                                if (marker != null) {
-                                    marker = pokemon.updateMarker(marker, this);
-                                }
-                            } else {
-                                //If our pokemon wasn't in our hashmap lets add him
-                                pokemonsMarkerMap.put(pokemon, mMap.addMarker(pokemon.getMarker(this)));
-                            }
+                            //If our pokemon expired lets remove the marker
+                            if (pokemonsMarkerMap.get(pokemon) != null)
+                                pokemonsMarkerMap.get(pokemon).remove();
+                            //Then remove the pokemon
+                            pokemonsMarkerMap.remove(pokemon);
+                            //Finally lets remove him from our realm.
+                            realm.beginTransaction();
+                            realm.where(Pokemons.class).equalTo("encounterid", pokemon.getEncounterid()).findAll().deleteAllFromRealm();
+                            realm.commitTransaction();
                         }
                     } else {
                         //If our pokemon expired lets remove the marker
@@ -439,72 +365,65 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             pokemonsMarkerMap.get(pokemon).remove();
                         //Then remove the pokemon
                         pokemonsMarkerMap.remove(pokemon);
-                        //Finally lets remove him from our realm.
-                        realm.beginTransaction();
-                        realm.where(Pokemons.class).equalTo("encounterid", pokemon.getEncounterid()).findAll().deleteAllFromRealm();
-                        realm.commitTransaction();
                     }
-                } else {
-                    //If our pokemon expired lets remove the marker
-                    if (pokemonsMarkerMap.get(pokemon) != null)
-                        pokemonsMarkerMap.get(pokemon).remove();
-                    //Then remove the pokemon
-                    pokemonsMarkerMap.remove(pokemon);
                 }
             }
         }
     }
+
     public void refreshGymsAndPokestops() {
-        //The the map bounds
-        if (mMap != null) {
-            LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
+        if (!LIST_MODE) {
+            //The the map bounds
+            if (mMap != null) {
+                LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
 
-            //Before we refresh we want to remove the old markers so lets do that first
-            for (Map.Entry<Gym, Marker> gymMarker : gymMarkerMap.entrySet())
-                gymMarker.getValue().remove();
-            for (Map.Entry<PokeStop, Marker> pokestopMarker : pokestopMarkerMap.entrySet())
-                pokestopMarker.getValue().remove();
+                //Before we refresh we want to remove the old markers so lets do that first
+                for (Map.Entry<Gym, Marker> gymMarker : gymMarkerMap.entrySet())
+                    gymMarker.getValue().remove();
+                for (Map.Entry<PokeStop, Marker> pokestopMarker : pokestopMarkerMap.entrySet())
+                    pokestopMarker.getValue().remove();
 
-            //Clear the hashmaps
-            gymMarkerMap.clear();
-            pokestopMarkerMap.clear();
+                //Clear the hashmaps
+                gymMarkerMap.clear();
+                pokestopMarkerMap.clear();
 
-            //Once we refresh our markers lets go ahead and load our pokemans
-            ArrayList<Gym> gyms = new ArrayList<Gym>(realm.copyFromRealm(realm.where(Gym.class).findAll()));
-            ArrayList<PokeStop> pokestops = new ArrayList<PokeStop>(realm.copyFromRealm(realm.where(PokeStop.class).findAll()));
+                //Once we refresh our markers lets go ahead and load our pokemans
+                ArrayList<Gym> gyms = new ArrayList<Gym>(realm.copyFromRealm(realm.where(Gym.class).findAll()));
+                ArrayList<PokeStop> pokestops = new ArrayList<PokeStop>(realm.copyFromRealm(realm.where(PokeStop.class).findAll()));
 
-            if (SettingsUtil.getSettings(MapsActivity.this).isGymsEnabled()) {
-                for (int i = 0; i < gyms.size(); i++) {
-                    Gym gym = gyms.get(i);
-                    LatLng pos = new LatLng(gym.getLatitude(), gym.getLongitude());
-                    if (curScreen.contains(pos) && !shouldGymBeRemoved(gym)) {
-                        Marker marker = mMap.addMarker(gym.getMarker(this));
-                        gymMarkerMap.put(gym, marker);
+                if (SettingsUtil.getSettings(MapsActivity.this).isGymsEnabled()) {
+                    for (int i = 0; i < gyms.size(); i++) {
+                        Gym gym = gyms.get(i);
+                        LatLng pos = new LatLng(gym.getLatitude(), gym.getLongitude());
+                        if (curScreen.contains(pos) && !shouldGymBeRemoved(gym)) {
+                            Marker marker = mMap.addMarker(gym.getMarker(this));
+                            gymMarkerMap.put(gym, marker);
+                        }
                     }
                 }
-            }
 
-            boolean showAllStops = !Settings.get(this).isShowOnlyLured();
+                boolean showAllStops = !Settings.get(this).isShowOnlyLured();
 
-            if (SettingsUtil.getSettings(MapsActivity.this).isPokestopsEnabled()) {
-                for (int i = 0; i < pokestops.size(); i++) {
-                    PokeStop pokestop = pokestops.get(i);
-                    LatLng pos = new LatLng(pokestop.getLatitude(), pokestop.getLongitude());
-                    if (curScreen.contains(pos)) {
-                        if (pokestop.isHasLureInfo() || showAllStops) {
-                            Marker marker = mMap.addMarker(pokestop.getMarker(this));
-                            pokestopMarkerMap.put(pokestop, marker);
+                if (SettingsUtil.getSettings(MapsActivity.this).isPokestopsEnabled()) {
+                    for (int i = 0; i < pokestops.size(); i++) {
+                        PokeStop pokestop = pokestops.get(i);
+                        LatLng pos = new LatLng(pokestop.getLatitude(), pokestop.getLongitude());
+                        if (curScreen.contains(pos)) {
+                            if (pokestop.isHasLureInfo() || showAllStops) {
+                                Marker marker = mMap.addMarker(pokestop.getMarker(this));
+                                pokestopMarkerMap.put(pokestop, marker);
+                            }
                         }
                     }
                 }
             }
         }
     }
+
     public void createBoundingBox() {
         if (SCANNING_STATUS) {
             if (scanMap.size() > 0) {
-                if (mBoundingBox != null)
-                    mBoundingBox.remove();
+                removeBoundingBox();
 
                 LatLng loc = scanMap.get(0);
 
@@ -527,14 +446,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         } else {
             if (currentCameraPos != null) {
-                if (mBoundingBox != null) {
-                    mBoundingBox.remove();
-                }
+
+                removeBoundingBox();
+
                 int scanDist = Settings.get(this).getScanValue();
+
                 LatLng center = currentCameraPos.target;
-                if (SettingsUtil.getSettings(this).isLockGpsEnabled()) {
-                    center = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+                if (SettingsUtil.getSettings(this).isDrivingModeEnabled()) {
+                    if (currentLocation != null) {
+                        center = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                    }
                 }
+
                 mBoundingBox = mMap.addCircle(new CircleOptions()
                         .center(center)
                         .radius(scanDist * 150)
@@ -543,6 +467,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     }
+
+    public void removeBoundingBox() {
+        if (mBoundingBox != null)
+            mBoundingBox.remove();
+    }
+
     public boolean shouldGymBeRemoved(Gym gym) {
         GymFilter currentGymFilter = GymFilter.getGymFilter(MapsActivity.this);
         int guardPokemonCp = gym.getGuardPokemonCp();
@@ -571,16 +501,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return false;
     }
+
     public void createMapObjects() {
         if (SettingsUtil.getSettings(this).isBoundingBoxEnabled()) {
             createBoundingBox();
         } else {
-            if (mBoundingBox != null) {
-                mBoundingBox.remove();
-                mBoundingBox = null;
-            }
+            removeBoundingBox();
         }
     }
+
     public void startRefresher() {
         if (pokeonRefresher != null)
             pokeonRefresher.unsubscribe();
@@ -635,10 +564,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         logOut();
     }
 
-    public boolean doWeHavePermission() {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -688,6 +613,213 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    @Override
+
+    public void onConnected(Bundle connectionHint) {
+        getLocation();
+    }
+
+    @SuppressWarnings({"MissingPermission"})
+    private boolean getLocation() {
+        if (PermissionUtils.doWeHaveGPSandLOC(this)) {
+            if (mGoogleApiClient.isConnected()) {
+                currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+
+    }
+
+    @OnClick(R.id.btnList)
+    public void listModeDialog(){
+        //GET OUR LOCATION AND SET A VARIABLE
+        getLocation();
+        Location pos;
+        //CREATE TWO LIST (THIS IS A GHETTO SOLUTION BOYS)
+        ArrayList<Pokemons> pokelist = new ArrayList<>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
+        ArrayList<Pokemons> listout = new ArrayList<>();
+
+            if (currentLocation != null) {
+                pos = currentLocation;
+            } else {
+                pos = new Location("");
+                pos.setLongitude(currentCameraPos.target.longitude);
+                pos.setLatitude(currentCameraPos.target.latitude);
+            }
+
+            if (pos != null) {
+                //Write distance to pokemons
+                for (int i = 0; i < pokelist.size(); i++) {
+                    Pokemons pokemons = pokelist.get(i);
+                    //IF OUR POKEMANS IS FILTERED WE AINT SHOWIN HIM
+                    if (!PokemonListLoader.getFilteredList().contains(new FilterItem(pokemons.getNumber()))) {
+                        //DO MATH
+                        Location temp = new Location("");
+
+                        temp.setLatitude(pokemons.getLatitude());
+                        temp.setLongitude(pokemons.getLongitude());
+
+                        double distance = pos.distanceTo(temp);
+                        pokemons.setDistance(distance);
+
+                        //ADD OUR POKEMANS TO OUR OUT LIST
+                        listout.add(pokemons);
+                    }
+                }
+            }
+
+        if (listout.size() > 0) {
+            LayoutInflater inflater = getLayoutInflater();
+            final View dialoglayout = inflater.inflate(R.layout.dialog_list_view, null);
+            final AlertDialog builder = new AlertDialog.Builder(this).create();
+            builder.setView(dialoglayout);
+
+
+            RecyclerView recyclerView = (RecyclerView) dialoglayout.findViewById(R.id.recyclerListView);
+            recyclerView.setHasFixedSize(true);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(mLayoutManager);
+
+            RecyclerView.Adapter mAdapter = new ListViewRecyclerAdapter(listout, new ListViewRecyclerAdapter.OnClickListener() {
+                @Override
+                public void onClick(Pokemons pokemons) {
+                    if (mMap != null) {
+                        LatLng pos = new LatLng(pokemons.getLatitude(), pokemons.getLongitude());
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 20));
+                        builder.dismiss();
+                    }
+                }
+            });
+
+            recyclerView.setAdapter(mAdapter);
+
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    LIST_MODE = false;
+                }
+            });
+
+            builder.show();
+            LIST_MODE = true;
+
+            //Were going to clear the map to reduce lag
+            pokemonsMarkerMap = new ArrayMap<Pokemons, Marker>();
+            pokestopMarkerMap = new ArrayMap<PokeStop, Marker>();
+            gymMarkerMap = new ArrayMap<Gym, Marker>();
+            mMap.clear();
+        }
+    }
+    @OnClick(R.id.btnSearch)
+    public void searchAddressDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Address Search");
+        alert.setMessage("Search by Address");
+
+        final EditText input = new EditText(this);
+        alert.setView(input);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String result = input.getText().toString();
+                Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
+                try {
+                    List<Address> addresses = geocoder.getFromLocationName(result,10);
+                    Address address = addresses.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+        alert.show();
+    }
+
+    @Override
+    @SuppressWarnings({"MissingPermission"})
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        System.out.println("Map ready");
+        if (PermissionUtils.doWeHaveGPSandLOC(this)) {
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMapToolbarEnabled(false);
+            moveCameraToCurrentPosition();
+        }
+        mMap.setOnCameraChangeListener(this);
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Object markerKey = null;
+                for (Map.Entry<Pokemons, Marker> pokemonsMarkerEntry : pokemonsMarkerMap.entrySet()) {
+                    if (pokemonsMarkerEntry.getValue().equals(marker)) {
+                        markerKey = pokemonsMarkerEntry.getKey();
+                        break;
+                    }
+                }
+                if (markerKey == null) {
+                    for (Map.Entry<Gym, Marker> gymMarkerEntry : gymMarkerMap.entrySet()) {
+                        if (gymMarkerEntry.getValue().equals(marker)) {
+                            markerKey = gymMarkerEntry.getKey();
+                            break;
+                        }
+                    }
+                }
+                if (markerKey == null) {
+                    for (Map.Entry<PokeStop, Marker> pokeStopMarkerEntry : pokestopMarkerMap.entrySet()) {
+                        if (pokeStopMarkerEntry.getValue().equals(marker)) {
+                            markerKey = pokeStopMarkerEntry.getKey();
+                            break;
+                        }
+                    }
+                }
+                if (markerKey != null) {
+                    if (!Settings.get(MapsActivity.this).isUseOldMapMarker()) {
+                        removeAdapterAndListener();
+                        MarkerDetails.showMarkerDetailsDialog(MapsActivity.this, markerKey, currentLocation);
+                    } else {
+                        setAdapterAndListener(markerKey);
+                        marker.showInfoWindow();
+                    }
+                }
+                return false;
+            }
+        });
+        startRefresher();
+    }
+
+    public boolean moveCameraToCurrentPosition() {
+        int i = 0;
+        getLocation();
+        if (currentLocation != null) {
+            LatLng target = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            if (mMap != null) {
+                this.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 15));
+                return true;
+            } else
+            return false;
+        } else {
+            //Try again after half a second
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    moveCameraToCurrentPosition();
+                }
+            }, 500);
+        }
+        return false;
+    }
+
     private void setAdapterAndListener(final Object markerKey) {
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
@@ -709,9 +841,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 TextView snippet = new TextView(MapsActivity.this);
                 snippet.setTextColor(Color.GRAY);
                 snippet.setGravity(Gravity.CENTER);
-                if(markerKey instanceof Pokemons){
+                if (markerKey instanceof Pokemons) {
                     snippet.setText(MapsActivity.this.getText(R.string.expires_in) + DrawableUtils.getExpireTime(((Pokemons) markerKey).getExpires()));
-                }else{
+                } else {
                     snippet.setText(marker.getSnippet());
                 }
 
@@ -728,7 +860,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + marker.getPosition().latitude + "," + marker.getPosition().longitude + "(" + marker.getTitle() + ")");

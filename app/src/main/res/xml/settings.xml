@@ -91,13 +91,6 @@
             android:layout_height="match_parent"
             android:layout_width="wrap_content" />
         <SwitchPreference
-            android:key="lockGpsEnabled"
-            android:title="@string/lock_gps"
-            android:summary="@string/lock_gps_desc"
-            android:defaultValue="false"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content" />
-        <SwitchPreference
             android:key="useOldMapMarker"
             android:title="@string/old_marker"
             android:summary="@string/old_marker_desc"

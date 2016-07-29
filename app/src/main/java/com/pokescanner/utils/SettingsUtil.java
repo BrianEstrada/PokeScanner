@@ -103,7 +103,6 @@ public class SettingsUtil {
         return new Settings(
             sharedPrefs.getBoolean(ENABLE_UPDATES,true),
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
-            sharedPrefs.getBoolean(KEY_LOCK_GPS, false),
             sharedPrefs.getBoolean(DRIVING_MODE, false),
             sharedPrefs.getInt(SCAN_VALUE, 4),
             sharedPrefs.getInt(SERVER_REFRESH_RATE, 1),
@@ -124,7 +123,6 @@ public class SettingsUtil {
             .edit()
             .putBoolean(ENABLE_UPDATES,settings.isUpdatesEnabled())
             .putBoolean(KEY_BOUNDING_BOX, settings.isBoundingBoxEnabled())
-            .putBoolean(KEY_LOCK_GPS, settings.isLockGpsEnabled())
             .putBoolean(DRIVING_MODE, settings.isDrivingModeEnabled())
             .putInt(SCAN_VALUE,settings.getScanValue())
             .putInt(SERVER_REFRESH_RATE, settings.getServerRefresh())

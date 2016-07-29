@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -27,8 +26,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.helper.Settings;
-import com.pokescanner.updater.AppUpdateLoader;
 import com.pokescanner.updater.AppUpdateDialog;
+import com.pokescanner.updater.AppUpdateLoader;
 import com.pokescanner.utils.PermissionUtils;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
@@ -42,20 +41,21 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class SplashScreenActivity extends AppCompatActivity
-{
+public class SplashScreenActivity extends AppCompatActivity {
     private final static int LOCATION_PERMISSION_REQUESTED = 1400;
     private final static int STORAGE_PERMISSION_REQUESTED = 1300;
     private final static int SPLASH_TIME_OUT = 3000;
 
     private Context mContext;
-    @BindView(R.id.splashProgress) DilatingDotsProgressBar splashProgress;
-    @BindView(R.id.splashRootView) RelativeLayout rootView;
-    @BindView(R.id.tvSplashVersion) TextView splashVersion;
+    @BindView(R.id.splashProgress)
+    DilatingDotsProgressBar splashProgress;
+    @BindView(R.id.splashRootView)
+    RelativeLayout rootView;
+    @BindView(R.id.tvSplashVersion)
+    TextView splashVersion;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         MultiDex.install(this);
         super.onCreate(savedInstanceState);
         //Crashlytics initialization
@@ -85,46 +85,32 @@ public class SplashScreenActivity extends AppCompatActivity
         checkRequirementsAndInitialize();
     }
 
-    private void loadVersionNumber()
-    {
-        try
-        {
+    private void loadVersionNumber() {
+        try {
             PackageInfo pInfo = pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
-            splashVersion.setText("V"+ version);
-        }
-        catch (PackageManager.NameNotFoundException e) {
+            splashVersion.setText("V" + version);
+        } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    private void checkRequirementsAndInitialize()
-    {
-        if(isConnectedToTheInternet())
-        {
-            if(checkGooglePlayServicesAvailable())
-            {
-                if(getLocationPermission())
-                {
-                    if (isLocationServicesEnabled())
-                    {
-                        Settings currentSettings = Settings.get(mContext);
-                        if (currentSettings.isUpdatesEnabled())
-                            new AppUpdateLoader().start();
-                        else
-                            goToLoginScreen();
-                    }
+    private void checkRequirementsAndInitialize() {
+        if (isConnectedToTheInternet()) {
+            if (checkGooglePlayServicesAvailable()) {
+                if (getLocationPermission()) {
+                    Settings currentSettings = Settings.get(mContext);
+                    if (currentSettings.isUpdatesEnabled())
+                        new AppUpdateLoader().start();
                     else
-                        displayErrorDialog(getString(R.string.enable_location_services));
+                        goToLoginScreen();
                 }
             }
-        }
-        else
+        } else
             displayErrorDialog(getString(R.string.no_internet));
     }
 
-    private void displayErrorDialog(String message)
-    {
+    private void displayErrorDialog(String message) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
         dialog.setMessage(message);
         dialog.setCancelable(false);
@@ -144,36 +130,30 @@ public class SplashScreenActivity extends AppCompatActivity
         dialog.show();
     }
 
-    private boolean isConnectedToTheInternet()
-    {
+    private boolean isConnectedToTheInternet() {
         ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         return isConnected;
     }
 
-    private boolean checkGooglePlayServicesAvailable()
-    {
+    private boolean checkGooglePlayServicesAvailable() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int result = googleAPI.isGooglePlayServicesAvailable(mContext);
-        if(result != ConnectionResult.SUCCESS)
-        {
-            if(googleAPI.isUserResolvableError(result))
-            {
+        if (result != ConnectionResult.SUCCESS) {
+            if (googleAPI.isUserResolvableError(result)) {
                 Dialog errorDialog = googleAPI.getErrorDialog(this, result, 1);
                 errorDialog.setCancelable(false);
                 errorDialog.setCanceledOnTouchOutside(false);
                 errorDialog.show();
-            }
-            else
+            } else
                 Toast.makeText(mContext, googleAPI.getErrorString(result), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-    private boolean getLocationPermission()
-    {
+    private boolean getLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{
@@ -184,21 +164,9 @@ public class SplashScreenActivity extends AppCompatActivity
         return true;
     }
 
-    private boolean isLocationServicesEnabled()
-    {
-        LocationManager lm = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-        boolean gps_enabled = false;
-        boolean network_enabled = false;
-        gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        return gps_enabled && network_enabled;
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAppUpdateEvent(AppUpdateEvent event)
-    {
-        switch (event.getStatus())
-        {
+    public void onAppUpdateEvent(AppUpdateEvent event) {
+        switch (event.getStatus()) {
             case AppUpdateEvent.OK:
                 if (PermissionUtils.doWeHaveReadWritePermission(this))
                     new AppUpdateDialog(mContext, event.getAppUpdate());
@@ -215,8 +183,7 @@ public class SplashScreenActivity extends AppCompatActivity
         }
     }
 
-    public void goToLoginScreen()
-    {
+    public void goToLoginScreen() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -235,17 +202,17 @@ public class SplashScreenActivity extends AppCompatActivity
     public void getReadWritePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                dialog.setCancelable(false)
-                .setMessage(R.string.Permission_Required_Auto_Updater)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        ActivityCompat.requestPermissions(SplashScreenActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUESTED);
-                    }
-                })
-                .show();
+            AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+            dialog.setCancelable(false)
+                    .setMessage(R.string.Permission_Required_Auto_Updater)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ActivityCompat.requestPermissions(SplashScreenActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUESTED);
+                        }
+                    })
+                    .show();
         } else {
             ActivityCompat.requestPermissions(SplashScreenActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUESTED);
@@ -261,20 +228,17 @@ public class SplashScreenActivity extends AppCompatActivity
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showToast(R.string.PERMISSION_OK);
                     checkRequirementsAndInitialize();
-                }else {
+                } else {
                     // Permission request was denied.
                     displayErrorDialog(getString(R.string.requires_location_services));
                 }
             }
             break;
             case STORAGE_PERMISSION_REQUESTED:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showToast(R.string.PERMISSION_OK);
                     new AppUpdateLoader().start();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(mContext, R.string.update_canceled, Toast.LENGTH_SHORT).show();
                     goToLoginScreen();
                 }

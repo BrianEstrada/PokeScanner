@@ -103,7 +103,6 @@ public class LoginActivity extends AppCompatActivity {
     public void onAuthLoadedEvent(final AuthLoadedEvent event) {
         switch (event.getStatus()) {
             case AuthLoadedEvent.OK:
-
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -112,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                                 password,
                                 event.getToken(),
                                 LOGIN_METHOD);
+                        System.out.println(user);
                         realm.copyToRealmOrUpdate(user);
                         startMapIntent();
                         showToast(R.string.LOGIN_OK);
@@ -139,18 +139,19 @@ public class LoginActivity extends AppCompatActivity {
         //This method is used to track which login method users are using
         // We're going to use to see if we should be improving the google login
         //or not (We are not storing any sort of login information via this method)
-        switch (LOGIN_METHOD)
-        {
-            case User.GOOGLE:
-                Answers.getInstance().logLogin(new LoginEvent()
-                        .putMethod("GOOGLE")
-                        .putSuccess(true));
-                break;
-            case User.PTC:
-                Answers.getInstance().logLogin(new LoginEvent()
-                        .putMethod("PTC")
-                        .putSuccess(true));
-                break;
+        if (!BuildConfig.DEBUG) {
+            switch (LOGIN_METHOD) {
+                case User.GOOGLE:
+                    Answers.getInstance().logLogin(new LoginEvent()
+                            .putMethod("GOOGLE")
+                            .putSuccess(true));
+                    break;
+                case User.PTC:
+                    Answers.getInstance().logLogin(new LoginEvent()
+                            .putMethod("PTC")
+                            .putSuccess(true));
+                    break;
+            }
         }
     }
 

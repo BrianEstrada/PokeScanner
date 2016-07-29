@@ -46,7 +46,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false,exclude = {"distance","Name","Number","expires"})
 public class Pokemons  extends RealmObject{
     int Number;
     @Index
@@ -55,6 +55,7 @@ public class Pokemons  extends RealmObject{
     long encounterid;
     long expires;
     double longitude,latitude;
+    double distance;
 
     public Pokemons() {}
 

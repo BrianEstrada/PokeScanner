@@ -56,7 +56,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 .putBoolean(SettingsUtil.SHOW_ONLY_LURED,settings.isShowOnlyLured())
                 .putBoolean(SettingsUtil.SHOW_GYMS,settings.isGymsEnabled())
                 .putBoolean(SettingsUtil.SHOW_POKESTOPS,settings.isPokestopsEnabled())
-                .putBoolean(SettingsUtil.KEY_LOCK_GPS,settings.isLockGpsEnabled())
                 .putString(SettingsUtil.SERVER_REFRESH_RATE,String.valueOf(settings.getServerRefresh()))
                 .putString(SettingsUtil.MAP_REFRESH_RATE,String.valueOf(settings.getMapRefresh()))
                 .putString(SettingsUtil.POKEMON_ICON_SCALE,String.valueOf(settings.getScale()))
@@ -193,7 +192,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         SettingsUtil.saveSettings(this,new Settings(
                 sharedPreferences.getBoolean(SettingsUtil.ENABLE_UPDATES,true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_BOUNDING_BOX, false),
-                sharedPreferences.getBoolean(SettingsUtil.KEY_LOCK_GPS, false),
                 sharedPreferences.getBoolean(SettingsUtil.DRIVING_MODE, false),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SCAN_VALUE,"4")),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SERVER_REFRESH_RATE, "1")),
