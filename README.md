@@ -20,18 +20,20 @@
 
 ###[Download Section](https://github.com/BrianEstrada/PokeScanner/releases)
 
+## Main Contributors
+
+- [rhari991](https://github.com/rhari991)
+- [EZTEQ](https://github.com/EZTEQ)
 
 ## Credits
 
 - [Java Api](https://github.com/Grover-c13/PokeGOAPI-Java/)
 - [Tsunamii](https://github.com/Tsunamii) (Material Icon)
-- [rhari991](https://github.com/rhari991)
 - [swhittaker](https://github.com/swhittaker)
 - [toumeitou](https://github.com/toumeitou)
 - [leTokki](https://github.com/leTokki)
 - [ljk1291](https://github.com/ljk1291)
 - [fizzxed](https://github.com/fizzxed)
-- [EZTEQ](https://github.com/EZTEQ)
 - [akymos](https://github.com/akymos)
 
 
