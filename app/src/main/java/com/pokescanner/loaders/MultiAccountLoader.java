@@ -5,7 +5,6 @@ import com.pokescanner.helper.MyPartition;
 import com.pokescanner.objects.User;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,18 +21,19 @@ public class MultiAccountLoader {
         scanMaps = new ArrayList<>();
         threads = new ArrayList<>();
 
-        int usersNumber = users.size();
-        int scanSize = (int) Math.ceil(scanMap.size()/usersNumber);
+        int userSize = users.size();
+        double dividedValue = (float) scanMap.size()/userSize;
+        int scanMapSplitSize = (int) Math.ceil(dividedValue);
 
-        scanMaps = MyPartition.partition(scanMap,scanSize);
+        System.out.println("Divided Value:"+dividedValue);
 
-        System.out.println(scanMaps.size());
+        scanMaps = MyPartition.partition(scanMap,scanMapSplitSize);
 
-        for (int i = 0;i<users.size();i++) {
+        System.out.println("Scan Map Size: " + scanMaps.size());
 
-            User tempUser = users.get(i);
+        for (int i = 0;i<scanMaps.size();i++) {
             List<LatLng> tempMap = scanMaps.get(i);
-            System.out.println(Arrays.asList(tempMap));
+            User tempUser = users.get(i);
             threads.add(new ObjectLoaderPTC(tempUser,tempMap,SLEEP_TIME,i));
         }
 
