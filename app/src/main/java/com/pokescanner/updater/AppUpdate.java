@@ -1,7 +1,7 @@
 package com.pokescanner.updater;
 
-import lombok.Getter;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
 @Getter

@@ -1,32 +1,16 @@
-<!--
-  ~
-  ~     This program is free software: you can redistribute it and/or modify
-  ~     it under the terms of the GNU General Public License as published by
-  ~     the Free Software Foundation, either version 3 of the License, or
-  ~     (at your option) any later version.
-  ~
-  ~     This program is distributed in the hope that it will be useful,
-  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~     GNU General Public License for more details.
-  ~
-  ~     You should have received a copy of the GNU General Public License
-  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
 <resources>
-    <string name="app_name" translatable="false">Poké Scanner</string>
     <string name="shared_key" translatable="false">POKESCANNER</string>
     <string name="title_activity_maps">Map</string>
     <string name="scan">Scan</string>
+    <string name="login">Login</string>
     <string name="ptclogin">PTC Login</string>
     <string name="googlelogin">Google Login</string>
-    <string name="poke_scanner" translatable="false">Poke Scanner</string>
+    <string name="poke_scanner" translatable="false">PokéScanner</string>
     <string name="blacklist">Blacklist</string>
     <string name="save">Save</string>
     <string name="search_radius">Search Radius</string>
     <string name="search_radius_desc">Allows you to change the search radius of Poke Scanner (warning large values will slow down your device)</string>
-    <string name="higher_number_slower_search">1 Unit ≈ 200 Meters</string>
+    <string name="higher_number_slower_search">1 Unit ≈ 140 Meters</string>
     <string name="cancel">Cancel</string>
     <string name="filter">Filter</string>
     <string name="none">None</string>
@@ -39,9 +23,15 @@
     <string name="LOGIN_OK">Login Successful</string>
     <string name="PERMISSION_OK">Thanks for the permission!</string>
 
+    <string name="ptcgoogleusername">PTC/Google Username</string>
     <string name="TRYING_PTC_LOGIN">Trying PTC login.</string>
     <string name="TRYING_GOOGLE_LOGIN">Trying Google Login.</string>
 
+    <string name="SCAN_FAILED">Scan Failed</string>
+    <string name="ERROR_LOGIN">Login Issue (Try relogging)</string>
+    <string name="ERROR_THREAD">Scan Canceled</string>
+    <string name="ERROR_SERVER">Servers not responding</string>
+    <string name="ERROR_LOW_MEMORY">Low Memory Detect! Clearing Gyms/Pokestops</string>
     <string name="on">On</string>
     <string name="off">Off</string>
 
@@ -86,6 +76,9 @@
 
     <string name="enable_update">Enable Auto-Updates</string>
     <string name="enable_update_desc">Checks every time you start to the app if there is an update (On by default).</string>
+
+    <string name="enable_low_memory">Enable Low Memory Management</string>
+    <string name="enable_low_memory_desc">Allows the application to clear Pokemon/Gyms/Pokestops to prevent memory issues</string>
 
     <string name="show_range">Show Range</string>
     <string name="show_range_desc">Creates a black round circle around the scanning area.</string>
@@ -137,7 +130,7 @@
 
     <string name="settingsbutton">SettingsButton</string>
     <string name="version_check_failed">Version check failed.</string>
-    <string name="updating_pokescanner">Updating Poke Scanner</string>
+    <string name="updating_pokescanner">Updating PokéScanner</string>
     <string name="update">Update</string>
     <string name="update_available_title">Update available</string>
     <string name="up_to_date">You have the latest version!</string>
@@ -163,6 +156,9 @@
 
     <string name="auto_update_denied">Permission Denied! Disabling auto updater :(</string>
     <string name="location_denied">App will not work without location!</string>
+
+    <string name="Force_English_Names">Force English names</string>
+    <string name="Force_English_Names_desc">Forces Pokemon names to default to English.</string>
 
     <string name="Check_For_Update">Check for updates</string>
     <string name="Check_For_Update_desc">Checks for an update manually</string>
@@ -335,4 +331,6 @@
     <string name="update_canceled">Update cancelled.</string>
     <string name="search">Search</string>
     <string name="search_by_address">Search By Address</string>
+    <string name="account_manager">Account Manager</string>
+    <string name="add_account">Add Account</string>
 </resources>

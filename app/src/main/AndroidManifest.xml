@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -42,6 +43,9 @@
         <activity android:name=".LoginActivity"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
 
+        <activity android:name=".multiboxing.MultiboxingActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
+
         <activity
             android:name=".GoogleLoginActivity"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
@@ -52,7 +56,8 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".SettingsActivity" />
+            android:name=".settings.SettingsActivity"
+            android:parentActivityName=".settings.SettingsActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

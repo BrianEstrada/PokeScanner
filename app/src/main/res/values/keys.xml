@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="GOOGLEAPIKEY">AIzaSyDi619nWykc5dZcsDYl9vBKcFxYI82TqVM</string>
+    <string name="banner">ca-app-pub-0241023336119330/6360170443</string>
 </resources>

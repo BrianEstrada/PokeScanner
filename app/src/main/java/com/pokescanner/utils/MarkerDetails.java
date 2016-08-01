@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,7 +40,7 @@ public class MarkerDetails
     private static TextView tvAddress;
     private static Context context;
 
-    public static void showMarkerDetailsDialog(final Context context, Object selectedMarkerData, Location currentLocation)
+    public static void showMarkerDetailsDialog(final Context context, Object selectedMarkerData)
     {
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

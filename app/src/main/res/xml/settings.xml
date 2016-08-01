@@ -9,7 +9,14 @@
     </Preference>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/category_update">
+        android:title="Multi-account support">
+        <Preference android:title="Configure accounts"
+            android:summary="Add multiple account to speed up scan time"
+            android:key="multiboxing"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/category_update"
+        android:key="category_update">
         <Preference
             android:title="@string/Check_For_Update"
             android:summary="@string/Check_For_Update_desc"
@@ -59,6 +66,13 @@
             android:key="shuffleIcons"
             android:title="@string/shuffle_icons"
             android:summary="@string/shuffle_icons_desc"
+            android:defaultValue="false"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
+        <SwitchPreference
+            android:key="forceEnglishNames"
+            android:title="@string/Force_English_Names"
+            android:summary="@string/Force_English_Names_desc"
             android:defaultValue="false"
             android:layout_height="match_parent"
             android:layout_width="wrap_content" />
@@ -132,6 +146,13 @@
             android:entries="@array/IconScale"
             android:entryValues="@array/IconScaleValues"
             android:defaultValue="2" />
+        <SwitchPreference
+            android:key="enableLowMemory"
+            android:title="@string/enable_low_memory"
+            android:summary="@string/enable_low_memory_desc"
+            android:defaultValue="true"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
     </PreferenceCategory>
 
     <PreferenceCategory

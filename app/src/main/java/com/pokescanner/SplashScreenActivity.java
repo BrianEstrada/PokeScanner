@@ -25,7 +25,8 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.pokescanner.events.AppUpdateEvent;
-import com.pokescanner.helper.Settings;
+import com.pokescanner.settings.Settings;
+import com.pokescanner.updater.AppUpdate;
 import com.pokescanner.updater.AppUpdateDialog;
 import com.pokescanner.updater.AppUpdateLoader;
 import com.pokescanner.utils.PermissionUtils;
@@ -45,6 +46,9 @@ public class SplashScreenActivity extends AppCompatActivity {
     private final static int LOCATION_PERMISSION_REQUESTED = 1400;
     private final static int STORAGE_PERMISSION_REQUESTED = 1300;
     private final static int SPLASH_TIME_OUT = 3000;
+    private boolean checkingForUpdate;
+    private AlertDialog.Builder builder;
+    private AlertDialog dialog;
 
     private Context mContext;
     @BindView(R.id.splashProgress)
@@ -64,7 +68,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         ButterKnife.bind(this);
         mContext = SplashScreenActivity.this;
-
+        checkingForUpdate = false;
+        builder = new AlertDialog.Builder(mContext);
+        dialog = builder.create();
 
         //Realm initialization
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
@@ -95,15 +101,21 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
-    private void checkRequirementsAndInitialize() {
+    private void checkRequirementsAndInitialize()  {
         if (isConnectedToTheInternet()) {
             if (checkGooglePlayServicesAvailable()) {
                 if (getLocationPermission()) {
                     Settings currentSettings = Settings.get(mContext);
-                    if (currentSettings.isUpdatesEnabled())
-                        new AppUpdateLoader().start();
-                    else
+                    if (BuildConfig.enableUpdater) {
+                        if (currentSettings.isUpdatesEnabled()) {
+                            new AppUpdateLoader().start();
+                            checkingForUpdate = true;
+                        } else
+                            goToLoginScreen();
+                    }else
+                    {
                         goToLoginScreen();
+                    }
                 }
             }
         } else
@@ -111,23 +123,26 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void displayErrorDialog(String message) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-        dialog.setMessage(message);
-        dialog.setCancelable(false);
-        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                checkRequirementsAndInitialize();
-            }
-        });
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                checkRequirementsAndInitialize();
-            }
-        });
-        dialog.show();
+        if(!dialog.isShowing()) {
+            builder = new AlertDialog.Builder(mContext);
+            builder.setMessage(message);
+            builder.setCancelable(false);
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkRequirementsAndInitialize();
+                }
+            });
+            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    checkRequirementsAndInitialize();
+                }
+            });
+            dialog = builder.create();
+            dialog.show();
+        }
     }
 
     private boolean isConnectedToTheInternet() {
@@ -164,35 +179,69 @@ public class SplashScreenActivity extends AppCompatActivity {
         return true;
     }
 
+    private void showAppUpdateDialog(final Context context, final AppUpdate update) {
+        if(!dialog.isShowing()) {
+            builder = new AlertDialog.Builder(context)
+                    .setTitle(R.string.update_available_title)
+                    .setMessage(context.getString(R.string.app_name) + " " + update.getVersion() + " " + context.getString(R.string.update_available_long) + "\n\n" + context.getString(R.string.changes) + "\n\n" + update.getChangelog())
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setPositiveButton(context.getString(R.string.update), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            AppUpdateDialog.downloadAndInstallAppUpdate(context, update);
+                        }
+                    })
+                    .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            goToLoginScreen();
+                        }
+                    })
+                    .setCancelable(false);
+            dialog = builder.create();
+            dialog.show();
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAppUpdateEvent(AppUpdateEvent event) {
         switch (event.getStatus()) {
             case AppUpdateEvent.OK:
-                if (PermissionUtils.doWeHaveReadWritePermission(this))
-                    new AppUpdateDialog(mContext, event.getAppUpdate());
-                else
+                if (PermissionUtils.doWeHaveReadWritePermission(this)) {
+                    showAppUpdateDialog(mContext, event.getAppUpdate());
+                    checkingForUpdate = false;
+                    System.out.println("Updating");
+                } else{
                     getReadWritePermission();
+                }
                 break;
             case AppUpdateEvent.FAILED:
                 showToast(R.string.update_check_failed);
+                checkingForUpdate = false;
                 goToLoginScreen();
                 break;
             case AppUpdateEvent.UPTODATE:
+                checkingForUpdate = false;
                 goToLoginScreen();
                 break;
         }
     }
 
     public void goToLoginScreen() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                splashProgress.hide();
-                Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
+        if(!dialog.isShowing()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    splashProgress.hide();
+                    Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    finish();
+                }
+            }, SPLASH_TIME_OUT);
+        }
     }
 
     public void showToast(int resString) {
@@ -240,6 +289,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     new AppUpdateLoader().start();
                 } else {
                     Toast.makeText(mContext, R.string.update_canceled, Toast.LENGTH_SHORT).show();
+                    checkingForUpdate = false;
                     goToLoginScreen();
                 }
                 break;
@@ -262,5 +312,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
+
 
 }

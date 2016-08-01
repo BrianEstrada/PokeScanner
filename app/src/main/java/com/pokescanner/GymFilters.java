@@ -2,18 +2,14 @@ package com.pokescanner;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.Window;
 import android.widget.CompoundButton;
 
-import com.pokescanner.events.RestartRefreshEvent;
 import com.pokescanner.helper.GymFilter;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
-import org.greenrobot.eventbus.EventBus;
 
 public class GymFilters
 {
@@ -92,24 +88,6 @@ public class GymFilters
                 int selectedMinValue = (Integer) minValue;
                 int selectedMaxValue = (Integer) maxValue;
                 GymFilter.getGymFilter(context).toBuilder().guardPokemonMinCp(selectedMinValue).guardPokemonMaxCp(selectedMaxValue).build().saveGymFilter(context);
-            }
-        });
-
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
-        {
-            @Override
-            public void onCancel(DialogInterface dialogInterface)
-            {
-                EventBus.getDefault().post(new RestartRefreshEvent());
-            }
-        });
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface)
-            {
-                EventBus.getDefault().post(new RestartRefreshEvent());
             }
         });
 

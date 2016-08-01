@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pokescanner.R;
-import com.pokescanner.helper.Settings;
+import com.pokescanner.settings.Settings;
 import com.pokescanner.utils.DrawableUtils;
 
 import POGOProtos.Map.Fort.FortDataOuterClass;

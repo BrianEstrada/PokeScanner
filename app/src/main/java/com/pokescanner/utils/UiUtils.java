@@ -19,6 +19,7 @@ import static com.pokescanner.helper.Generation.hexagonal_number;
 
 
 public class UiUtils {
+    public static final int BASE_DELAY = 5000;
     public static void hideKeyboard(EditText editText) {
         ((InputMethodManager) editText.getContext()
             .getSystemService(Context.INPUT_METHOD_SERVICE))
@@ -26,7 +27,7 @@ public class UiUtils {
     }
 
     public static String getSearchTime(int val,Context context) {
-        int calculatedValue = hexagonal_number(val) * SettingsUtil.getSettings(context).getServerRefresh() * 1000;
+        int calculatedValue = hexagonal_number(val) * BASE_DELAY;
         long millis = calculatedValue;
         DateTime dt = new DateTime(millis);
         DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
@@ -34,7 +35,7 @@ public class UiUtils {
     }
 
     public static boolean isPokemonExpiredFiltered(Pokemons pokemons,Context context) {
-        long millis = ExpirationFilter.getFilter(context).getPokemonExpirationMinSec() * 1000;
+        long millis = ExpirationFilter.getFilter(context).getPokemonExpirationMinSec() * BASE_DELAY;
         //Create a date from the expire time (Long value)
         DateTime date = new DateTime(pokemons.getExpires());
         //If our date time is after now then it's expired and we'll return expired (So we don't get an exception

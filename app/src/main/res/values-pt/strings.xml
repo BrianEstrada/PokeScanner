@@ -1,19 +1,3 @@
-<!--
-  ~
-  ~     This program is free software: you can redistribute it and/or modify
-  ~     it under the terms of the GNU General Public License as published by
-  ~     the Free Software Foundation, either version 3 of the License, or
-  ~     (at your option) any later version.
-  ~
-  ~     This program is distributed in the hope that it will be useful,
-  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~     GNU General Public License for more details.
-  ~
-  ~     You should have received a copy of the GNU General Public License
-  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
 <resources>
     <string name="title_activity_maps">Mapa</string>
     <string name="scan">Pesquisar</string>
@@ -23,7 +7,7 @@
     <string name="save">Guardar</string>
     <string name="search_radius">Raio de Pesquisa</string>
     <string name="search_radius_desc">Permite mudar o raio de pesquisa do Poke Scanner (aviso: valores elevados irão abrandar o dispositivo)</string>
-    <string name="higher_number_slower_search">1 Unidade ≈ 200 Metros</string>
+    <string name="higher_number_slower_search">1 Unidade ≈ 140 Metros</string>
     <string name="cancel">Cancelar</string>
     <string name="filter">Filtro</string>
     <string name="none">Nenhum</string>
@@ -91,10 +75,10 @@
 
     <string name="show_pokemon_filter">Filtro de Pokémon</string>
     <string name="show_pokemon_filter_desc">Permite escolher quais os pokémon que aparecem no mapa</string>
-    
+
     <string name="show_pokemon_blacklist_filter">Lista Negra de Pokémon</string>
     <string name="show_pokemon_blacklist_filter_desc">Permite escolher os Pokémon que não devem ser mostrados no mapa</string>
-    
+
     <string name="show_gym_filter">Filtro de Ginásios</string>
     <string name="show_gym_filter_desc">Permite escolher quais os ginásios que aparecem no mapa</string>
 
@@ -116,11 +100,11 @@
     <string name="show_pokestop_desc">Mostra/Esconde Pokéstops no mapa</string>
     <string name="lock_gps">Pesquisar Baseado no GPS</string>
     <string name="lock_gps_desc">Em vez de pesquisar no centro do ecrã (onde quer que seja), irá pesquisar na sua localização</string>
-     <string name="old_marker">Usar Marcadores de Mapa Antigos</string>
+    <string name="old_marker">Usar Marcadores de Mapa Antigos</string>
     <string name="old_marker_desc"></string>
     <string name="driving_mode">Modo de Condução</string>
     <string name="driving_mode_desc">Mantém o mapa centrado na localização atual</string>
-    
+
     <string name="shuffle_icons">Usar Ícones do Shuffle</string>
     <string name="shuffle_icons_desc">Usar ícones do Pokémon Shuffle Icons em vez das imagens padrão (mais fácil de distinguir!)</string>
 
@@ -170,8 +154,8 @@
     <string name="slowest">Muito Lento</string>
     <string name="large">Grande</string>
     <string name="small">Pequeno</string>
-    
-    
+
+
     <string name="p1">Bulbasaur</string>
     <string name="p2">Ivysaur</string>
     <string name="p3">Venusaur</string>

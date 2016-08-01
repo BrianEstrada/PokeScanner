@@ -6,7 +6,8 @@ import android.graphics.Bitmap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.pokescanner.helper.Settings;
+import com.pokegoapi.api.map.fort.Pokestop;
+import com.pokescanner.settings.Settings;
 import com.pokescanner.utils.DrawableUtils;
 import com.pokescanner.utils.SettingsUtil;
 import com.pokescanner.utils.UiUtils;
@@ -17,7 +18,6 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import POGOProtos.Map.Fort.FortDataOuterClass;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
@@ -42,15 +42,15 @@ public class PokeStop extends RealmObject
     {
     }
 
-    public PokeStop(FortDataOuterClass.FortData pokestopData)
+    public PokeStop(Pokestop pokestopData)
     {
         setLatitude(pokestopData.getLatitude());
         setLongitude(pokestopData.getLongitude());
         setId(pokestopData.getId());
-        setHasLureInfo(pokestopData.hasLureInfo());
-        setLureExpiryTimestamp(pokestopData.getLureInfo().getLureExpiresTimestampMs());
-        setActivePokemonNo(pokestopData.getLureInfo().getActivePokemonId().getNumber());
-        setActivePokemonName(pokestopData.getLureInfo().getActivePokemonId().toString());
+        setHasLureInfo(pokestopData.getFortData().hasLureInfo());
+        setLureExpiryTimestamp(pokestopData.getFortData().getLureInfo().getLureExpiresTimestampMs());
+        setActivePokemonNo(pokestopData.getFortData().getLureInfo().getActivePokemonId().getNumber());
+        setActivePokemonName(pokestopData.getFortData().getLureInfo().getActivePokemonId().toString());
     }
 
     public DateTime getExpiryTime()

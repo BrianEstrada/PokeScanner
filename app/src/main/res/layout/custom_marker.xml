@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="100dp"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    android:gravity="center_vertical|fill_vertical|center_horizontal">
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/timer"
         android:textAlignment="center"
         android:background="@drawable/rounded_corners_pokemon"
-        android:textSize="18dp" />
+        android:textSize="15dp"
+        android:textColor="@color/white"
+        android:padding="2dp" />
 
     <ImageView
         android:layout_width="fill_parent"

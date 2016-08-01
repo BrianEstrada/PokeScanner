@@ -16,6 +16,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -31,6 +32,59 @@
         tools:context="com.pokescanner.MapsActivity"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/floatActionMenu"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        fab:menu_icon="@drawable/ic_menu_white_24dp"
+        fab:menu_openDirection="down"
+        fab:menu_fab_size="mini"
+        fab:fab_colorNormal="@color/colorPrimary"
+        fab:fab_colorPressed="@color/colorAccent"
+        fab:fab_colorRipple="@color/colorPrimaryDark"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/btnAddressSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_search_white_36dp"
+            fab:fab_size="mini"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_colorRipple="@color/colorPrimaryDark" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/btnListMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_view_list_white_24dp"
+            fab:fab_size="mini"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_colorRipple="@color/colorPrimaryDark" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/btnSataliteMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_satellite_white_24dp"
+            fab:fab_size="mini"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_colorRipple="@color/colorPrimaryDark" />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/btnCenterCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_my_location_white_24dp"
+            fab:fab_size="mini"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_colorRipple="@color/colorPrimaryDark" />
+    </com.github.clans.fab.FloatingActionMenu>
+
 
     <RelativeLayout
         android:layout_width="88dp"
@@ -52,8 +106,8 @@
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="74dp"
+            android:layout_height="74dp"
             android:padding="6dp"
             android:rotation="-90"
             android:layout_centerInParent="true"
@@ -87,29 +141,5 @@
             android:layout_marginRight="5dp" />
 
     </RelativeLayout>
-
-    <ImageButton
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:src="@drawable/ic_search_blue_grey_500_24dp"
-        android:clickable="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:contentDescription="@string/search"
-        android:layout_margin="25dp"
-        android:background="@color/MaterialGray"
-        android:id="@+id/btnAddressSearch" />
-
-    <ImageButton
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:id="@+id/btnList"
-        android:src="@drawable/ic_menu_grey_700_24dp"
-        android:clickable="true"
-        android:contentDescription="@string/search"
-        android:background="@color/MaterialGray"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="25dp" />
 
 </RelativeLayout>

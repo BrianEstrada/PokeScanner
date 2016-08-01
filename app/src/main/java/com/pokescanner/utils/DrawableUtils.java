@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pokescanner.R;
-import com.pokescanner.helper.Settings;
+import com.pokescanner.settings.Settings;
 
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
@@ -21,9 +21,6 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-/**
- * Created by admin on 23-07-2016.
- */
 public class DrawableUtils
 {
     public static final int PokemonType = 6;
@@ -38,9 +35,10 @@ public class DrawableUtils
         //Create a date from the expire time (Long value)
         DateTime date = new DateTime(expireTime);
         //If our date time is after now then it's expired and we'll return expired (So we don't get an exception
-        if (date.isAfter(new Instant())) {
+        Instant instant = new Instant();
+        if (date.isAfter(instant)) {
             Interval interval;
-            interval = new Interval(new Instant(), date);
+            interval = new Interval(instant, date);
             //turn our interval into MM:SS
             DateTime dt = new DateTime(interval.toDurationMillis());
             DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
@@ -50,6 +48,7 @@ public class DrawableUtils
             return "Expired";
         }
     }
+
     public static  Bitmap getBitmap(Context context, String URI) {
         int unitScale = Settings.get(context).getScale();
         int resourceID = context.getResources().getIdentifier(URI, "drawable", context.getPackageName());

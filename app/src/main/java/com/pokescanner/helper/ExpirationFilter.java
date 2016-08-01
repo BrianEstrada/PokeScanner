@@ -3,7 +3,6 @@ package com.pokescanner.helper;
 import android.content.Context;
 
 import com.pokescanner.ExpirationFilters;
-import com.pokescanner.GymFilters;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

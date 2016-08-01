@@ -10,7 +10,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.pokescanner.R;
-import com.pokescanner.helper.Settings;
+import com.pokescanner.settings.Settings;
 
 
 public class SettingsUtil {
@@ -18,18 +18,18 @@ public class SettingsUtil {
     public static final String ENABLE_UPDATES = "updatesEnabled";
     public static final String KEY_BOUNDING_BOX = "boundingBoxEnabled";
     public static final String SHOW_ONLY_LURED = "showOnlyLured";
+    public static final String ENABLE_LOW_MEMORY = "enableLowMemory";
     public static final String SHOW_GYMS = "showGyms";
     public static final String SHOW_POKESTOPS = "showPokestops";
     public static final String SHOW_LURED_POKEMON = "showLuredPokemon";
     public static final String KEY_LOCK_GPS = "lockGpsEnabled";
     public static final String KEY_OLD_MARKER = "useOldMapMarker";
     public static final String DRIVING_MODE = "drivingModeEnabled";
-
+    public static final String FORCE_ENGLISH_NAMES = "forceEnglishNames";
     public static final String SERVER_REFRESH_RATE = "serverRefreshRate";
     public static final String MAP_REFRESH_RATE = "mapRefreshRate";
     public static final String POKEMON_ICON_SCALE = "pokemonIconScale";
     public static final String SCAN_VALUE = "scanValue";
-
     public static final String LAST_USERNAME = "lastUsername";
 
     public static final String SHUFFLE_ICONS = "shuffleIcons";
@@ -104,8 +104,10 @@ public class SettingsUtil {
             sharedPrefs.getBoolean(ENABLE_UPDATES,true),
             sharedPrefs.getBoolean(KEY_BOUNDING_BOX, false),
             sharedPrefs.getBoolean(DRIVING_MODE, false),
+            sharedPrefs.getBoolean(FORCE_ENGLISH_NAMES,false),
+            sharedPrefs.getBoolean(ENABLE_LOW_MEMORY,true),
             sharedPrefs.getInt(SCAN_VALUE, 4),
-            sharedPrefs.getInt(SERVER_REFRESH_RATE, 1),
+            sharedPrefs.getInt(SERVER_REFRESH_RATE, 3),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
             sharedPrefs.getInt(MAP_REFRESH_RATE, 2),
             sharedPrefs.getString(LAST_USERNAME, ""),
@@ -124,6 +126,8 @@ public class SettingsUtil {
             .putBoolean(ENABLE_UPDATES,settings.isUpdatesEnabled())
             .putBoolean(KEY_BOUNDING_BOX, settings.isBoundingBoxEnabled())
             .putBoolean(DRIVING_MODE, settings.isDrivingModeEnabled())
+            .putBoolean(FORCE_ENGLISH_NAMES,settings.isForceEnglishNames())
+            .putBoolean(ENABLE_LOW_MEMORY,settings.isEnableLowMemory())
             .putInt(SCAN_VALUE,settings.getScanValue())
             .putInt(SERVER_REFRESH_RATE, settings.getServerRefresh())
             .putInt(POKEMON_ICON_SCALE, settings.getScale())

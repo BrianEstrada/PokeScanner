@@ -1,20 +1,3 @@
-/*
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 
 package com.pokescanner.objects;
 
@@ -26,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pokescanner.R;
-import com.pokescanner.helper.Settings;
+import com.pokescanner.settings.Settings;
 import com.pokescanner.utils.DrawableUtils;
 
 import org.joda.time.DateTime;
@@ -100,7 +83,12 @@ public class Pokemons  extends RealmObject{
     }
 
     public String getFormalName(Context context) {
-        String name = context.getString(DrawableUtils.getStringID(getNumber(),context));
+        String name = getName();
+
+        if (!Settings.get(context).isForceEnglishNames()) {
+            name = context.getString(DrawableUtils.getStringID(getNumber(), context));
+        }
+
         return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 
