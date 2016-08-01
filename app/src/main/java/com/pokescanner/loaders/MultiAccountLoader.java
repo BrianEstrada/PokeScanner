@@ -12,19 +12,15 @@ import java.util.List;
  * Created by Brian on 7/31/2016.
  */
 public class MultiAccountLoader {
-    List<LatLng> scanMap;
-    List<List<LatLng>> scanMaps = new ArrayList<>();
-    ArrayList<Thread> threads = new ArrayList<>();
-    ArrayList<User> users;
-    int SLEEP_TIME;
+    static private List<LatLng> scanMap;
+    static private List<List<LatLng>> scanMaps;
+    static private ArrayList<Thread> threads;
+    static private ArrayList<User> users;
+    static private int SLEEP_TIME;
 
-    public MultiAccountLoader(List<LatLng> scanMap,int SLEEP_TIME,ArrayList<User> users){
-        this.scanMap = scanMap;
-        this.SLEEP_TIME = SLEEP_TIME;
-        this.users = users;
-    }
-
-    public void startThreads() {
+    static public void startThreads() {
+        scanMaps = new ArrayList<>();
+        threads = new ArrayList<>();
 
         int usersNumber = users.size();
         int scanSize = (int) Math.ceil(scanMap.size()/usersNumber);
@@ -46,7 +42,34 @@ public class MultiAccountLoader {
         }
     }
 
-    public boolean cancelAllThreads() {
+    static public void setSleepTime(int SLEEP_TIME) {
+        MultiAccountLoader.SLEEP_TIME = SLEEP_TIME;
+    }
+
+    static public void setUsers(ArrayList<User> users) {
+        MultiAccountLoader.users = users;
+    }
+
+    static public void setScanMap(List<LatLng> scanMap) {
+        MultiAccountLoader.scanMap = scanMap;
+    }
+
+    public static boolean areThreadsRunning() {
+        if (threads==null) {
+            return false;
+        }
+        if (threads.size() != 0) {
+            if (threads.get(0).getState()== Thread.State.TERMINATED) {
+                return false;
+            }else {
+                return true;
+            }
+        }else {
+            return false;
+        }
+    }
+
+    static public void cancelAllThreads() {
         while (threads != null) {
             for (Thread thread: threads) {
                 try {
@@ -54,15 +77,10 @@ public class MultiAccountLoader {
                     thread.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }finally {
+                    threads = null;
                 }
             }
         }
-
-        if (threads != null) {
-            if (!threads.get(0).isAlive()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

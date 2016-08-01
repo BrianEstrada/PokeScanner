@@ -54,7 +54,6 @@ import com.pokescanner.events.ForceLogOutEvent;
 import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.InterruptedExecptionEvent;
 import com.pokescanner.events.LoginFailedExceptionEvent;
-import com.pokescanner.events.PublishProgressEvent;
 import com.pokescanner.events.RemoteServerExceptionEvent;
 import com.pokescanner.events.RestartRefreshEvent;
 import com.pokescanner.events.ScanCircleEvent;
@@ -65,7 +64,6 @@ import com.pokescanner.helper.GymFilter;
 import com.pokescanner.helper.PokeDistanceSorter;
 import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.loaders.MultiAccountLoader;
-import com.pokescanner.loaders.ObjectLoaderPTC;
 import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
@@ -137,10 +135,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Map<Pokemons, Marker> pokemonsMarkerMap = new HashMap<>();
     private Map<Gym, Marker> gymMarkerMap = new HashMap<>();
     private Map<PokeStop, Marker> pokestopMarkerMap = new HashMap<>();
+    private ArrayList<Circle> circleArray = new ArrayList<>();
 
     Circle mBoundingBox = null;
-
-    private ObjectLoaderPTC mapObjectsLoader;
 
     int pos = 1;
     //Used for determining Scan status
@@ -222,32 +219,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @OnClick(R.id.btnSearch)
     public void PokeScan() {
-        System.out.println("Click");
         if (SCANNING_STATUS) {
             stopPokeScan();
         } else {
-            System.out.println("Scan Button Clicked");
             //Progress Bar Related Stuff
             pos = 1;
             progressBar.setProgress(0);
-            //showProgressbar(true);
-
-            //Load our scan value
             int scanValue = Settings.get(this).getScanValue();
-            //Our refresh rate to Milliseconds
-            int millis = UiUtils.BASE_DELAY;
-
-
+            showProgressbar(true);
             //get our camera position
             LatLng scanPosition = null;
 
             //Try to get the camera position
             try {
                 scanPosition = getCameraLocation();
-            } catch (NoMapException e) {
-                showToast(R.string.SCAN_FAILED);
-                e.printStackTrace();
-            } catch (NoCameraPositionException e) {
+            } catch (NoMapException | NoCameraPositionException e) {
                 showToast(R.string.SCAN_FAILED);
                 e.printStackTrace();
             }
@@ -257,13 +243,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             if (scanPosition != null) {
-                System.out.println("Making Scan map");
                 scanMap = makeHexScanMap(scanPosition, scanValue, 1, new ArrayList<LatLng>());
                 if (scanMap != null) {
-                    System.out.println("Scan map made");
+                    //Pull our users from the realm
                     ArrayList<User> users = new ArrayList<>(realm.copyFromRealm(realm.where(User.class).findAll()));
-                    MultiAccountLoader accountLoader = new MultiAccountLoader(scanMap,millis,users);
-                    accountLoader.startThreads();
+
+                    MultiAccountLoader.setSleepTime(UiUtils.BASE_DELAY);
+                    //Set our map
+                    MultiAccountLoader.setScanMap(scanMap);
+                    //Set our users
+                    MultiAccountLoader.setUsers(users);
+                    //Begin our threads???
+                    MultiAccountLoader.startThreads();
                 } else {
                     showToast(R.string.SCAN_FAILED);
                     showProgressbar(false);
@@ -275,19 +266,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void createCircle(ScanCircleEvent event) {
-        if (event.pos != null)
-        {
-            CircleOptions circleOptions = new CircleOptions()
-                    .radius(70)
-                    .strokeWidth(0)
-                    .fillColor(ResourcesCompat.getColor(getResources(),R.color.colorPrimaryTransparent,null))
-                    .center(event.pos);
-            mMap.addCircle(circleOptions);
-        }
-    }
-
     @OnClick(R.id.btnSettings)
     public void onSettingsClick() {
         Intent settingsIntent = new Intent(MapsActivity.this, SettingsActivity.class);
@@ -295,6 +273,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void stopPokeScan() {
+        MultiAccountLoader.cancelAllThreads();
+        if (!MultiAccountLoader.areThreadsRunning()) {
+            showProgressbar(false);
+        }
     }
 
     @OnLongClick(R.id.btnSearch)
@@ -314,6 +296,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             button.setImageDrawable(ContextCompat.getDrawable(MapsActivity.this, R.drawable.ic_pause_white_24dp));
             SCANNING_STATUS = true;
         } else {
+            removeCircleArray();
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             progressBar.setVisibility(View.INVISIBLE);
             button.setImageDrawable(ContextCompat.getDrawable(MapsActivity.this, R.drawable.ic_track_changes_white_24dp));
@@ -340,11 +323,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Map related Functions
     public void refreshMap() {
 
-        if (mapObjectsLoader != null) {
-            if (mapObjectsLoader.getState() == Thread.State.TERMINATED) {
-                showProgressbar(false);
-                mapObjectsLoader = null;
-            }
+        if (!MultiAccountLoader.areThreadsRunning()) {
+            System.out.println("Threads");
+            showProgressbar(false);
         }
 
         if (!LIST_MODE) {
@@ -529,6 +510,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mBoundingBox.remove();
     }
 
+    public void removeCircleArray() {
+        if (circleArray != null)
+        {
+            for(Circle circle: circleArray) {
+                circle.remove();
+            }
+
+            circleArray.clear();
+        }
+    }
+
     public boolean shouldGymBeRemoved(Gym gym) {
         GymFilter currentGymFilter = GymFilter.getGymFilter(MapsActivity.this);
         int guardPokemonCp = gym.getGuardPokemonCp();
@@ -593,6 +585,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void createCircle(ScanCircleEvent event) {
+        if (event.pos != null)
+        {
+            CircleOptions circleOptions = new CircleOptions()
+                    .radius(70)
+                    .strokeWidth(0)
+                    .fillColor(ResourcesCompat.getColor(getResources(),R.color.colorPrimaryTransparent,null))
+                    .center(event.pos);
+            circleArray.add(mMap.addCircle(circleOptions));
+
+            float progress = (float) pos++ * 100 / scanMap.size();
+            progressBar.setProgress((int) progress);
+            if((int) progress == 100) {
+                showProgressbar(false);
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void forceRefreshEvent(ForceRefreshEvent event) {
         refreshGymsAndPokestops();
         refreshMap();
@@ -604,17 +615,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         refreshGymsAndPokestops();
         refreshMap();
         startRefresher();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPublishProgressEvent(PublishProgressEvent event) {
-        if (event.getProgress() != -1) {
-            float progress = (float) event.getProgress() * 100 / scanMap.size();
-            progressBar.setProgress((int) progress);
-            if((int) progress == 100) {
-                showProgressbar(false);
-            }
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
