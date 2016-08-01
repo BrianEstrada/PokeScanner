@@ -56,9 +56,9 @@ public class MultiboxingActivity extends AppCompatActivity{
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         userRecycler.setLayoutManager(mLayoutManager);
 
-        userAdapter = new MultiboxingAdapter(this, userList, new MultiboxingAdapter.onLongClickListener() {
+        userAdapter = new MultiboxingAdapter(this, userList, new MultiboxingAdapter.accountRemovalListener() {
             @Override
-            public void onLongClick(User user) {
+            public void onRemove(User user) {
                 removeAccount(user);
             }
         });

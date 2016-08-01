@@ -332,5 +332,5 @@
     <string name="search">Search</string>
     <string name="search_by_address">Search By Address</string>
     <string name="account_manager">Account Manager</string>
-    <string name="add_account">Add Account</string>
+    <string name="add_account">Add Account (PTC)</string>
 </resources>

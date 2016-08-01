@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,14 +19,14 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
 
     private ArrayList<User> accountData;
     private Context mContext;
-    private onLongClickListener listener;
+    private accountRemovalListener listener;
 
-    public interface onLongClickListener {
-        void onLongClick(User user);
+    public interface accountRemovalListener {
+        void onRemove(User user);
     }
 
 
-    public MultiboxingAdapter(Context context, ArrayList<User> accountData,onLongClickListener listener) {
+    public MultiboxingAdapter(Context context, ArrayList<User> accountData,accountRemovalListener listener) {
         mContext = context;
         this.listener = listener;
         this.accountData = accountData;
@@ -54,6 +55,7 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
         public TextView tvAccountName;
         public ImageView imgStatus;
         public ProgressBar progressBarStatus;
+        public ImageButton btnRemoveAccount;
 
         public MBViewHolder(View view) {
             super(view);
@@ -61,17 +63,20 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
             tvAccountName = (TextView) view.findViewById(R.id.tvAccountName);
             imgStatus = (ImageView) view.findViewById(R.id.imgStatus);
             progressBarStatus = (ProgressBar) view.findViewById(R.id.progressBarStatus);
+            btnRemoveAccount = (ImageButton) view.findViewById(R.id.btnRemoveAccount);
         }
 
-        public void bind(final User user, final onLongClickListener listener, int position) {
+        public void bind(final User user, final accountRemovalListener listener, int position) {
             tvAccountNumber.setText(String.valueOf(position));
-            tvAccountName.setText(user.getUsername());
+            if(user.getAuthType() == User.GOOGLE)
+                tvAccountName.setText("Google account");
+            else
+                tvAccountName.setText(user.getUsername());
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            btnRemoveAccount.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
-                    listener.onLongClick(user);
-                    return true;
+                public void onClick(View view) {
+                    listener.onRemove(user);
                 }
             });
 
@@ -91,6 +96,13 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
                     imgStatus.setVisibility(View.VISIBLE);
                     imgStatus.setImageResource(R.drawable.ic_check_green);
                     break;
+            }
+
+            //For google, accept automatically
+            if(user.getAuthType() == User.GOOGLE) {
+                progressBarStatus.setVisibility(View.GONE);
+                imgStatus.setVisibility(View.VISIBLE);
+                imgStatus.setImageResource(R.drawable.ic_check_green);
             }
         }
     }
