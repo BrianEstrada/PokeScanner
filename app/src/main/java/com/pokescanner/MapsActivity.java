@@ -948,9 +948,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng GPS_LOCATION = getCurrentLocation();
         if (GPS_LOCATION != null) {
             if (mMap != null) {
-                if (zoom) {
-                    this.mMap.animateCamera(CameraUpdateFactory.newLatLng(GPS_LOCATION));
-                    this.mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                if (zoom || scanPosition) {
+                    this.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(GPS_LOCATION,15));
                 } else {
                     this.mMap.animateCamera(CameraUpdateFactory.newLatLng(GPS_LOCATION));
                 }
