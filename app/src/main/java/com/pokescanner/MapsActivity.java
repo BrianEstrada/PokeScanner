@@ -238,7 +238,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 e.printStackTrace();
             }
 
-            if (SettingsUtil.getSettings(MapsActivity.this).isDrivingModeEnabled() && moveCameraToCurrentPosition()) {
+            if (SettingsUtil.getSettings(MapsActivity.this).isDrivingModeEnabled() && moveCameraToCurrentPosition(false)) {
                 scanPosition = getCurrentLocation();
             }
 
@@ -334,7 +334,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 //If in driving mode, move camera to current location
                 if (SettingsUtil.getSettings(MapsActivity.this).isDrivingModeEnabled())
-                    moveCameraToCurrentPosition();
+                    moveCameraToCurrentPosition(false);
 
                 //Load our Pokemon Array
                 ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
@@ -847,7 +847,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     @OnClick(R.id.btnCenterCamera)
     public void onLocateMeClick() {
-        moveCameraToCurrentPosition();
+        moveCameraToCurrentPosition(true);
         floatingActionMenu.close(true);
     }
     @Override
@@ -859,7 +859,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMapToolbarEnabled(false);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            moveCameraToCurrentPosition();
+            moveCameraToCurrentPosition(true);
         }
         mMap.setOnCameraChangeListener(this);
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -944,11 +944,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onLowMemory();
         cleanEntireMap();
     }
-    public boolean moveCameraToCurrentPosition() {
+    public boolean moveCameraToCurrentPosition(boolean zoom) {
         LatLng GPS_LOCATION = getCurrentLocation();
         if (GPS_LOCATION != null) {
             if (mMap != null) {
-                this.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(GPS_LOCATION, 15));
+                if (zoom || scanPosition) {
+                    this.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(GPS_LOCATION,15));
+                } else {
+                    this.mMap.animateCamera(CameraUpdateFactory.newLatLng(GPS_LOCATION));
+                }
+
                 return true;
             } else {
                 return false;
@@ -958,7 +963,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    moveCameraToCurrentPosition();
+                    moveCameraToCurrentPosition(true);
                 }
             }, 500);
         }
