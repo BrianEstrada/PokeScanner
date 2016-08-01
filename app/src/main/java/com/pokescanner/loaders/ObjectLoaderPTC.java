@@ -8,6 +8,7 @@ import com.pokegoapi.api.map.fort.Pokestop;
 import com.pokegoapi.auth.CredentialProvider;
 import com.pokegoapi.auth.GoogleUserCredentialProvider;
 import com.pokegoapi.auth.PtcCredentialProvider;
+import com.pokegoapi.exceptions.AsyncPokemonGoException;
 import com.pokegoapi.exceptions.LoginFailedException;
 import com.pokegoapi.exceptions.RemoteServerException;
 import com.pokescanner.events.ForceLogOutEvent;
@@ -65,34 +66,33 @@ public class ObjectLoaderPTC extends Thread {
 
                 if (go != null) {
                     for (LatLng pos : scanMap) {
-                        go.setLatitude(pos.latitude);
-                        go.setLongitude(pos.longitude);
-                        Map map = go.getMap();
-                        MapObjects event = map.getMapObjects();
-                        final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getCatchablePokemons();
-                        final Collection<FortDataOuterClass.FortData> collectionGyms = event.getGyms();
-                        final Collection<Pokestop> collectionPokeStops = event.getPokestops();
+                            go.setLatitude(pos.latitude);
+                            go.setLongitude(pos.longitude);
+                            Map map = go.getMap();
+                            MapObjects event = map.getMapObjects();
+                            final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getCatchablePokemons();
+                            final Collection<FortDataOuterClass.FortData> collectionGyms = event.getGyms();
+                            final Collection<Pokestop> collectionPokeStops = event.getPokestops();
 
-                        EventBus.getDefault().post(new ScanCircleEvent(pos));
+                            EventBus.getDefault().post(new ScanCircleEvent(pos));
 
-                        realm = Realm.getDefaultInstance();
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                for (MapPokemonOuterClass.MapPokemon pokemonOut : collectionPokemon)
-                                    realm.copyToRealmOrUpdate(new Pokemons(pokemonOut));
+                            realm = Realm.getDefaultInstance();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    for (MapPokemonOuterClass.MapPokemon pokemonOut : collectionPokemon)
+                                        realm.copyToRealmOrUpdate(new Pokemons(pokemonOut));
 
-                                for (FortDataOuterClass.FortData gymOut : collectionGyms)
-                                    realm.copyToRealmOrUpdate(new Gym(gymOut));
+                                    for (FortDataOuterClass.FortData gymOut : collectionGyms)
+                                        realm.copyToRealmOrUpdate(new Gym(gymOut));
 
-                                for (Pokestop pokestopOut : collectionPokeStops)
-                                    realm.copyToRealmOrUpdate(new PokeStop(pokestopOut));
-                            }
-                        });
-                        realm.close();
+                                    for (Pokestop pokestopOut : collectionPokeStops)
+                                        realm.copyToRealmOrUpdate(new PokeStop(pokestopOut));
+                                }
+                            });
+                            realm.close();
 
-                        Thread.sleep(SLEEP_TIME);
-
+                            Thread.sleep(SLEEP_TIME);
                     }
                 }
             }
@@ -101,6 +101,8 @@ public class ObjectLoaderPTC extends Thread {
         } catch (RemoteServerException e) {
             e.printStackTrace();
         } catch (LoginFailedException e) {
+            e.printStackTrace();
+        }catch (AsyncPokemonGoException e) {
             e.printStackTrace();
         }
     }

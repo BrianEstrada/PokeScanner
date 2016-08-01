@@ -324,7 +324,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void refreshMap() {
 
         if (!MultiAccountLoader.areThreadsRunning()) {
-            System.out.println("Threads");
             showProgressbar(false);
         }
 
