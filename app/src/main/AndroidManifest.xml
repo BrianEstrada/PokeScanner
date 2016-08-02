@@ -50,6 +50,11 @@
         <activity
             android:name=".GoogleLoginActivity"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
+
+        <activity
+            android:name=".DrivingModeActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
+
         <activity
             android:name=".ListViewActivity"
             android:windowSoftInputMode="adjustPan|adjustResize"/>

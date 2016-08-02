@@ -661,6 +661,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 double[] locationOut = new double[2];
                 locationOut[0] = cameraLocation.latitude;
                 locationOut[1] = cameraLocation.longitude;
+
                 listViewActivity.putExtra("cameraLocation",locationOut);
                 startActivity(listViewActivity);
             }
@@ -731,6 +732,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         floatingActionMenu.close(true);
+    }
+    @OnClick(R.id.btnDrivingMode)
+    public void startDrivingMode() {
+        floatingActionMenu.close(true);
+        Intent drivingModeIntent = new Intent(this,DrivingModeActivity.class);
+        startActivity(drivingModeIntent);
     }
     @OnClick(R.id.btnCenterCamera)
     public void onLocateMeClick() {

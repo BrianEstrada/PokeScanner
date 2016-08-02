@@ -57,6 +57,15 @@
             fab:fab_colorPressed="@color/colorAccent"
             fab:fab_colorRipple="@color/colorPrimaryDark" />
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/btnDrivingMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_directions_car_white_24dp"
+            fab:fab_size="mini"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_colorRipple="@color/colorPrimaryDark" />
+        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/btnListMode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

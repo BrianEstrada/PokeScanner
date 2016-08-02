@@ -58,6 +58,7 @@ android {
     android {
         packagingOptions {
             exclude 'META-INF/rxjava.properties'
+            exclude 'rx/Back'
         }
     }
 }
@@ -76,8 +77,9 @@ dependencies {
     compile 'joda-time:joda-time:2.9.4'
     compile 'com.android.support:multidex:1.0.1'
     //RX java Stuff (Should probly be using this)
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
+    compile ('io.reactivex:rxandroid:1.2.1') {
+        exclude module: 'rxjava'
+    }
     compile 'org.greenrobot:eventbus:3.0.0'
     //idk what this is for but I'm sure we're using it
     compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
