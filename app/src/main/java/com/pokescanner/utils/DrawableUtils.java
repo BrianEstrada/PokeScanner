@@ -18,8 +18,9 @@ import com.pokescanner.settings.Settings;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
 import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class DrawableUtils
 {
@@ -39,10 +40,7 @@ public class DrawableUtils
         if (date.isAfter(instant)) {
             Interval interval;
             interval = new Interval(instant, date);
-            //turn our interval into MM:SS
-            DateTime dt = new DateTime(interval.toDurationMillis());
-            DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
-            return fmt.print(dt);
+            return formatInterval(interval.toDurationMillis());
         }else
         {
             return "Expired";
@@ -140,4 +138,12 @@ public class DrawableUtils
         return (int) ((nDP * conversionScale) + 0.5f) ;
 
     }
+
+    private static String formatInterval(final long l)
+    {
+        final long min = TimeUnit.MILLISECONDS.toMinutes(l);
+        final long sec = TimeUnit.MILLISECONDS.toSeconds(l - TimeUnit.MINUTES.toMillis(min));
+        return String.format(Locale.getDefault(),"%02d:%02d", min, sec);
+    }
+
 }

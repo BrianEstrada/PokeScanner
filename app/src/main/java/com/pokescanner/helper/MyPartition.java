@@ -3,9 +3,6 @@ package com.pokescanner.helper;
 import java.util.AbstractList;
 import java.util.List;
 
-/**
- * Created by Brian on 7/31/2016.
- */
 public class MyPartition {
     public static <T> List<List<T>> partition(List<T> list, int size) {
 
@@ -14,7 +11,7 @@ public class MyPartition {
         if (!(size > 0))
             throw new IllegalArgumentException("'size' must be greater than 0");
 
-        return new Partition<T>(list, size);
+        return new Partition<>(list, size);
     }
 
     private static class Partition<T> extends AbstractList<List<T>> {

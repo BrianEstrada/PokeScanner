@@ -55,6 +55,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     Realm realm;
     int scanValue;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

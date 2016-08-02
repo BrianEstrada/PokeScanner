@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
         android:allowBackup="true"
@@ -48,6 +49,9 @@
 
         <activity
             android:name=".GoogleLoginActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
+        <activity
+            android:name=".ListViewActivity"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity
             android:name=".BlacklistActivity"

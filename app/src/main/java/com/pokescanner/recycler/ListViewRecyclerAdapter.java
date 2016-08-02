@@ -21,7 +21,7 @@ public class ListViewRecyclerAdapter extends RecyclerView.Adapter<ListViewHolder
         void onClick(Pokemons pokemons);
     }
 
-    public ListViewRecyclerAdapter(ArrayList<Pokemons> pokemon, OnClickListener listener) {
+    public ListViewRecyclerAdapter(ArrayList<Pokemons> pokemon) {
         this.pokemon = pokemon;
         this.listener = listener;
     }
@@ -34,7 +34,7 @@ public class ListViewRecyclerAdapter extends RecyclerView.Adapter<ListViewHolder
 
     @Override
     public void onBindViewHolder(ListViewHolder holder, int position) {
-        holder.bind(pokemon.get(position),listener);
+        holder.bind(pokemon.get(position));
     }
 
     @Override

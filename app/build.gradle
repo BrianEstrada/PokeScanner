@@ -54,6 +54,12 @@ android {
         incremental true
         javaMaxHeapSize "4g"
     }
+
+    android {
+        packagingOptions {
+            exclude 'META-INF/rxjava.properties'
+        }
+    }
 }
 
 dependencies {

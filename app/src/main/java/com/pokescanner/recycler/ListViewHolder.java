@@ -32,19 +32,12 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         itemView.setClickable(true);
     }
 
-    public void bind(final Pokemons pokemons, final ListViewRecyclerAdapter.OnClickListener listener) {
+    public void bind(final Pokemons pokemons) {
         Bitmap bitmap = DrawableUtils.getBitmapFromView(pokemons.getResourceID(context),"",context,DrawableUtils.PokemonType);
 
 
         PokemonImage.setImageBitmap(bitmap);
         PokemonName.setText(pokemons.getFormalName(context));
         Distance.setText(String.valueOf(Math.round(pokemons.getDistance()))+"M");
-
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onClick(pokemons);
-            }
-        });
     }
 }
