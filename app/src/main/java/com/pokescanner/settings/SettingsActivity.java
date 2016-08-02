@@ -1,330 +1,69 @@
 package com.pokescanner.settings;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialog;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
-import com.pokescanner.BlacklistActivity;
-import com.pokescanner.BuildConfig;
-import com.pokescanner.ExpirationFilters;
-import com.pokescanner.GymFilters;
 import com.pokescanner.LoginActivity;
-import com.pokescanner.multiboxing.MultiboxingActivity;
 import com.pokescanner.R;
-import com.pokescanner.events.AppUpdateEvent;
+import com.pokescanner.multiboxing.MultiboxingActivity;
 import com.pokescanner.objects.Gym;
 import com.pokescanner.objects.PokeStop;
 import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
-import com.pokescanner.updater.AppUpdate;
-import com.pokescanner.updater.AppUpdateDialog;
-import com.pokescanner.updater.AppUpdateLoader;
-import com.pokescanner.utils.PermissionUtils;
-import com.pokescanner.utils.SettingsUtil;
-import com.pokescanner.utils.UiUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import java.util.List;
 
 import io.realm.Realm;
 
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-    SharedPreferences preferences;
-    Preference scan_dialog,gym_filter,expiration_filter;
-    Preference clear_pokemon,clear_gyms,clear_pokestops;
-    Preference pokemon_blacklist;
-    Preference multiboxing;
-    Preference logout,update;
-    Realm realm;
-    int scanValue;
+public class SettingsActivity extends AppCompatPreferenceActivity {
 
+    private Realm realm;
+    private Context mContext;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onBuildHeaders(List<Header> target) {
+        loadHeadersFromResource(R.xml.settings_headers, target);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.registerOnSharedPreferenceChangeListener(this);
-        Settings settings = SettingsUtil.getSettings(this);
+        setContentView(R.layout.settings_page);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.settingsToolbar);
+        setSupportActionBar(toolbar);
 
-        preferences.edit()
-                .putBoolean(SettingsUtil.ENABLE_UPDATES,settings.isUpdatesEnabled())
-                .putBoolean(SettingsUtil.ENABLE_LOW_MEMORY,settings.isEnableLowMemory())
-                .putBoolean(SettingsUtil.KEY_BOUNDING_BOX,settings.isBoundingBoxEnabled())
-                .putBoolean(SettingsUtil.FORCE_ENGLISH_NAMES,settings.isForceEnglishNames())
-                .putString(SettingsUtil.SCAN_VALUE,String.valueOf(settings.getScanValue()))
-                .putBoolean(SettingsUtil.SHOW_ONLY_LURED,settings.isShowOnlyLured())
-                .putBoolean(SettingsUtil.SHOW_GYMS,settings.isGymsEnabled())
-                .putBoolean(SettingsUtil.SHOW_POKESTOPS,settings.isPokestopsEnabled())
-                .putString(SettingsUtil.SERVER_REFRESH_RATE,String.valueOf(settings.getServerRefresh()))
-                .putString(SettingsUtil.MAP_REFRESH_RATE,String.valueOf(settings.getMapRefresh()))
-                .putString(SettingsUtil.POKEMON_ICON_SCALE,String.valueOf(settings.getScale()))
-                .putString(SettingsUtil.LAST_USERNAME,settings.getLastUsername())
-                .putBoolean(SettingsUtil.KEY_OLD_MARKER,settings.isUseOldMapMarker())
-                .putBoolean(SettingsUtil.SHUFFLE_ICONS,settings.isShuffleIcons())
-                .putBoolean(SettingsUtil.SHOW_LURED_POKEMON,settings.isShowLuredPokemon())
-                .commit();
+        ActionBar bar = getSupportActionBar();
+        bar.setHomeButtonEnabled(true);
+        bar.setDisplayHomeAsUpEnabled(true);
+        bar.setDisplayShowTitleEnabled(true);
+        bar.setHomeAsUpIndicator(R.drawable.back_button);
+        bar.setTitle("Settings");
+    }
 
-        addPreferencesFromResource(R.xml.settings);
-
-        realm = Realm.getDefaultInstance();
-
-        multiboxing = getPreferenceManager().findPreference("multiboxing");
-        multiboxing.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent i = new Intent(SettingsActivity.this, MultiboxingActivity.class);
-                startActivity(i);
-                return true;
-            }
-        });
-
-        scan_dialog = getPreferenceManager().findPreference("scan_dialog");
-        scan_dialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                SettingsUtil.searchRadiusDialog(SettingsActivity.this);
-                return true;
-            }
-        });
-
-        gym_filter = getPreferenceManager().findPreference("gym_filter");
-        gym_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                GymFilters.showGymFiltersDialog(SettingsActivity.this);
-                return true;
-            }
-        });
-
-        expiration_filter = getPreferenceManager().findPreference("expiration_filter");
-        expiration_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                ExpirationFilters.showExpirationFiltersDialog(SettingsActivity.this);
-                return true;
-            }
-        });
-
-        pokemon_blacklist = getPreferenceManager().findPreference("pokemon_blacklist");
-        pokemon_blacklist.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                Intent filterIntent = new Intent(SettingsActivity.this,BlacklistActivity.class);
-                startActivity(filterIntent);
-                return true;
-            }
-        });
-
-        clear_gyms = getPreferenceManager().findPreference("clear_gyms");
-        clear_gyms.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        if(realm.where(Gym.class).findAll().deleteAllFromRealm())
-                        {
-                            Toast.makeText(SettingsActivity.this, getString(R.string.gyms_cleared), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                return true;
-            }
-        });
-
-        clear_pokemon = getPreferenceManager().findPreference("clear_pokemon");
-        clear_pokemon.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        if(realm.where(Pokemons.class).findAll().deleteAllFromRealm())
-                        {
-                            Toast.makeText(SettingsActivity.this, getString(R.string.pokemon_cleared), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                return true;
-            }
-        });
-
-        clear_pokestops = getPreferenceManager().findPreference("clear_pokestops");
-        clear_pokestops.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        if(realm.where(PokeStop.class).findAll().deleteAllFromRealm())
-                        {
-                            Toast.makeText(SettingsActivity.this, getString(R.string.pokestops_cleared), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                return true;
-            }
-        });
-
-        logout = getPreferenceManager().findPreference("logout");
-        logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                logOut();
-                return true;
-            }
-        });
-
-        update = getPreferenceManager().findPreference("update");
-        update.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                new AppUpdateLoader().start();
-                return true;
-            }
-        });
-
-        if (!BuildConfig.enableUpdater) {
-            PreferenceScreen screen = getPreferenceScreen();
-            PreferenceCategory updateCategory = (PreferenceCategory) getPreferenceManager().findPreference("category_update");
-            ListPreference serverRefresh = (ListPreference) getPreferenceManager().findPreference("serverRefreshRate");
-            screen.removePreference(updateCategory);
-            screen.removePreference(serverRefresh);
+    @Override
+    public void onHeaderClick(Header header, int position) {
+        super.onHeaderClick(header, position);
+        if(header.id == R.id.logoutHeader)
+            logOut();
+        else if(header.id == R.id.multiboxingHeader)
+        {
+            Intent i = new Intent(mContext, MultiboxingActivity.class);
+            startActivity(i);
         }
     }
 
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAppUpdateEvent(AppUpdateEvent event) {
-        switch (event.getStatus()) {
-            case AppUpdateEvent.OK:
-                if (PermissionUtils.doWeHaveReadWritePermission(this)) {
-                    showAppUpdateDialog(SettingsActivity.this, event.getAppUpdate());
-                }
-                break;
-            case AppUpdateEvent.FAILED:
-                Toast.makeText(SettingsActivity.this, getString(R.string.update_check_failed), Toast.LENGTH_SHORT).show();
-                break;
-            case AppUpdateEvent.UPTODATE:
-                Toast.makeText(SettingsActivity.this, getString(R.string.up_to_date), Toast.LENGTH_SHORT).show();
-                break;
-        }
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        return true;
     }
-
-    private void showAppUpdateDialog(final Context context, final AppUpdate update) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setTitle(R.string.update_available_title)
-                .setMessage(context.getString(R.string.app_name) + " " + update.getVersion() + " " + context.getString(R.string.update_available_long) + "\n\n" + context.getString(R.string.changes) + "\n\n" + update.getChangelog())
-                .setIcon(R.mipmap.ic_launcher)
-                .setPositiveButton(context.getString(R.string.update), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        AppUpdateDialog.downloadAndInstallAppUpdate(context, update);
-                    }
-                })
-                .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                })
-                .setCancelable(false);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        System.out.println(sharedPreferences.getAll().toString());
-        SettingsUtil.saveSettings(this,new Settings(
-                sharedPreferences.getBoolean(SettingsUtil.ENABLE_UPDATES,true),
-                sharedPreferences.getBoolean(SettingsUtil.KEY_BOUNDING_BOX, false),
-                sharedPreferences.getBoolean(SettingsUtil.DRIVING_MODE, false),
-                sharedPreferences.getBoolean(SettingsUtil.FORCE_ENGLISH_NAMES,false),
-                sharedPreferences.getBoolean(SettingsUtil.ENABLE_LOW_MEMORY,true),
-                Integer.valueOf(sharedPreferences.getString(SettingsUtil.SCAN_VALUE,"4")),
-                Integer.valueOf(sharedPreferences.getString(SettingsUtil.SERVER_REFRESH_RATE, "3")),
-                Integer.valueOf(sharedPreferences.getString(SettingsUtil.POKEMON_ICON_SCALE, "2")),
-                Integer.valueOf(sharedPreferences.getString(SettingsUtil.MAP_REFRESH_RATE, "2")),
-                sharedPreferences.getString(SettingsUtil.LAST_USERNAME, ""),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_ONLY_LURED, true),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_GYMS, true),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_POKESTOPS, true),
-                sharedPreferences.getBoolean(SettingsUtil.KEY_OLD_MARKER, false),
-                sharedPreferences.getBoolean(SettingsUtil.SHUFFLE_ICONS, false),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKEMON, true)
-        ));
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public void searchRadiusDialog() {
-        scanValue = Integer.valueOf(preferences.getString(SettingsUtil.SCAN_VALUE,"4"));
-
-        final AppCompatDialog dialog = new AppCompatDialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_search_radius);
-
-        final SeekBar seekBar = (SeekBar) dialog.findViewById(R.id.seekBar);
-        Button btnSave = (Button) dialog.findViewById(R.id.btnAccept);
-        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-        final TextView tvNumber = (TextView) dialog.findViewById(R.id.tvNumber);
-        final TextView tvEstimate = (TextView) dialog.findViewById(R.id.tvEstimate);
-        tvNumber.setText(String.valueOf(scanValue));
-        tvEstimate.setText(getString(R.string.timeEstimate) + " " + UiUtils.getSearchTime(scanValue,this));
-        seekBar.setProgress(scanValue);
-        seekBar.setMax(12);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                tvNumber.setText(String.valueOf(i));
-                tvEstimate.setText(getString(R.string.timeEstimate) + " " + UiUtils.getSearchTime(i,SettingsActivity.this));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int saveValue = seekBar.getProgress();
-                if (saveValue == 0) {
-                    scanValue = 1;
-                } else {
-                    scanValue = saveValue;
-                }
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(SettingsUtil.SCAN_VALUE,String.valueOf(scanValue));
-                editor.apply();
-                dialog.dismiss();
-            }
-        });
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void logOut() {
@@ -335,7 +74,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 realm.where(PokeStop.class).findAll().deleteAllFromRealm();
                 realm.where(Pokemons.class).findAll().deleteAllFromRealm();
                 realm.where(Gym.class).findAll().deleteAllFromRealm();
-                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+                Intent intent = new Intent(mContext, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
@@ -344,20 +83,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Override
     protected void onResume() {
         realm = Realm.getDefaultInstance();
+        mContext = SettingsActivity.this;
         super.onResume();
     }
 

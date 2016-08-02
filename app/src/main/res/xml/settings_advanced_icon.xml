@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="showOnlyLured"
+        android:title="@string/only_lured"
+        android:summary="@string/only_lured_desc"
+        android:defaultValue="true"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+    <SwitchPreference
+        android:key="shuffleIcons"
+        android:title="@string/shuffle_icons"
+        android:summary="@string/shuffle_icons_desc"
+        android:defaultValue="false"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+    <SwitchPreference
+        android:key="forceEnglishNames"
+        android:title="@string/Force_English_Names"
+        android:summary="@string/Force_English_Names_desc"
+        android:defaultValue="false"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+    <SwitchPreference
+        android:key="useOldMapMarker"
+        android:title="@string/old_marker"
+        android:summary="@string/old_marker_desc"
+        android:defaultValue="false"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+</PreferenceScreen>
