@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="Miscellaneous"
+    android:summary="Additional settings">
+
+    <Preference
+        android:title="@string/Check_For_Update"
+        android:summary="@string/Check_For_Update_desc"
+        android:key="update"/>
+
+    <SwitchPreference
+        android:key="updatesEnabled"
+        android:title="@string/enable_update"
+        android:summary="@string/enable_update_desc"
+        android:defaultValue="true"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+    <Preference
+        android:title="View License"
+        android:key="viewLicense"
+        android:fragment="com.pokescanner.settings.LicenseFragment"/>
+
+</PreferenceScreen>

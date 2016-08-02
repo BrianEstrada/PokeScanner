@@ -44,7 +44,7 @@
             android:windowSoftInputMode="adjustPan|adjustResize"/>
 
         <activity android:name=".multiboxing.MultiboxingActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize"/>
+            android:windowSoftInputMode="adjustPan|adjustResize" />
 
         <activity
             android:name=".GoogleLoginActivity"
@@ -57,12 +57,10 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".settings.SettingsActivity"
-            android:parentActivityName=".settings.SettingsActivity"/>
-
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLEAPIKEY" />
-
         <meta-data android:name="com.samsung.android.sdk.multiwindow.enable"
             android:value="true"/>
 

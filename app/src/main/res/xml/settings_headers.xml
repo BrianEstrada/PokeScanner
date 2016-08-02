@@ -1,0 +1,57 @@
+<preference-headers
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="com.pokescanner.settings.SettingsFragment"
+        android:title="@string/category_filters"
+        android:summary="Choose which icons to display on the map" >
+        <extra
+            android:name="page"
+            android:value="filterOptions"/>
+    </header>
+
+    <header
+        android:title="Manage Accounts"
+        android:id="@+id/multiboxingHeader"
+        android:summary="Add multiple accounts to speed up scan time" />
+
+    <header
+        android:fragment="com.pokescanner.settings.SettingsFragment"
+        android:title="@string/category_map_options"
+        android:summary="Configure how the map is displayed" >
+        <extra
+            android:name="page"
+            android:value="mapOptions"/>
+    </header>
+
+    <header
+        android:fragment="com.pokescanner.settings.SettingsFragment"
+        android:title="@string/category_clear"
+        android:summary="Clear the markers on the map" >
+        <extra
+            android:name="page"
+            android:value="clearOptions"/>
+    </header>
+
+    <header
+        android:fragment="com.pokescanner.settings.SettingsFragment"
+        android:title="Miscellaneous"
+        android:summary="Update Settings and License" >
+        <extra
+            android:name="page"
+            android:value="miscOptions"/>
+    </header>
+
+    <header
+        android:title="About us"
+        android:fragment="com.pokescanner.settings.AboutUsFragment">
+        <extra
+            android:name="page"
+            android:value="aboutUs"/>
+    </header>
+
+    <header
+        android:title="@string/logout"
+        android:id="@+id/logoutHeader"/>
+
+</preference-headers>

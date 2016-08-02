@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/category_clear">
+
+    <Preference
+        android:title="@string/clear_pokemon"
+        android:summary="@string/clear_pokemon_desc"
+        android:key="clear_pokemon"/>
+
+    <Preference
+        android:title="@string/clear_gyms"
+        android:summary="@string/clear_gyms_desc"
+        android:key="clear_gyms"/>
+
+    <Preference
+        android:title="@string/clear_pokestops"
+        android:summary="@string/clear_pokestops_desc"
+        android:key="clear_pokestops"/>
+
+</PreferenceScreen>
