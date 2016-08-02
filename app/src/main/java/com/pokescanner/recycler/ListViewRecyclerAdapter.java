@@ -15,15 +15,9 @@ import java.util.ArrayList;
  */
 public class ListViewRecyclerAdapter extends RecyclerView.Adapter<ListViewHolder>{
     ArrayList<Pokemons> pokemon;
-    OnClickListener listener;
-
-    public interface OnClickListener {
-        void onClick(Pokemons pokemons);
-    }
 
     public ListViewRecyclerAdapter(ArrayList<Pokemons> pokemon) {
         this.pokemon = pokemon;
-        this.listener = listener;
     }
 
     @Override
