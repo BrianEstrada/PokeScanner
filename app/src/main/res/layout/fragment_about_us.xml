@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/toolbar"
+            android:id="@+id/aboutUsToolbar" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:text="Thank you for using PokeScanner, we hope you enjoyed your experience !"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:text="Chief developers : \n\nBrianEstrada\nrhari991\nEZTEQ"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="#006600"
+                android:gravity="center"
+                android:text="Please consider donating in order to support continued development"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Donate"
+                android:id="@+id/donateButton"
+                android:padding="16dp"
+                android:textSize="18sp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/rounded_corners"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="#990000"
+                android:gravity="center"
+                android:text="This is a free software, and is available only through Github and /r/PokeScanner. If you received this application from somewhere else, it may contain malicious code. Please support the developers by only downloading the app from official sources."
+                android:layout_marginBottom="4dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

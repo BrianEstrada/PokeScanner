@@ -67,12 +67,10 @@
     <string name="donate">Donate</string>
 
     <string name="category_donate">Donate and Support continued development!</string>
-    <string name="category_range_options">Range Options</string>
     <string name="category_map_options">Map Options</string>
-    <string name="category_extendedMap_options">Advance Map Options</string>
+    <string name="category_extendedMap_options">Advanced Map Options</string>
     <string name="category_filters">Filter Options</string>
     <string name="category_clear">Clear Options</string>
-    <string name="category_update">Update Options</string>
 
     <string name="enable_update">Enable Auto-Updates</string>
     <string name="enable_update_desc">Checks every time you start to the app if there is an update (On by default).</string>
