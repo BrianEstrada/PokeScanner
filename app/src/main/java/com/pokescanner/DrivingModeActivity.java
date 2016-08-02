@@ -227,6 +227,12 @@ public class DrivingModeActivity extends AppCompatActivity implements GoogleApiC
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         showProgressbar(false);
@@ -241,8 +247,12 @@ public class DrivingModeActivity extends AppCompatActivity implements GoogleApiC
     }
 
     @Override
+    @SuppressWarnings("MissingPermission")
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
+        if (mMap != null) {
+            mMap.setMyLocationEnabled(true);
+        }
     }
 
     public boolean moveCameraToCurrentPosition() {

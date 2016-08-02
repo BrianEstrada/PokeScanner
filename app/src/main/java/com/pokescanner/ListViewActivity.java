@@ -304,6 +304,12 @@ public class ListViewActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         showProgressbar(false);
