@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -16,11 +17,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,11 +55,12 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     SharedPreferences preferences;
     Preference scan_dialog,gym_filter,expiration_filter;
     Preference clear_pokemon,clear_gyms,clear_pokestops;
-    Preference pokemon_blacklist, update;
+    Preference pokemon_blacklist, update,serve_refresh_rate_dialog;
     Realm realm;
     int scanValue;
     private Context mContext;
     private View rootView;
+    boolean donation = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                         break;
                     case "miscOptions":
                         addPreferencesFromResource(R.xml.settings_miscellaneous);
+                        break;
+                    case "donatePage":
+                        donationIntent();
+                        donation = true;
                         break;
                 }
         }
@@ -127,6 +135,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                     case "mapOptions":
                         setupMapOptions();
                         break;
+                    case "advancedMapOptions":
+                        setupAdvanceMapOptions();
+                        break;
                     case "clearOptions":
                         setupClearOptions();
                         break;
@@ -148,7 +159,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         bar.setDisplayHomeAsUpEnabled(true);
         bar.setDisplayShowTitleEnabled(true);
         bar.setHomeAsUpIndicator(R.drawable.back_button);
-        bar.setTitle(getPreferenceScreen().getTitle());
+        if (!donation)
+            bar.setTitle(getPreferenceScreen().getTitle());
     }
 
     private void setupFilterOptions() {
@@ -183,6 +195,16 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         scan_dialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 SettingsUtil.searchRadiusDialog(mContext);
+                return true;
+            }
+        });
+    }
+
+    private void setupAdvanceMapOptions() {
+        serve_refresh_rate_dialog = getPreferenceManager().findPreference("server_refresh_rate_dialog");
+        serve_refresh_rate_dialog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                serverRefreshDialog();
                 return true;
             }
         });
@@ -255,8 +277,13 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             PreferenceScreen screen = getPreferenceScreen();
             PreferenceCategory updateCategory = (PreferenceCategory) getPreferenceManager().findPreference("category_update");
             ListPreference serverRefresh = (ListPreference) getPreferenceManager().findPreference("serverRefreshRate");
-            screen.removePreference(updateCategory);
-            screen.removePreference(serverRefresh);
+            if (serverRefresh != null) {
+                screen.removePreference(serverRefresh);
+            }
+            if (updateCategory!=null) {
+                screen.removePreference(updateCategory);
+            }
+
         }
     }
 
@@ -299,6 +326,39 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         dialog.show();
     }
 
+    public void donationIntent() {
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.me/brianestrada"));
+        startActivity(i);
+    }
+    public void serverRefreshDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Server Refresh Rate");
+
+        final EditText input = new EditText(getActivity());
+
+        input.setText(preferences.getString(SettingsUtil.SERVER_REFRESH_RATE,"11"));
+
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                preferences.edit()
+                        .putString(SettingsUtil.SERVER_REFRESH_RATE,input.getText().toString())
+                        .apply();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
@@ -310,7 +370,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 sharedPreferences.getBoolean(SettingsUtil.FORCE_ENGLISH_NAMES,false),
                 sharedPreferences.getBoolean(SettingsUtil.ENABLE_LOW_MEMORY,true),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.SCAN_VALUE,"4")),
-                Integer.valueOf(sharedPreferences.getString(SettingsUtil.SERVER_REFRESH_RATE, "3")),
+                Integer.valueOf(sharedPreferences.getString(SettingsUtil.SERVER_REFRESH_RATE, "11")),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.POKEMON_ICON_SCALE, "2")),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.MAP_REFRESH_RATE, "2")),
                 sharedPreferences.getString(SettingsUtil.LAST_USERNAME, ""),

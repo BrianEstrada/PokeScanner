@@ -4,14 +4,10 @@
     android:title="@string/category_extendedMap_options"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListPreference
-        android:key="serverRefreshRate"
+    <Preference
+        android:key="server_refresh_rate_dialog"
         android:title="@string/server_refresh"
-        android:summary="@string/server_refresh_desc"
-        android:dialogTitle="@string/server_refresh"
-        android:entries="@array/ServerRefreshRate"
-        android:entryValues="@array/ServerRefreshRateValues"
-        android:defaultValue="1" />
+        android:summary="@string/server_refresh_desc" />
 
     <ListPreference
         android:key="mapRefreshRate"

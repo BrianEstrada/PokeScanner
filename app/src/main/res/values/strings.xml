@@ -136,6 +136,10 @@
     <string name="changes">Changes:</string>
     <string name="update_available_long">is available.</string>
 
+    <string name="category_range">Range Options</string>
+    <string name="category_update">Update Options</string>
+    <string name="category_range_options">Range Options</string>
+
     <string name="guard_pokemon">Guard Pokémon : </string>
     <string name="gym_points">Gym points : </string>
     <string name="expires_in">Expires in : </string>

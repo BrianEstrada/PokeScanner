@@ -10,6 +10,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
+//This line should commented out if you aren't using fabric
 apply plugin: 'realm-android'
 
 repositories {

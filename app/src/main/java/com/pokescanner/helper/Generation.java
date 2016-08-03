@@ -1,6 +1,10 @@
 package com.pokescanner.helper;
 
+import android.support.v4.content.res.ResourcesCompat;
+
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.pokescanner.R;
 
 import java.util.Arrays;
 import java.util.List;
@@ -96,6 +100,16 @@ public class Generation {
         } else {
             return scanMap;
         }
+    }
+    public static PolygonOptions generateSingleGrid(LatLng latLng) {
+        return new PolygonOptions()
+                .add(translate(latLng,0,70))
+                .add(translate(latLng,60,70))
+                .add(translate(latLng,120,70))
+                .add(translate(latLng,180,70))
+                .add(translate(latLng,240,70))
+                .add(translate(latLng,300,70))
+                .strokeWidth(0);
     }
 
     // Takes in distance in meters, bearing in degrees

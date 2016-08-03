@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.pokescanner.R;
 import com.pokescanner.loaders.AuthAccountsLoader;
+import com.pokescanner.loaders.AuthSingleAccountLoader;
 import com.pokescanner.objects.User;
 
 import java.util.ArrayList;
@@ -97,6 +98,7 @@ public class MultiboxingActivity extends AppCompatActivity{
         loadAccounts();
     }
 
+
     @OnClick(R.id.btnAddAccount)
     public void addAccountDialog() {
         View view = getLayoutInflater().inflate(R.layout.dialog_add_account,null);
@@ -120,6 +122,9 @@ public class MultiboxingActivity extends AppCompatActivity{
                 realm.beginTransaction();
                 realm.copyToRealmOrUpdate(user);
                 realm.commitTransaction();
+
+                AuthSingleAccountLoader singleloader = new AuthSingleAccountLoader(user);
+                singleloader.start();
 
                 builder.dismiss();
             }

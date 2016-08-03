@@ -107,7 +107,7 @@ public class SettingsUtil {
             sharedPrefs.getBoolean(FORCE_ENGLISH_NAMES,false),
             sharedPrefs.getBoolean(ENABLE_LOW_MEMORY,true),
             sharedPrefs.getInt(SCAN_VALUE, 4),
-            sharedPrefs.getInt(SERVER_REFRESH_RATE, 3),
+            sharedPrefs.getInt(SERVER_REFRESH_RATE, 11),
             sharedPrefs.getInt(POKEMON_ICON_SCALE, 2),
             sharedPrefs.getInt(MAP_REFRESH_RATE, 2),
             sharedPrefs.getString(LAST_USERNAME, ""),

@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.pokescanner.events.ScanCircleEvent;
 import com.pokescanner.helper.PokeDistanceSorter;
@@ -70,6 +71,7 @@ public class ListViewActivity extends AppCompatActivity implements GoogleApiClie
     GoogleApiClient mGoogleApiClient;
     Subscription pokemonSubscriber;
     RecyclerView.Adapter mAdapter;
+
     Realm realm;
     Boolean autoScan = false;
     List<LatLng> scanMap;
@@ -183,6 +185,7 @@ public class ListViewActivity extends AppCompatActivity implements GoogleApiClie
                 progressBar.setProgress(0);
                 //Get our scale for range
                 int scale = Settings.get(this).getScanValue();
+                int SERVER_REFRESH_RATE = Settings.get(this).getServerRefresh();
                 //pull our GPS location
                 LatLng scanPosition = getCurrentLocation();
 
@@ -198,7 +201,7 @@ public class ListViewActivity extends AppCompatActivity implements GoogleApiClie
                         //Pull our users from the realm
                         ArrayList<User> users = new ArrayList<>(realm.copyFromRealm(realm.where(User.class).findAll()));
 
-                        MultiAccountLoader.setSleepTime(UiUtils.BASE_DELAY);
+                        MultiAccountLoader.setSleepTime(UiUtils.BASE_DELAY * SERVER_REFRESH_RATE);
                         //Set our map
                         MultiAccountLoader.setScanMap(scanMap);
                         //Set our users
@@ -281,6 +284,7 @@ public class ListViewActivity extends AppCompatActivity implements GoogleApiClie
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             progressBar.setVisibility(View.INVISIBLE);
+
         }
     }
     @Override

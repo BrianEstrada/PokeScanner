@@ -1,6 +1,7 @@
 package com.pokescanner;
 
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,9 +22,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.pokescanner.events.ScanCircleEvent;
+import com.pokescanner.helper.Generation;
 import com.pokescanner.loaders.MultiAccountLoader;
+import com.pokescanner.objects.Pokemons;
 import com.pokescanner.objects.User;
 import com.pokescanner.settings.Settings;
 import com.pokescanner.utils.PermissionUtils;
@@ -35,7 +44,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -50,9 +61,6 @@ import rx.functions.Action1;
 
 import static com.pokescanner.helper.Generation.makeHexScanMap;
 
-/**
- * Created by Brian on 8/2/2016.
- */
 public class DrivingModeActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback {
     @BindView(R.id.btnAutoScan)
     FloatingActionButton btnAutoScan;
@@ -61,7 +69,10 @@ public class DrivingModeActivity extends AppCompatActivity implements GoogleApiC
 
     GoogleMap mMap;
     LatLng cameraLocation;
+    ArrayList<Circle> circleArray = new ArrayList<>();
+    Polygon mBoundingHexagon = null;
 
+    private Map<Pokemons, Marker> pokemonsMarkerMap = new HashMap<>();
     GoogleApiClient mGoogleApiClient;
     Subscription pokemonSubscriber;
     Realm realm;
@@ -100,20 +111,22 @@ public class DrivingModeActivity extends AppCompatActivity implements GoogleApiC
         refresh();
     }
 
+
     public void scanMap() {
+        createBoundingBox();
+        generatePokemons();
+
         if (autoScan) {
             if (!MultiAccountLoader.areThreadsRunning()) {
                 pos = 1;
                 progressBar.setProgress(0);
                 //Get our scale for range
                 int scale = Settings.get(this).getScanValue();
+                int SERVER_REFRESH_RATE = Settings.get(this).getServerRefresh();
                 //pull our GPS location
                 LatLng scanPosition = getCurrentLocation();
 
-                //On the offchance we don't have our location then lets get the camera location instead
-                if (scanPosition == null) {
-                    scanPosition = cameraLocation;
-                }
+                Toast.makeText(DrivingModeActivity.this, "Starting new Scan", Toast.LENGTH_SHORT).show();
 
                 if (scanPosition != null) {
                     scanMap = makeHexScanMap(scanPosition, scale, 1, new ArrayList<LatLng>());
@@ -122,7 +135,7 @@ public class DrivingModeActivity extends AppCompatActivity implements GoogleApiC
                         //Pull our users from the realm
                         ArrayList<User> users = new ArrayList<>(realm.copyFromRealm(realm.where(User.class).findAll()));
 
-                        MultiAccountLoader.setSleepTime(UiUtils.BASE_DELAY);
+                        MultiAccountLoader.setSleepTime(UiUtils.BASE_DELAY * SERVER_REFRESH_RATE);
                         //Set our map
                         MultiAccountLoader.setScanMap(scanMap);
                         //Set our users
@@ -134,7 +147,66 @@ public class DrivingModeActivity extends AppCompatActivity implements GoogleApiC
             }
         }
     }
+    public void generatePokemons() {
+        if (mMap != null) {
+            LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
 
+            //Load our Pokemon Array
+            ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
+            //Okay so we're going to fix the annoying issue where the markers were being constantly redrawn
+            for (int i = 0; i < pokemons.size(); i++) {
+                //Get our pokemon from the list
+                Pokemons pokemon = pokemons.get(i);
+                //Is our pokemon contained within the bounds of the camera?
+                if (curScreen.contains(new LatLng(pokemon.getLatitude(), pokemon.getLongitude()))) {
+                    //If yes then has he expired?
+                    //This isnt worded right it should say isNotExpired (Will fix later)
+                    if (pokemon.isExpired()) {
+                        if (UiUtils.isPokemonFiltered(pokemon) ||
+                                UiUtils.isPokemonExpiredFiltered(pokemon, this)) {
+                            if (pokemonsMarkerMap.containsKey(pokemon)) {
+                                Marker marker = pokemonsMarkerMap.get(pokemon);
+                                if (marker != null) {
+                                    marker.remove();
+                                    pokemonsMarkerMap.remove(pokemon);
+                                }
+                            }
+                        } else {
+                            //Okay finally is he contained within our hashmap?
+                            if (pokemonsMarkerMap.containsKey(pokemon)) {
+                                //Well if he is then lets pull out our marker.
+                                Marker marker = pokemonsMarkerMap.get(pokemon);
+                                //Update the marker
+                                //UNTESTED
+                                if (marker != null) {
+                                    marker = pokemon.updateMarker(marker, this);
+                                }
+                            } else {
+                                //If our pokemon wasn't in our hashmap lets add him
+                                pokemonsMarkerMap.put(pokemon, mMap.addMarker(pokemon.getMarker(this)));
+                            }
+                        }
+                    } else {
+                        //If our pokemon expired lets remove the marker
+                        if (pokemonsMarkerMap.get(pokemon) != null)
+                            pokemonsMarkerMap.get(pokemon).remove();
+                        //Then remove the pokemon
+                        pokemonsMarkerMap.remove(pokemon);
+                        //Finally lets remove him from our realm.
+                        realm.beginTransaction();
+                        realm.where(Pokemons.class).equalTo("encounterid", pokemon.getEncounterid()).findAll().deleteAllFromRealm();
+                        realm.commitTransaction();
+                    }
+                } else {
+                    //If our pokemon expired lets remove the marker
+                    if (pokemonsMarkerMap.get(pokemon) != null)
+                        pokemonsMarkerMap.get(pokemon).remove();
+                    //Then remove the pokemon
+                    pokemonsMarkerMap.remove(pokemon);
+                }
+            }
+        }
+    }
     public void refresh() {
         if (pokemonSubscriber != null)
             pokemonSubscriber.unsubscribe();
@@ -145,6 +217,7 @@ public class DrivingModeActivity extends AppCompatActivity implements GoogleApiC
                     @Override
                     public void call(Long aLong) {
                         moveCameraToCurrentPosition();
+                        scanMap();
                     }
                 });
     }
@@ -187,6 +260,13 @@ public class DrivingModeActivity extends AppCompatActivity implements GoogleApiC
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void createCircle(ScanCircleEvent event) {
         if (event.pos != null) {
+            CircleOptions circleOptions = new CircleOptions()
+                    .radius(80)
+                    .strokeWidth(0)
+                    .fillColor(ResourcesCompat.getColor(getResources(),R.color.colorPrimaryTransparent,null))
+                    .center(event.pos);
+            circleArray.add(mMap.addCircle(circleOptions));
+
             float progress = (float) pos++ * 100 / scanMap.size();
             progressBar.setProgress((int) progress);
             if ((int) progress == 100) {
@@ -194,8 +274,37 @@ public class DrivingModeActivity extends AppCompatActivity implements GoogleApiC
             }
         }
     }
+    public void createBoundingBox() {
+        removeBoundingBox();
+        if (autoScan) {
+            if (scanMap != null) {
+                if (scanMap.size() > 0) {
+                    List<LatLng> boundingPoints = Generation.getCorners(scanMap);
+                    PolygonOptions polygonOptions = new PolygonOptions();
+                    for (LatLng latLng : boundingPoints) {
+                        polygonOptions.add(latLng);
+                    }
+                    polygonOptions.strokeColor(Color.parseColor("#80d22d2d"));
 
+                    mBoundingHexagon = mMap.addPolygon(polygonOptions);
+                }
+            }
+        }
+    }
+    public void removeBoundingBox() {
+        if (mBoundingHexagon != null)
+            mBoundingHexagon.remove();
+    }
+    public void removeCircleArray() {
+        if (circleArray != null)
+        {
+            for(Circle circle: circleArray) {
+                circle.remove();
+            }
 
+            circleArray.clear();
+        }
+    }
     public void showProgressbar(boolean status) {
         if (status) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -203,6 +312,7 @@ public class DrivingModeActivity extends AppCompatActivity implements GoogleApiC
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             progressBar.setVisibility(View.INVISIBLE);
+            removeCircleArray();
         }
     }
 

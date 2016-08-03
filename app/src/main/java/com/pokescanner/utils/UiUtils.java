@@ -8,6 +8,8 @@ import com.pokescanner.helper.ExpirationFilter;
 import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.objects.FilterItem;
 import com.pokescanner.objects.Pokemons;
+import com.pokescanner.objects.User;
+import com.pokescanner.settings.Settings;
 
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
@@ -15,11 +17,13 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import io.realm.Realm;
+
 import static com.pokescanner.helper.Generation.hexagonal_number;
 
 
 public class UiUtils {
-    public static final int BASE_DELAY = 5000;
+    public static final int BASE_DELAY = 1000;
     public static void hideKeyboard(EditText editText) {
         ((InputMethodManager) editText.getContext()
             .getSystemService(Context.INPUT_METHOD_SERVICE))
@@ -27,7 +31,10 @@ public class UiUtils {
     }
 
     public static String getSearchTime(int val,Context context) {
-        int calculatedValue = hexagonal_number(val) * BASE_DELAY;
+        int serverRefreshValue = (BASE_DELAY * Settings.get(context).getServerRefresh());
+        int serverDividedValue = serverRefreshValue / Realm.getDefaultInstance().where(User.class).findAll().size();
+        int calculatedValue = hexagonal_number(val) * serverDividedValue;
+        System.out.println(serverRefreshValue + " " + serverDividedValue + " " + calculatedValue);
         long millis = calculatedValue;
         DateTime dt = new DateTime(millis);
         DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
