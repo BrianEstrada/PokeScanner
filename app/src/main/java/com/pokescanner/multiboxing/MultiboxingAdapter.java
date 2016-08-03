@@ -1,6 +1,11 @@
 package com.pokescanner.multiboxing;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,23 +56,22 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
 
 
     public class MBViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvAccountNumber;
         public TextView tvAccountName;
+        public ImageView accountColor;
         public ImageView imgStatus;
         public ProgressBar progressBarStatus;
         public ImageButton btnRemoveAccount;
 
         public MBViewHolder(View view) {
             super(view);
-            tvAccountNumber = (TextView) view.findViewById(R.id.tvAccountNumber);
             tvAccountName = (TextView) view.findViewById(R.id.tvAccountName);
+            accountColor = (ImageView) view.findViewById(R.id.accountColor);
             imgStatus = (ImageView) view.findViewById(R.id.imgStatus);
             progressBarStatus = (ProgressBar) view.findViewById(R.id.progressBarStatus);
             btnRemoveAccount = (ImageButton) view.findViewById(R.id.btnRemoveAccount);
         }
 
         public void bind(final User user, final accountRemovalListener listener, int position) {
-            tvAccountNumber.setText(String.valueOf(position));
             if(user.getAuthType() == User.GOOGLE)
                 tvAccountName.setText("Google account");
             else
@@ -79,6 +83,21 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
                     listener.onRemove(user);
                 }
             });
+
+            if (user.getAccountColor() == -1) {
+                Drawable drawable = ResourcesCompat.getDrawable(mContext.getResources(),R.drawable.circle_button,null);
+                drawable = DrawableCompat.wrap(drawable);
+                drawable.setAlpha(128);
+                drawable.setColorFilter(ResourcesCompat.getColor(mContext.getResources(),R.color.colorAccent,null), PorterDuff.Mode.SRC);
+                accountColor.setImageDrawable(drawable);
+            }else
+            {
+                Drawable drawable = ResourcesCompat.getDrawable(mContext.getResources(),R.drawable.circle_button,null);
+                drawable = DrawableCompat.wrap(drawable);
+                drawable.setAlpha(128);
+                drawable.setColorFilter(ResourcesCompat.getColor(mContext.getResources(),user.getAccountColor(),null), PorterDuff.Mode.SRC);
+                accountColor.setImageDrawable(drawable);
+            }
 
             switch(user.getStatus())
             {

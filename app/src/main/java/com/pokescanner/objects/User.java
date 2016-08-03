@@ -29,7 +29,7 @@ public class User extends RealmObject{
     GoogleAuthToken token;
     int authType;
     int status = 10;
-    long lastScan;
+    int accountColor = -1;
 
     public User() {}
 

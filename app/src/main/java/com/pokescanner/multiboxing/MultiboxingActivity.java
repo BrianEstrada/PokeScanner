@@ -96,6 +96,7 @@ public class MultiboxingActivity extends AppCompatActivity{
         super.onResume();
         realm = Realm.getDefaultInstance();
         loadAccounts();
+        refreshAccounts();
     }
 
 
