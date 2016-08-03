@@ -1,8 +1,10 @@
 <resources>
+    <string name="shared_key" translatable="false">POKESCANNER</string>
     <string name="title_activity_maps">Mapa</string>
     <string name="scan">Pesquisar</string>
     <string name="ptclogin">Login PTC</string>
     <string name="googlelogin">Login Google</string>
+    <string name="poke_scanner" translatable="false">PokéScanner</string>
     <string name="blacklist">Lita Negra</string>
     <string name="save">Guardar</string>
     <string name="search_radius">Raio de Pesquisa</string>
@@ -20,9 +22,15 @@
     <string name="LOGIN_OK">Login Efetuado</string>
     <string name="PERMISSION_OK">Obrigado pelas permissões!</string>
 
+    <string name="ptcgoogleusername">Nome de Utilizador PTC/Google</string>
     <string name="TRYING_PTC_LOGIN">A tentar login PTC.</string>
     <string name="TRYING_GOOGLE_LOGIN">A tentar login Google.</string>
 
+    <string name="SCAN_FAILED">Falha na Pesquisa</string>
+    <string name="ERROR_LOGIN">Problema no Login (Tente religar-se)</string>
+    <string name="ERROR_THREAD">Pesquisa Cancelada</string>
+    <string name="ERROR_SERVER">Servidores sem resposta</string>
+    <string name="ERROR_LOW_MEMORY">Pouca Memória Detetada! A limpar Ginásios/Pokéstops</string>
     <string name="on">On</string>
     <string name="off">Off</string>
 
@@ -34,12 +42,13 @@
     <string name="timeEstimate">Tempo Estimado de Pesquisa: </string>
     <string name="hide">Esconder</string>
     <string name="searchicon">IconePesquisa</string>
-    <string name="menubutton">BotooMenu</string>
+    <string name="menubutton">BotaoMenu</string>
     <string name="yellow_team">Equipa Amarela</string>
     <string name="blue_team">Equipa Azul</string>
     <string name="red_team">Equipa Vermelha</string>
     <string name="neutral_gyms">Ginásios Neutros</string>
     <string name="guard_pokemon_cp">CP de Pokémon de Guarda</string>
+    <string name="_0" translatable="false">0</string>
     <string name="expiration_time">Esconder Pokémon que expiram em</string>
     <string name="expiration_min">Mín:</string>
     <string name="expiration_max">Máx:</string>
@@ -57,15 +66,16 @@
     <string name="donate">Doar</string>
 
     <string name="category_donate">Doar e apoiar o desenvolvimento contínuo da app!</string>
-    <string name="category_range_options">Opções de Alcance</string>
     <string name="category_map_options">Opções de Mapa</string>
     <string name="category_extendedMap_options">Opções de Mapa Avançadas</string>
     <string name="category_filters">Opções de Filtragem</string>
     <string name="category_clear">Opções de Limpeza</string>
-    <string name="category_update">Opções de Atualização</string>
 
     <string name="enable_update">Ativar Auto-Atualização</string>
     <string name="enable_update_desc">Verifica se existe uma atualização sempre que a app é aberta (ligado por defeito)</string>
+
+    <string name="enable_low_memory">Ativar Gestão de Pouca Memória</string>
+    <string name="enable_low_memory_desc">Permite que a aplicação limpe Pokémon/Ginásios/Pokéstops para evitar problemas de memória</string>
 
     <string name="show_range">Mostrar Alcance</string>
     <string name="show_range_desc">Cria um círculo preto em redor da área de pesquisa</string>
@@ -98,6 +108,8 @@
     <string name="show_gyms_desc">Mostra/Esconde os ginásios no mapa</string>
     <string name="show_pokestops">Mostrar Pokéstops</string>
     <string name="show_pokestop_desc">Mostra/Esconde Pokéstops no mapa</string>
+    <string name="show_lured_pokemon">Mostrar Pokémon nos Lures</string>
+    <string name="show_lured_pokemon_desc">Mostra o ícone do Pokémon em vez do ícone de uma Pokéstop com Lure (a não ser que esse Pokémon esteja filtrado)</string>
     <string name="lock_gps">Pesquisar Baseado no GPS</string>
     <string name="lock_gps_desc">Em vez de pesquisar no centro do ecrã (onde quer que seja), irá pesquisar na sua localização</string>
     <string name="old_marker">Usar Marcadores de Mapa Antigos</string>
@@ -106,7 +118,7 @@
     <string name="driving_mode_desc">Mantém o mapa centrado na localização atual</string>
 
     <string name="shuffle_icons">Usar Ícones do Shuffle</string>
-    <string name="shuffle_icons_desc">Usar ícones do Pokémon Shuffle Icons em vez das imagens padrão (mais fácil de distinguir!)</string>
+    <string name="shuffle_icons_desc">Usar ícones do Pokémon Shuffle em vez das imagens padrão (mais fácil de distinguir!)</string>
 
     <string name="gyms_cleared">Ginásios Limpos</string>
     <string name="pokestops_cleared">Pokéstops Limpas</string>
@@ -115,19 +127,23 @@
 
     <string name="settingsbutton">BotaoDefinicoes</string>
     <string name="version_check_failed">Falha na verificação de versão.</string>
-    <string name="updating_pokescanner">A atualizar o Poke Scanner</string>
+    <string name="updating_pokescanner">A atualizar PokéScanner</string>
     <string name="update">Atualizar</string>
     <string name="update_available_title">Atualização disponível</string>
     <string name="up_to_date">A sua versão é a mais recente!</string>
     <string name="update_check_failed">Falha na verificação de atualização.</string>
     <string name="changes">Alterações:</string>
     <string name="update_available_long">está disponível.</string>
+    
+    <string name="category_range">Opções de Alcance</string>
+    <string name="category_update">Opções de Atualização</string>
+    <string name="category_range_options">Opções de Alcance</string>
 
     <string name="guard_pokemon">Pokémon de guarda : </string>
-    <string name="gym_points">Pontos do ginásio : </string>
+    <string name="gym_points">Pontos do Ginásio : </string>
     <string name="expires_in">Expira em : </string>
     <string name="lure_expires_in">Lure expira em : </string>
-    <string name="lured_pokemon">Pokémon de Lure</string>
+    <string name="lured_pokemon">Pokémon no Lure</string>
     <string name="open_in_gmaps">Abrir em Google Maps</string>
     <string name="get_directions">Direções dentro da app</string>
     <string name="click_open_in_gmaps">Carregue aqui para abrir em Google Maps</string>
@@ -141,6 +157,9 @@
 
     <string name="auto_update_denied">Permissão recusada! A desativar auto-atualização :(</string>
     <string name="location_denied">A app não funcionará sem localização!</string>
+    
+    <string name="Force_English_Names">Forçar nomes em Inglês</string>
+    <string name="Force_English_Names_desc">Força os nomes dos Pokémon a serem exibidos em Inglês.</string>
 
     <string name="Check_For_Update">Procurar Atualizações</string>
     <string name="Check_For_Update_desc">Procura uma atualização manualmente</string>
@@ -313,4 +332,6 @@
     <string name="update_canceled">Atualização cancelada.</string>
     <string name="search">Procurar</string>
     <string name="search_by_address">Procurar por Endereço</string>
+    <string name="account_manager">Gestor de Contas</string>
+    <string name="add_account">Adicionar Conta (PTC)</string>
 </resources>
