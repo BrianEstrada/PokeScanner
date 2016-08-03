@@ -84,6 +84,15 @@
             fab:fab_colorPressed="@color/colorAccent"
             fab:fab_colorRipple="@color/colorPrimaryDark" />
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/btnBlacklistToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_filter_white_24dp"
+            fab:fab_size="mini"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_colorRipple="@color/colorPrimaryDark" />
+        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/btnCenterCamera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -115,6 +115,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     RelativeLayout main;
     @BindView(R.id.btnSataliteMode)
     com.github.clans.fab.FloatingActionButton btnSataliteMode;
+    @BindView(R.id.btnBlacklistToggle)
+    com.github.clans.fab.FloatingActionButton btnBlacklistToggle;
     @BindView(R.id.floatActionMenu)
     FloatingActionMenu floatingActionMenu;
 
@@ -140,6 +142,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Used for determining Scan status
     boolean SCANNING_STATUS = false;
     boolean LIST_MODE = false;
+    boolean BLACKLIST_ENABLED = true;
     //Used for our refreshing of the map
     Subscription pokeonRefresher;
     Subscription gymstopRefresher;
@@ -344,8 +347,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //If yes then has he expired?
                         //This isnt worded right it should say isNotExpired (Will fix later)
                         if (pokemon.isExpired()) {
-                            if (UiUtils.isPokemonFiltered(pokemon) ||
-                                    UiUtils.isPokemonExpiredFiltered(pokemon, this)) {
+                            if ((UiUtils.isPokemonFiltered(pokemon) ||
+                                    UiUtils.isPokemonExpiredFiltered(pokemon, this)) &&
+                                    BLACKLIST_ENABLED) {
                                 if (pokemonsMarkerMap.containsKey(pokemon)) {
                                     Marker marker = pokemonsMarkerMap.get(pokemon);
                                     if (marker != null) {
@@ -731,6 +735,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 btnSataliteMode.setImageResource(R.drawable.ic_satellite_white_24dp);
             }
         }
+        floatingActionMenu.close(true);
+    }
+    @OnClick(R.id.btnBlacklistToggle)
+    public void toggleBlacklist() {
+        BLACKLIST_ENABLED = !BLACKLIST_ENABLED;
+        if(BLACKLIST_ENABLED) {
+            btnBlacklistToggle.setImageResource(R.drawable.ic_filter_white_24dp);
+        }
+        else {
+            btnBlacklistToggle.setImageResource(R.drawable.ic_filter_white_outline_24dp);
+        }
+
         floatingActionMenu.close(true);
     }
     @OnClick(R.id.btnDrivingMode)
