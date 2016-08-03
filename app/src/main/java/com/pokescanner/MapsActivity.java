@@ -538,12 +538,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void createCircle(ScanCircleEvent event) {
-        if (event.pos != null)
-        {
+        if (event.pos != null) {
+            int color = event.color;
+
+            if (color == 0) {
+                color = ResourcesCompat.getColor(getResources(),R.color.colorPrimaryTransparent,null);
+            }
+
             CircleOptions circleOptions = new CircleOptions()
                     .radius(80)
                     .strokeWidth(0)
-                    .fillColor(ResourcesCompat.getColor(getResources(),R.color.colorPrimaryTransparent,null))
+                    .fillColor(color)
                     .center(event.pos);
             circleArray.add(mMap.addCircle(circleOptions));
 

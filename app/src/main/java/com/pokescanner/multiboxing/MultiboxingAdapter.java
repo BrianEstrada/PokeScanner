@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.pavelsikun.vintagechroma.ChromaDialog;
+import com.pavelsikun.vintagechroma.IndicatorMode;
+import com.pavelsikun.vintagechroma.colormode.ColorMode;
 import com.pokescanner.R;
 import com.pokescanner.objects.User;
 
@@ -26,16 +29,23 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
     private ArrayList<User> accountData;
     private Context mContext;
     private accountRemovalListener listener;
+    private accountChangeColorListener listener2;
 
     public interface accountRemovalListener {
         void onRemove(User user);
     }
 
+    public interface accountChangeColorListener {
+        void changeColor(User user);
+    }
 
-    public MultiboxingAdapter(Context context, ArrayList<User> accountData,accountRemovalListener listener) {
+
+
+    public MultiboxingAdapter(Context context, ArrayList<User> accountData,accountRemovalListener listener,accountChangeColorListener listener2) {
         mContext = context;
         this.listener = listener;
         this.accountData = accountData;
+        this.listener2 = listener2;
     }
 
     @Override
@@ -47,7 +57,7 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
     @Override
     public void onBindViewHolder(MultiboxingAdapter.MBViewHolder holder, final int position) {
         User user = accountData.get(position);
-        holder.bind(user,listener,position);
+        holder.bind(user,listener,listener2);
     }
 
     @Override
@@ -72,7 +82,7 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
             btnRemoveAccount = (ImageButton) view.findViewById(R.id.btnRemoveAccount);
         }
 
-        public void bind(final User user, final accountRemovalListener listener, int position) {
+        public void bind(final User user, final accountRemovalListener listener, final accountChangeColorListener listener2) {
             if(user.getAuthType() == User.GOOGLE)
                 tvAccountName.setText("Google account");
             else
@@ -91,14 +101,21 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
                 color = user.getAccountColor();
             }
 
-            Drawable drawable = ResourcesCompat.getDrawable(mContext.getResources(),R.drawable.circle_button,null);
+            Drawable drawable = ResourcesCompat.getDrawable(mContext.getResources(),R.drawable.circle_account_color,null);
 
             if (drawable != null) {
                 drawable = DrawableCompat.wrap(drawable);
                 drawable.setAlpha(128);
-                drawable.setColorFilter(color, PorterDuff.Mode.SRC);
+                drawable.setColorFilter(color, PorterDuff.Mode.SRC_OVER);
                 accountColor.setImageDrawable(drawable);
             }
+
+            accountColor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener2.changeColor(user);
+                }
+            });
 
             switch(user.getStatus())
             {

@@ -66,33 +66,35 @@ public class ObjectLoaderPTC extends Thread {
 
                 if (go != null) {
                     for (LatLng pos : scanMap) {
-                            go.setLatitude(pos.latitude);
-                            go.setLongitude(pos.longitude);
-                            Map map = go.getMap();
-                            MapObjects event = map.getMapObjects();
-                            final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getCatchablePokemons();
-                            final Collection<FortDataOuterClass.FortData> collectionGyms = event.getGyms();
-                            final Collection<Pokestop> collectionPokeStops = event.getPokestops();
+                        go.setLatitude(pos.latitude);
+                        go.setLongitude(pos.longitude);
+                        Map map = go.getMap();
+                        MapObjects event = map.getMapObjects();
+                        final Collection<MapPokemonOuterClass.MapPokemon> collectionPokemon = event.getCatchablePokemons();
+                        final Collection<FortDataOuterClass.FortData> collectionGyms = event.getGyms();
+                        final Collection<Pokestop> collectionPokeStops = event.getPokestops();
 
-                            EventBus.getDefault().post(new ScanCircleEvent(pos));
+                        if(EventBus.getDefault().hasSubscriberForEvent(ScanCircleEvent.class)) {
+                            EventBus.getDefault().post(new ScanCircleEvent(pos,user.getAccountColor()));
+                        }
 
-                            realm = Realm.getDefaultInstance();
-                            realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    for (MapPokemonOuterClass.MapPokemon pokemonOut : collectionPokemon)
-                                        realm.copyToRealmOrUpdate(new Pokemons(pokemonOut));
+                        realm = Realm.getDefaultInstance();
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                for (MapPokemonOuterClass.MapPokemon pokemonOut : collectionPokemon)
+                                    realm.copyToRealmOrUpdate(new Pokemons(pokemonOut));
 
-                                    for (FortDataOuterClass.FortData gymOut : collectionGyms)
-                                        realm.copyToRealmOrUpdate(new Gym(gymOut));
+                                for (FortDataOuterClass.FortData gymOut : collectionGyms)
+                                    realm.copyToRealmOrUpdate(new Gym(gymOut));
 
-                                    for (Pokestop pokestopOut : collectionPokeStops)
-                                        realm.copyToRealmOrUpdate(new PokeStop(pokestopOut));
-                                }
-                            });
-                            realm.close();
+                                for (Pokestop pokestopOut : collectionPokeStops)
+                                    realm.copyToRealmOrUpdate(new PokeStop(pokestopOut));
+                            }
+                        });
+                        realm.close();
 
-                            Thread.sleep(SLEEP_TIME);
+                        Thread.sleep(SLEEP_TIME);
                     }
                 }
             }
