@@ -44,6 +44,6 @@ public class AboutUsFragment extends PreferenceFragment {
         bar.setDisplayHomeAsUpEnabled(true);
         bar.setDisplayShowTitleEnabled(true);
         bar.setHomeAsUpIndicator(R.drawable.back_button);
-        bar.setTitle("About Us");
+        bar.setTitle(com.pokescanner.R.string.about_us);
     }
 }

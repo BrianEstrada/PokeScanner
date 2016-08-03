@@ -26,7 +26,7 @@
                 android:textSize="18sp"
                 android:textColor="@color/black"
                 android:gravity="center"
-                android:text="Thank you for using PokeScanner, we hope you enjoyed your experience !"
+                android:text="@string/about_us_thanks"
                 android:layout_marginBottom="16dp"/>
 
             <TextView
@@ -35,7 +35,7 @@
                 android:textSize="18sp"
                 android:textColor="@color/black"
                 android:gravity="center"
-                android:text="Chief developers : \n\nBrianEstrada\nrhari991\nEZTEQ"
+                android:text="@string/chief_devs"
                 android:layout_marginBottom="16dp"/>
 
             <TextView
@@ -44,14 +44,14 @@
                 android:textSize="16sp"
                 android:textColor="#006600"
                 android:gravity="center"
-                android:text="Please consider donating in order to support continued development"
+                android:text="@string/about_us_please_donate"
                 android:layout_marginBottom="16dp"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:text="Donate"
+                android:text="@string/donate"
                 android:id="@+id/donateButton"
                 android:padding="16dp"
                 android:textSize="18sp"
@@ -65,7 +65,7 @@
                 android:textSize="16sp"
                 android:textColor="#990000"
                 android:gravity="center"
-                android:text="This is a free software, and is available only through Github and /r/PokeScanner. If you received this application from somewhere else, it may contain malicious code. Please support the developers by only downloading the app from official sources."
+                android:text="@string/about_us_free_software"
                 android:layout_marginBottom="4dp"/>
 
         </LinearLayout>

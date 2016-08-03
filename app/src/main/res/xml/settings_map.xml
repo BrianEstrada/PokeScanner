@@ -57,7 +57,7 @@
     </PreferenceScreen>
 
     <PreferenceScreen
-        android:title="Advanced Icon options"
+        android:title="@string/advanced_icon_options"
         android:fragment="com.pokescanner.settings.SettingsFragment" >
         <extra
             android:name="page"

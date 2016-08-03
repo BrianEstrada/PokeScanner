@@ -14,7 +14,7 @@
     <header
         android:fragment="com.pokescanner.settings.SettingsFragment"
         android:title="@string/category_filters"
-        android:summary="Choose which icons to display on the map" >
+        android:summary="@string/filter_options_desc" >
         <extra
             android:name="page"
             android:value="filterOptions"/>
@@ -23,12 +23,12 @@
     <header
         android:title="Manage Accounts"
         android:id="@+id/multiboxingHeader"
-        android:summary="Add multiple accounts to speed up scan time" />
+        android:summary="@string/multiboxing_desc" />
 
     <header
         android:fragment="com.pokescanner.settings.SettingsFragment"
         android:title="@string/category_map_options"
-        android:summary="Configure how the map is displayed" >
+        android:summary="@string/map_options_desc" >
         <extra
             android:name="page"
             android:value="mapOptions"/>
@@ -37,7 +37,7 @@
     <header
         android:fragment="com.pokescanner.settings.SettingsFragment"
         android:title="@string/category_clear"
-        android:summary="Clear the markers on the map" >
+        android:summary="@string/clear_options_desc" >
         <extra
             android:name="page"
             android:value="clearOptions"/>
@@ -46,7 +46,7 @@
     <header
         android:fragment="com.pokescanner.settings.SettingsFragment"
         android:title="Miscellaneous"
-        android:summary="Update Settings and License" >
+        android:summary="@string/misc_options_desc" >
         <extra
             android:name="page"
             android:value="miscOptions"/>
