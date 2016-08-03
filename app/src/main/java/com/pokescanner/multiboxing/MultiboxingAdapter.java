@@ -2,6 +2,7 @@ package com.pokescanner.multiboxing;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.res.ResourcesCompat;
@@ -84,18 +85,18 @@ public class MultiboxingAdapter extends RecyclerView.Adapter<MultiboxingAdapter.
                 }
             });
 
-            if (user.getAccountColor() == -1) {
-                Drawable drawable = ResourcesCompat.getDrawable(mContext.getResources(),R.drawable.circle_button,null);
+            int color = ResourcesCompat.getColor(mContext.getResources(),R.color.colorPrimary,null);
+
+            if (user.getAccountColor() != 0) {
+                color = user.getAccountColor();
+            }
+
+            Drawable drawable = ResourcesCompat.getDrawable(mContext.getResources(),R.drawable.circle_button,null);
+
+            if (drawable != null) {
                 drawable = DrawableCompat.wrap(drawable);
                 drawable.setAlpha(128);
-                drawable.setColorFilter(ResourcesCompat.getColor(mContext.getResources(),R.color.colorAccent,null), PorterDuff.Mode.SRC);
-                accountColor.setImageDrawable(drawable);
-            }else
-            {
-                Drawable drawable = ResourcesCompat.getDrawable(mContext.getResources(),R.drawable.circle_button,null);
-                drawable = DrawableCompat.wrap(drawable);
-                drawable.setAlpha(128);
-                drawable.setColorFilter(ResourcesCompat.getColor(mContext.getResources(),user.getAccountColor(),null), PorterDuff.Mode.SRC);
+                drawable.setColorFilter(color, PorterDuff.Mode.SRC);
                 accountColor.setImageDrawable(drawable);
             }
 

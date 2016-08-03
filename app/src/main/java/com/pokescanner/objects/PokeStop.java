@@ -91,6 +91,11 @@ public class PokeStop extends RealmObject
         return luredPokemonName;
     }
 
+
+    public String getExpireTime() {
+        return DrawableUtils.getExpireTime(getLureExpiryTimestamp());
+    }
+
     public Bitmap getBitmap(Context context)
     {
         int pokeStopType = DrawableUtils.PokeStopType;

@@ -99,7 +99,6 @@ public class LoginActivity extends AppCompatActivity {
                                 event.getToken(),
                                 LOGIN_METHOD,
                                 User.STATUS_VALID);
-                        user.setAccountColor(R.color.colorPrimary);
                         realm.copyToRealmOrUpdate(user);
                         loginLog();
                         showToast(R.string.LOGIN_OK);
