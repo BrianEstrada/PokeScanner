@@ -98,6 +98,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
+import static com.pokescanner.helper.Generation.getCorners;
 import static com.pokescanner.helper.Generation.makeHexScanMap;
 
 
@@ -453,6 +454,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 polygonOptions.strokeColor(Color.parseColor("#80d22d2d"));
 
                 mBoundingHexagon = mMap.addPolygon(polygonOptions);
+            }
+        }else {
+            if (mMap != null)
+            {
+                try {
+                    removeBoundingBox();
+                    LatLng target = getCameraLocation();
+                    if (target != null) {
+                        int scanValue = Settings.get(this).getScanValue();
+                        List<LatLng> tempScanMap = makeHexScanMap(target, scanValue, 1, new ArrayList<LatLng>());
+                        List<LatLng> tempCornerMap = getCorners(tempScanMap);
+
+                        PolygonOptions polygonOptions = new PolygonOptions();
+                        for (LatLng latLng: tempCornerMap){
+                            polygonOptions.add(latLng);
+                        }
+                        polygonOptions.strokeColor(Color.parseColor("#80d22d2d"));
+
+                        mBoundingHexagon = mMap.addPolygon(polygonOptions);
+
+                    }
+
+                } catch (NoMapException e) {
+                    e.printStackTrace();
+                } catch (NoCameraPositionException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
