@@ -1,6 +1,9 @@
 
 package com.pokescanner.objects;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.AllArgsConstructor;
@@ -24,5 +27,13 @@ public class FilterItem extends RealmObject{
 
     public FilterItem(int number) {
         setNumber(number);
+    }
+
+    public JSONObject toJSONObject() throws JSONException {
+        JSONObject result = new JSONObject();
+        result.put("number", Number);
+        result.put("name", Name);
+        result.put("filtered", filtered);
+        return result;
     }
 }

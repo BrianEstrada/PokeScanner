@@ -10,164 +10,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp">
+        android:padding="16dp"
+        android:gravity="center_vertical|center_horizontal">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/neutral_gyms"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15dp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-
-            <FrameLayout
-                android:layout_width="160dp"
-                android:layout_height="match_parent">
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/showNeutralGyms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal" />
-
-            </FrameLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/yellow_team"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15dp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-
-            <FrameLayout
-                android:layout_width="160dp"
-                android:layout_height="match_parent">
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/showYellowTeam"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal" />
-
-            </FrameLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/blue_team"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15dp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-
-            <FrameLayout
-                android:layout_width="160dp"
-                android:layout_height="match_parent">
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/showBlueTeam"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal" />
-
-            </FrameLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center_vertical|center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/red_team"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15dp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-
-            <FrameLayout
-                android:layout_width="160dp"
-                android:layout_height="match_parent">
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/showRedTeam"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal" />
-
-            </FrameLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal">
+            android:text="Select the range of values for the guard pokemon's CP"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="15dp"
+            android:layout_marginRight="16dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/guard_pokemon_cp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15dp"
-                android:layout_marginRight="16dp"/>
-
-            <org.florescu.android.rangeseekbar.RangeSeekBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/guardPokemonCpSeekbar"
-                rsb:absoluteMinValue="1"
-                rsb:absoluteMaxValue="2000"
-                android:padding="0dp"
-                rsb:valuesAboveThumbs="true"
-                rsb:textAboveThumbsColor="#000000"
-                android:layout_margin="0dp" />
-
-        </LinearLayout>
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/guardPokemonCpSeekbar"
+            rsb:absoluteMinValue="1"
+            rsb:absoluteMaxValue="2000"
+            android:padding="0dp"
+            rsb:valuesAboveThumbs="true"
+            rsb:textAboveThumbsColor="#000000"
+            android:layout_margin="0dp" />
 
     </LinearLayout>
 

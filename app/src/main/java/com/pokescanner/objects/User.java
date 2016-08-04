@@ -1,10 +1,7 @@
 
 package com.pokescanner.objects;
 
-import android.content.res.TypedArray;
 import android.graphics.Color;
-
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,5 +50,15 @@ public class User extends RealmObject {
         Random rnd = new Random();
         int color = Color.argb(128, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         this.accountColor = color;
+    }
+
+    public JSONObject toJSONObject() throws JSONException {
+        JSONObject result = new JSONObject();
+        result.put("username", username);
+        result.put("password", password);
+        result.put("token", token);
+        result.put("authType", authType);
+        result.put("status", status);
+        return result;
     }
 }

@@ -60,7 +60,6 @@ import com.pokescanner.exceptions.NoCameraPositionException;
 import com.pokescanner.exceptions.NoMapException;
 import com.pokescanner.helper.CustomMapFragment;
 import com.pokescanner.helper.Generation;
-import com.pokescanner.helper.GymFilter;
 import com.pokescanner.helper.PokemonListLoader;
 import com.pokescanner.loaders.MultiAccountLoader;
 import com.pokescanner.objects.Gym;
@@ -408,33 +407,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 gymMarkerMap.clear();
                 pokestopMarkerMap.clear();
 
-                //Once we refresh our markers lets go ahead and load our pokemans
+
                 ArrayList<Gym> gyms = new ArrayList<Gym>(realm.copyFromRealm(realm.where(Gym.class).findAll()));
                 ArrayList<PokeStop> pokestops = new ArrayList<PokeStop>(realm.copyFromRealm(realm.where(PokeStop.class).findAll()));
-
-                if (SettingsUtil.getSettings(MapsActivity.this).isGymsEnabled()) {
-                    for (int i = 0; i < gyms.size(); i++) {
-                        Gym gym = gyms.get(i);
-                        LatLng pos = new LatLng(gym.getLatitude(), gym.getLongitude());
-                        if (curScreen.contains(pos) && !shouldGymBeRemoved(gym)) {
-                            Marker marker = mMap.addMarker(gym.getMarker(this));
-                            gymMarkerMap.put(gym, marker);
-                        }
+                
+                for (int i = 0; i < gyms.size(); i++) {
+                    Gym gym = gyms.get(i);
+                    LatLng pos = new LatLng(gym.getLatitude(), gym.getLongitude());
+                    if (curScreen.contains(pos) && shouldGymBeFiltered(gym)) {
+                        Marker marker = mMap.addMarker(gym.getMarker(this));
+                        gymMarkerMap.put(gym, marker);
                     }
                 }
-
-                boolean showAllStops = !Settings.get(this).isShowOnlyLured();
-
-                if (SettingsUtil.getSettings(MapsActivity.this).isPokestopsEnabled()) {
-                    for (int i = 0; i < pokestops.size(); i++) {
-                        PokeStop pokestop = pokestops.get(i);
-                        LatLng pos = new LatLng(pokestop.getLatitude(), pokestop.getLongitude());
-                        if (curScreen.contains(pos)) {
-                            if (pokestop.isHasLureInfo() || showAllStops) {
-                                Marker marker = mMap.addMarker(pokestop.getMarker(this));
-                                pokestopMarkerMap.put(pokestop, marker);
-                            }
-                        }
+                
+                for (int i = 0; i < pokestops.size(); i++) {
+                    PokeStop pokestop = pokestops.get(i);
+                    LatLng pos = new LatLng(pokestop.getLatitude(), pokestop.getLongitude());
+                    if (curScreen.contains(pos) && shouldPokestopBeFiltered(pokestop)) {
+                        Marker marker = mMap.addMarker(pokestop.getMarker(this));
+                        pokestopMarkerMap.put(pokestop, marker);
                     }
                 }
             }
@@ -501,34 +492,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public boolean shouldGymBeRemoved(Gym gym) {
-        GymFilter currentGymFilter = GymFilter.getGymFilter(MapsActivity.this);
+    //Returns true if gym is to be shown
+    public boolean shouldGymBeFiltered(Gym gym) {
+        Settings currentSettings = SettingsUtil.getSettings(MapsActivity.this);
         int guardPokemonCp = gym.getGuardPokemonCp();
-        int minCp = currentGymFilter.getGuardPokemonMinCp();
-        int maxCp = currentGymFilter.getGuardPokemonMaxCp();
+        int minCp = currentSettings.getGuardPokemonMinCp();
+        int maxCp = currentSettings.getGuardPokemonMaxCp();
         if (!((guardPokemonCp >= minCp) && (guardPokemonCp <= maxCp)) && (guardPokemonCp != 0))
-            return true;
+            return false;
         int ownedByTeamValue = gym.getOwnedByTeamValue();
         switch (ownedByTeamValue) {
             case 0:
-                if (!currentGymFilter.isNeutralGymsEnabled())
-                    return true;
+                if (!currentSettings.isNeutralGymsEnabled())
+                    return false;
                 break;
             case 1:
-                if (!currentGymFilter.isBlueGymsEnabled())
-                    return true;
+                if (!currentSettings.isBlueGymsEnabled())
+                    return false;
                 break;
             case 2:
-                if (!currentGymFilter.isRedGymsEnabled())
-                    return true;
+                if (!currentSettings.isRedGymsEnabled())
+                    return false;
                 break;
             case 3:
-                if (!currentGymFilter.isYellowGymsEnabled())
-                    return true;
+                if (!currentSettings.isYellowGymsEnabled())
+                    return false;
                 break;
         }
-        return false;
+        return true;
     }
+
+    public boolean shouldPokestopBeFiltered(PokeStop pokeStop){
+        Settings currentSettings = SettingsUtil.getSettings(MapsActivity.this);
+        if(pokeStop.isHasLureInfo() && !currentSettings.isLuredPokestopsEnabled())
+            return false;
+        if(!pokeStop.isHasLureInfo() && !currentSettings.isNormalPokestopsEnabled())
+            return false;
+        return true;
+    }
+
+
 
     public void createMapObjects() {
         if (SettingsUtil.getSettings(this).isBoundingBoxEnabled()) {
