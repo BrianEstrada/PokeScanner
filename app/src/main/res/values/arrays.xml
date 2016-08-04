@@ -10,7 +10,6 @@
         <item>2</item>
         <item>3</item>
     </string-array>
-
     <string-array name="MapRereshRate">
         <item>@string/faster</item>
         <item>@string/fast</item>
@@ -25,7 +24,6 @@
         <item>4</item>
         <item>5</item>
     </string-array>
-
     <string-array name="IconScale">
         <item>@string/large</item>
         <item>@string/normal</item>

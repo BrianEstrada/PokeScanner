@@ -1,6 +1,9 @@
 package com.pokescanner.multiboxing;
 
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,8 +12,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.pavelsikun.vintagechroma.ChromaDialog;
+import com.pavelsikun.vintagechroma.IndicatorMode;
+import com.pavelsikun.vintagechroma.OnColorSelectedListener;
+import com.pavelsikun.vintagechroma.colormode.ColorMode;
 import com.pokescanner.R;
 import com.pokescanner.loaders.AuthAccountsLoader;
+import com.pokescanner.loaders.AuthSingleAccountLoader;
 import com.pokescanner.objects.User;
 
 import java.util.ArrayList;
@@ -61,9 +69,36 @@ public class MultiboxingActivity extends AppCompatActivity{
             public void onRemove(User user) {
                 removeAccount(user);
             }
+        }, new MultiboxingAdapter.accountChangeColorListener() {
+            @Override
+            public void changeColor(User user) {
+                changeAccountColor(user);
+            }
         });
 
         userRecycler.setAdapter(userAdapter);
+
+    }
+
+    private void changeAccountColor(final User user) {
+        new ChromaDialog.Builder()
+                .initialColor(user.getAccountColor())
+                .colorMode(ColorMode.ARGB) // RGB, ARGB, HVS, CMYK, CMYK255, HSL
+                .indicatorMode(IndicatorMode.HEX) //HEX or DECIMAL; Note that (HSV || HSL || CMYK) && IndicatorMode.HEX is a bad idea
+                .onColorSelected(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(@ColorInt final int color) {
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                user.setAccountColor(color);
+                                realm.copyToRealmOrUpdate(user);
+                            }
+                        });
+                    }
+                })
+                .create()
+                .show(getSupportFragmentManager(), "ChromaDialog");
     }
 
     private void removeAccount(final User user) {
@@ -95,7 +130,9 @@ public class MultiboxingActivity extends AppCompatActivity{
         super.onResume();
         realm = Realm.getDefaultInstance();
         loadAccounts();
+        refreshAccounts();
     }
+
 
     @OnClick(R.id.btnAddAccount)
     public void addAccountDialog() {
@@ -120,6 +157,9 @@ public class MultiboxingActivity extends AppCompatActivity{
                 realm.beginTransaction();
                 realm.copyToRealmOrUpdate(user);
                 realm.commitTransaction();
+
+                AuthSingleAccountLoader singleloader = new AuthSingleAccountLoader(user);
+                singleloader.start();
 
                 builder.dismiss();
             }

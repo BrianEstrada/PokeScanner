@@ -10,6 +10,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
+//This line should commented out if you aren't using fabric
 apply plugin: 'realm-android'
 
 repositories {
@@ -81,6 +82,7 @@ dependencies {
         exclude module: 'rxjava'
     }
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.pavelsikun:vintage-chroma:1.5'
     //idk what this is for but I'm sure we're using it
     compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'

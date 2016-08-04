@@ -124,7 +124,7 @@ public class MarkerDetails
                         .subscribe(new Action1<Long>() {
                             @Override
                             public void call(Long aLong) {
-                                lureTimer.setText(selectedPokestop.getLureExpiryTime());
+                                lureTimer.setText(selectedPokestop.getExpireTime());
                             }
                         });
             }

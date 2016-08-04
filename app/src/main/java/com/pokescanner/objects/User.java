@@ -1,8 +1,12 @@
 
 package com.pokescanner.objects;
 
+import android.graphics.Color;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Random;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -19,12 +23,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = false,exclude = {"token","status","authType","lastScan"})
-public class User extends RealmObject{
+public class User extends RealmObject {
     static public final int PTC = 0;
     static public final int GOOGLE = 1;
-    static public final int STATUS_UNKNOWN  = 10;
-    static public final int STATUS_INVALID  = 11;
-    static public final int STATUS_VALID  = 12;
+    static public final int STATUS_UNKNOWN = 10;
+    static public final int STATUS_INVALID = 11;
+    static public final int STATUS_VALID = 12;
 
     @PrimaryKey
     String username;
@@ -32,16 +36,20 @@ public class User extends RealmObject{
     GoogleAuthToken token;
     int authType;
     int status = 10;
-    long lastScan;
+    int accountColor;
 
-    public User() {}
+    public User() {
+    }
 
-    public User(String username,String password,GoogleAuthToken token,int authType,int status) {
+    public User(String username, String password, GoogleAuthToken token, int authType, int status) {
         this.username = username;
         this.password = password;
         this.token = token;
         this.authType = authType;
         this.status = status;
+        Random rnd = new Random();
+        int color = Color.argb(128, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        this.accountColor = color;
     }
 
     public JSONObject toJSONObject() throws JSONException {
@@ -51,7 +59,6 @@ public class User extends RealmObject{
         result.put("token", token);
         result.put("authType", authType);
         result.put("status", status);
-        result.put("lastScan", lastScan);
         return result;
     }
 }

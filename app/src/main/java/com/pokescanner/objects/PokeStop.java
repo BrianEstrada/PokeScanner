@@ -65,12 +65,7 @@ public class PokeStop extends RealmObject
         String iconMessage = "Pokestop";
         if(hasLureInfo) //There is a lure active at the pokestop
         {
-            if(getExpiryTime().isAfter(new Instant()))  //The lure is currently active
-            {
-                Interval interval = new Interval(new Instant(), getExpiryTime());
-                DateTime dt = new DateTime(interval.toDurationMillis());
-                DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
-
+            if(getExpiryTime().isAfter(new Instant())){
                 String activePokemonName = getActivePokemonName();
                 activePokemonName = activePokemonName.substring(0, 1).toUpperCase() + activePokemonName.substring(1).toLowerCase();
                 snippetMessage = "A lure is active here, and has attracted a " + activePokemonName;
@@ -89,24 +84,16 @@ public class PokeStop extends RealmObject
         return pokestopMarker;
     }
 
-    public String getLureExpiryTime()
-    {
-        String result = "";
-        if(hasLureInfo && getExpiryTime().isAfter(new Instant()))
-        {
-            Interval interval = new Interval(new Instant(), getExpiryTime());
-            DateTime dt = new DateTime(interval.toDurationMillis());
-            DateTimeFormatter fmt = DateTimeFormat.forPattern("mm:ss");
-            result = fmt.print(dt);
-        }
-        return result;
-    }
-
     public String getLuredPokemonName()
     {
         String luredPokemonName = getActivePokemonName();
         luredPokemonName = luredPokemonName.substring(0, 1).toUpperCase() + luredPokemonName.substring(1).toLowerCase();
         return luredPokemonName;
+    }
+
+
+    public String getExpireTime() {
+        return DrawableUtils.getExpireTime(getLureExpiryTimestamp());
     }
 
     public Bitmap getBitmap(Context context)
@@ -134,7 +121,7 @@ public class PokeStop extends RealmObject
         }
 
         int resourceID = context.getResources().getIdentifier(uri, "drawable", context.getPackageName());
-        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, getLureExpiryTime(), context, pokeStopType);
+        Bitmap out = DrawableUtils.getBitmapFromView(resourceID, DrawableUtils.getExpireTime(getLureExpiryTimestamp()), context, pokeStopType);
 
         return out;
     }

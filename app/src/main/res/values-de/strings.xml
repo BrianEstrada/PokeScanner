@@ -51,7 +51,7 @@
   <string name="settings">Einstellungen</string>
   <string name="logout">Ausloggen</string>
   <string name="check_hidden">Häkchen = Ausgeblendet</string>
-  <string name="server_refresh">Intervall der Kartenaktualisierung</string>
+  <string name="server_refresh">Intervall der Serveraktualisierung</string>
   <string name="server_refresh_desc">Verändert das Scanintervall der Karte (Bei einer langsamen Internetverbindung sollte das Intervall höher ausfallen)</string>
   <string name="pokemon_filters">Pokémon-Filter</string>
   <string name="map_refresh">Kartenaktualisierung</string>
@@ -139,7 +139,7 @@
   <string name="fast">Schnell</string>
   <string name="normal">Normal</string>
   <string name="slow">Langsam</string>
-  <string name="slowest">Langsam</string>
+  <string name="slowest">Langsamer</string>
   <string name="large">Groß</string>
   <string name="small">Klein</string>
   <string name="p1">Bisasam</string>
@@ -301,4 +301,16 @@
   <string name="search_by_address">Suche nach Adresse</string>
   <string name="account_manager">Account Manager</string>
   <string name="add_account">Account hinzufügen</string>
+  <string name="category_range">Reichweiten-Einstellungen</string>
+  <string name="about_us">Über uns</string>
+  <string name="about_us_free_software">Dies ist freie Software und nur über GitHub und /r/PokeScanner erhältlich. Hast du die Applikation von einer anderen Quelle bezogen, enthält sie möglicherweise Schadcode. Bitte unterstütze die Entwickler mit dem herrunterladen von offiziellen Quellen.</string>
+  <string name="about_us_please_donate">Bitte ziehe es in Erwägung zu Spenden um die Weiterentwicklung zu unterstützen</string>
+  <string name="about_us_thanks">Danke für das Nutzen von PokeScanner. Wir hoffen die gefällt es!</string>
+  <string name="advanced_icon_options">Erweiterte Icon Optionen</string>
+  <string name="chief_devs">Hauptentwickler:\n\nBrianEstrada\nrhari991\nEZTEQ</string>
+  <string name="clear_options_desc">Säubere die Marker von der Karte</string>
+  <string name="filter_options_desc">Wähle aus welche Icons auf der Karte angezeigt werden</string>
+  <string name="map_options_desc">Konfiguriere die Anzeigeeinstellungen der Karte</string>
+  <string name="misc_options_desc">Aktualisierungeinstellungen und Lizenz</string>
+  <string name="multiboxing_desc">Hinzufügen mehrerer Accounts erhöht die Scangeschwindigkeit</string>
 </resources>

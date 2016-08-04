@@ -49,7 +49,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.pokescanner.events.ForceLogOutEvent;
+import com.pokescanner.events.ForceLogoutEvent;
 import com.pokescanner.events.ForceRefreshEvent;
 import com.pokescanner.events.InterruptedExecptionEvent;
 import com.pokescanner.events.LoginFailedExceptionEvent;
@@ -97,6 +97,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
+import static com.pokescanner.helper.Generation.getCorners;
 import static com.pokescanner.helper.Generation.makeHexScanMap;
 
 
@@ -220,6 +221,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             //Progress Bar Related Stuff
             pos = 1;
+            int SERVER_REFRESH_RATE = Settings.get(this).getServerRefresh();
+
+            System.out.println(SERVER_REFRESH_RATE);
+
             progressBar.setProgress(0);
             int scanValue = Settings.get(this).getScanValue();
             showProgressbar(true);
@@ -244,7 +249,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //Pull our users from the realm
                     ArrayList<User> users = new ArrayList<>(realm.copyFromRealm(realm.where(User.class).findAll()));
 
-                    MultiAccountLoader.setSleepTime(UiUtils.BASE_DELAY);
+                    MultiAccountLoader.setSleepTime(UiUtils.BASE_DELAY * SERVER_REFRESH_RATE);
                     //Set our map
                     MultiAccountLoader.setScanMap(scanMap);
                     //Set our users
@@ -327,10 +332,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (mMap != null) {
                 LatLngBounds curScreen = mMap.getProjection().getVisibleRegion().latLngBounds;
                 createMapObjects();
-
-                //If in driving mode, move camera to current location
-                if (SettingsUtil.getSettings(MapsActivity.this).isDrivingModeEnabled())
-                    moveCameraToCurrentPosition(false);
 
                 //Load our Pokemon Array
                 ArrayList<Pokemons> pokemons = new ArrayList<Pokemons>(realm.copyFromRealm(realm.where(Pokemons.class).findAll()));
@@ -445,6 +446,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 mBoundingHexagon = mMap.addPolygon(polygonOptions);
             }
+        }else {
+            if (mMap != null)
+            {
+                try {
+                    removeBoundingBox();
+                    LatLng target = getCameraLocation();
+                    if (target != null) {
+                        int scanValue = Settings.get(this).getScanValue();
+                        List<LatLng> tempScanMap = makeHexScanMap(target, scanValue, 1, new ArrayList<LatLng>());
+                        List<LatLng> tempCornerMap = getCorners(tempScanMap);
+
+                        PolygonOptions polygonOptions = new PolygonOptions();
+                        for (LatLng latLng: tempCornerMap){
+                            polygonOptions.add(latLng);
+                        }
+                        polygonOptions.strokeColor(Color.parseColor("#80d22d2d"));
+
+                        mBoundingHexagon = mMap.addPolygon(polygonOptions);
+
+                    }
+
+                } catch (NoMapException e) {
+                    e.printStackTrace();
+                } catch (NoCameraPositionException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -541,12 +569,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void createCircle(ScanCircleEvent event) {
-        if (event.pos != null)
-        {
+        if (event.pos != null) {
+            int color = event.color;
+
+            if (color == 0) {
+                color = ResourcesCompat.getColor(getResources(),R.color.colorPrimaryTransparent,null);
+            }
+
             CircleOptions circleOptions = new CircleOptions()
-                    .radius(70)
+                    .radius(80)
                     .strokeWidth(0)
-                    .fillColor(ResourcesCompat.getColor(getResources(),R.color.colorPrimaryTransparent,null))
+                    .fillColor(color)
                     .center(event.pos);
             circleArray.add(mMap.addCircle(circleOptions));
 
@@ -589,7 +622,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onForceLogOutEvent(ForceLogOutEvent event) {
+    public void onForceLogOutEvent(ForceLogoutEvent event) {
         showToast(R.string.ERROR_LOGIN);
         logOut();
     }

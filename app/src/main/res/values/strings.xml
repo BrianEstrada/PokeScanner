@@ -143,6 +143,10 @@
     <string name="changes">Changes:</string>
     <string name="update_available_long">is available.</string>
 
+    <string name="category_range">Range Options</string>
+    <string name="category_update">Update Options</string>
+    <string name="category_range_options">Range Options</string>
+
     <string name="guard_pokemon">Guard Pokémon : </string>
     <string name="gym_points">Gym points : </string>
     <string name="expires_in">Expires in : </string>
@@ -351,4 +355,15 @@
     <string name="search_by_address">Search By Address</string>
     <string name="account_manager">Account Manager</string>
     <string name="add_account">Add Account (PTC)</string>
+    <string name="advanced_icon_options">Advanced Icon options</string>
+    <string name="filter_options_desc">Choose which icons to display on the map</string>
+    <string name="multiboxing_desc">Add multiple accounts to speed up scan time</string>
+    <string name="map_options_desc">Configure how the map is displayed</string>
+    <string name="clear_options_desc">Clear the markers on the map</string>
+    <string name="misc_options_desc">Update Settings and License</string>
+    <string name="about_us">About Us</string>
+    <string name="about_us_thanks">Thank you for using PokeScanner, we hope you enjoyed your experience!</string>
+    <string name="chief_devs">Chief developers : \n\nBrianEstrada\nrhari991\nEZTEQ</string>
+    <string name="about_us_please_donate">Please consider donating in order to support continued development</string>
+    <string name="about_us_free_software">This is a free software, and is available only through Github and /r/PokeScanner. If you received this application from somewhere else, it may contain malicious code. Please support the developers by only downloading the app from official sources.</string>
 </resources>
