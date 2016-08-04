@@ -3,6 +3,53 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/category_filters">
 
+    <SwitchPreference
+        android:key="showNeutralGyms"
+        android:title="@string/show_neutral_gyms"
+        android:defaultValue="true"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+    <SwitchPreference
+        android:key="showYellowGyms"
+        android:title="@string/show_yellow_gyms"
+        android:defaultValue="true"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+    <SwitchPreference
+        android:key="showBlueGyms"
+        android:title="@string/show_blue_gyms"
+        android:defaultValue="true"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+    <SwitchPreference
+        android:key="showRedGyms"
+        android:title="@string/show_red_gyms"
+        android:defaultValue="true"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+    <SwitchPreference
+        android:key="showLuredPokestops"
+        android:title="@string/show_lured_pokestops"
+        android:defaultValue="true"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+    <SwitchPreference
+        android:key="showNormalPokestops"
+        android:title="@string/show_normal_pokestops"
+        android:defaultValue="true"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content" />
+
+    <Preference
+        android:title="@string/guard_pokemon_cp"
+        android:summary="@string/guard_cp_description"
+        android:key="gym_cp_filter"/>
+
     <Preference
         android:title="@string/show_expiration_filter"
         android:summary="@string/show_expiration_filter_desc"
@@ -12,10 +59,5 @@
         android:title="@string/show_pokemon_blacklist_filter"
         android:summary="@string/show_pokemon_blacklist_filter_desc"
         android:key="pokemon_blacklist"/>
-
-    <Preference
-        android:title="@string/show_gym_filter"
-        android:summary="@string/show_gym_filter_desc"
-        android:key="gym_filter"/>
 
 </PreferenceScreen>

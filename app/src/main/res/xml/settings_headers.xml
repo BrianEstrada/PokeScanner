@@ -43,6 +43,16 @@
     </header>
 
     <header
+        android:title="Create Backup"
+        android:summary="Save all your settings to a backup file"
+        android:id="@+id/createBackup"/>
+
+    <header
+        android:title="Load Settings"
+        android:summary="Load a previously created backup file"
+        android:id="@+id/loadSettings"/>
+
+    <header
         android:title="About us"
         android:fragment="com.pokescanner.settings.AboutUsFragment">
         <extra

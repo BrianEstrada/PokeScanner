@@ -1,6 +1,9 @@
 
 package com.pokescanner.objects;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.AllArgsConstructor;
@@ -39,5 +42,16 @@ public class User extends RealmObject{
         this.token = token;
         this.authType = authType;
         this.status = status;
+    }
+
+    public JSONObject toJSONObject() throws JSONException {
+        JSONObject result = new JSONObject();
+        result.put("username", username);
+        result.put("password", password);
+        result.put("token", token);
+        result.put("authType", authType);
+        result.put("status", status);
+        result.put("lastScan", lastScan);
+        return result;
     }
 }

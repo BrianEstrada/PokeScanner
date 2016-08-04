@@ -11,7 +11,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
@@ -28,7 +27,6 @@ import android.widget.Toast;
 import com.pokescanner.BlacklistActivity;
 import com.pokescanner.BuildConfig;
 import com.pokescanner.ExpirationFilters;
-import com.pokescanner.GymFilters;
 import com.pokescanner.R;
 import com.pokescanner.events.AppUpdateEvent;
 import com.pokescanner.objects.Gym;
@@ -50,7 +48,7 @@ import io.realm.Realm;
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     SharedPreferences preferences;
-    Preference scan_dialog,gym_filter,expiration_filter;
+    Preference scan_dialog, gym_cp_filter,expiration_filter;
     Preference clear_pokemon,clear_gyms,clear_pokestops;
     Preference pokemon_blacklist, update;
     Realm realm;
@@ -89,7 +87,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.settings_page, container, false);
         mContext = getActivity();
         setupToolbar();
@@ -103,9 +101,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 .putBoolean(SettingsUtil.KEY_BOUNDING_BOX,settings.isBoundingBoxEnabled())
                 .putBoolean(SettingsUtil.FORCE_ENGLISH_NAMES,settings.isForceEnglishNames())
                 .putString(SettingsUtil.SCAN_VALUE,String.valueOf(settings.getScanValue()))
-                .putBoolean(SettingsUtil.SHOW_ONLY_LURED,settings.isShowOnlyLured())
-                .putBoolean(SettingsUtil.SHOW_GYMS,settings.isGymsEnabled())
-                .putBoolean(SettingsUtil.SHOW_POKESTOPS,settings.isPokestopsEnabled())
                 .putString(SettingsUtil.SERVER_REFRESH_RATE,String.valueOf(settings.getServerRefresh()))
                 .putString(SettingsUtil.MAP_REFRESH_RATE,String.valueOf(settings.getMapRefresh()))
                 .putString(SettingsUtil.POKEMON_ICON_SCALE,String.valueOf(settings.getScale()))
@@ -113,6 +108,14 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 .putBoolean(SettingsUtil.KEY_OLD_MARKER,settings.isUseOldMapMarker())
                 .putBoolean(SettingsUtil.SHUFFLE_ICONS,settings.isShuffleIcons())
                 .putBoolean(SettingsUtil.SHOW_LURED_POKEMON,settings.isShowLuredPokemon())
+                .putBoolean(SettingsUtil.SHOW_NEUTRAL_GYMS,settings.isNeutralGymsEnabled())
+                .putBoolean(SettingsUtil.SHOW_YELLOW_GYMS,settings.isYellowGymsEnabled())
+                .putBoolean(SettingsUtil.SHOW_BLUE_GYMS,settings.isBlueGymsEnabled())
+                .putBoolean(SettingsUtil.SHOW_RED_GYMS,settings.isRedGymsEnabled())
+                .putInt(SettingsUtil.GUARD_MIN_CP,settings.getGuardPokemonMinCp())
+                .putInt(SettingsUtil.GUARD_MAX_CP,settings.getGuardPokemonMaxCp())
+                .putBoolean(SettingsUtil.SHOW_LURED_POKESTOPS,settings.isLuredPokestopsEnabled())
+                .putBoolean(SettingsUtil.SHOW_NORMAL_POKESTOPS,settings.isNormalPokestopsEnabled())
                 .commit();
 
         realm = Realm.getDefaultInstance();
@@ -152,10 +155,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
     private void setupFilterOptions() {
-        gym_filter = getPreferenceManager().findPreference("gym_filter");
-        gym_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        gym_cp_filter = getPreferenceManager().findPreference("gym_cp_filter");
+        gym_cp_filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                GymFilters.showGymFiltersDialog(mContext);
+                GymFilters.showGymCpFilterDialog(mContext);
                 return true;
             }
         });
@@ -302,8 +305,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        System.out.println(sharedPreferences.getAll().toString());
         SettingsUtil.saveSettings(mContext,new Settings(
+                1,
                 sharedPreferences.getBoolean(SettingsUtil.ENABLE_UPDATES,true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_BOUNDING_BOX, false),
                 sharedPreferences.getBoolean(SettingsUtil.DRIVING_MODE, false),
@@ -314,12 +317,17 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.POKEMON_ICON_SCALE, "2")),
                 Integer.valueOf(sharedPreferences.getString(SettingsUtil.MAP_REFRESH_RATE, "2")),
                 sharedPreferences.getString(SettingsUtil.LAST_USERNAME, ""),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_ONLY_LURED, true),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_GYMS, true),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_POKESTOPS, true),
                 sharedPreferences.getBoolean(SettingsUtil.KEY_OLD_MARKER, false),
                 sharedPreferences.getBoolean(SettingsUtil.SHUFFLE_ICONS, false),
-                sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKEMON, true)
+                sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKEMON, true),
+                sharedPreferences.getBoolean(SettingsUtil.SHOW_NEUTRAL_GYMS, true),
+                sharedPreferences.getBoolean(SettingsUtil.SHOW_YELLOW_GYMS, true),
+                sharedPreferences.getBoolean(SettingsUtil.SHOW_BLUE_GYMS, true),
+                sharedPreferences.getBoolean(SettingsUtil.SHOW_RED_GYMS, true),
+                sharedPreferences.getInt(SettingsUtil.GUARD_MIN_CP, 1),
+                sharedPreferences.getInt(SettingsUtil.GUARD_MAX_CP, 1999),
+                sharedPreferences.getBoolean(SettingsUtil.SHOW_LURED_POKESTOPS, true),
+                sharedPreferences.getBoolean(SettingsUtil.SHOW_NORMAL_POKESTOPS, true)
         ));
     }
 

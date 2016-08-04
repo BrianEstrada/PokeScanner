@@ -49,11 +49,15 @@
     <string name="red_team">Red team</string>
     <string name="neutral_gyms">Neutral gyms</string>
     <string name="guard_pokemon_cp">Guard Pokémon CP</string>
+    <string name="guard_cp_description">Select the range of cp values for the guardian pokemon of gyms</string>
     <string name="_0" translatable="false">0</string>
     <string name="expiration_time">Hide Pokémon expiring in</string>
     <string name="expiration_min">Min:</string>
     <string name="expiration_max">Max:</string>
-
+    <string name="show_neutral_gyms">Show Neutral gyms</string>
+    <string name="show_yellow_gyms">Show Yellow gyms</string>
+    <string name="show_blue_gyms">Show Blue gyms</string>
+    <string name="show_red_gyms">Show Red gyms</string>
 
     <string name="settings">Settings</string>
     <string name="logout">Log out</string>
@@ -99,6 +103,9 @@
     <string name="clear_pokestops_desc">Clears the current Pokestops</string>
     <string name="clear_gyms">Clear Gyms</string>
     <string name="clear_gyms_desc">Clears the current Gyms</string>
+
+    <string name="show_lured_pokestops">Show Lured PokeStops</string>
+    <string name="show_normal_pokestops">Show Normal Pokestops</string>
 
 
     <string name="icon_scale">Icon Scale</string>
@@ -171,6 +178,18 @@
     <string name="slowest">Slowest</string>
     <string name="large">Large</string>
     <string name="small">Small</string>
+
+    <string name="backup_load_error">The backup file could not be loaded</string>
+    <string name="backup_creation_error">An error occured while creating the backup</string>
+    <string name="backup_load_success">Backup loaded successfully</string>
+    <string name="request_file_name">Enter the file name :</string>
+    <string name="backup_location_message">The file will be stored in your downloads folder</string>
+    <string name="create_backup">Create backup</string>
+    <string name="file_name_error">Please enter a valid file name</string>
+    <string name="backup_creation_successful">Backup created successfully</string>
+    <string name="backup_read_permission">We need access to your file system in order to read the backup file</string>
+    <string name="backup_write_permission">We need access to your file system in order to create the backup file</string>
+
 
 
     <string name="p1">Bulbasaur</string>
